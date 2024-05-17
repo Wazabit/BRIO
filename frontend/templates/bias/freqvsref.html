@@ -43,7 +43,7 @@ function handle_refs() {
 
       data.append("tt_selected", selected_option_tt.value);
       data.append("nb_selected", selected_option_nb.value);
-      const freqvsref_url = "http://" + "{{ local_ip }}" + ":5000/bias/freqvsref";
+      const freqvsref_url = "http://" + "{{ local_ip }}" + ":80/bias/freqvsref";
       const preds_id = document.getElementById("ref_dist");
       fetch(freqvsref_url, {
       "method": "POST",
@@ -64,7 +64,7 @@ function handle_agg_funcs() {
   if (selected_option_pr.value != predvar.options[0].value && selected_option_rv.value != rootvar.options[0].value) {
     data.append("rv_selected", selected_option_rv.value);
     data.append("pr_selected", selected_option_pr.value);
-    const freqvsref_url = "http://" + "{{ local_ip }}" + ":5000/bias/freqvsref";
+    const freqvsref_url = "http://" + "{{ local_ip }}" + ":80/bias/freqvsref";
     const preds_id = document.getElementById("ref_dist");
     fetch(freqvsref_url, {
     "method": "POST",

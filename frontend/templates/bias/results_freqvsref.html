@@ -64,7 +64,7 @@ Results
 {% block scripts %}
 <script type="text/javascript">
 function handle_export() {
-  const results_url = "http://" + "{{ local_ip }}" + ":5000/bias/freqvsref/results";
+  const results_url = "http://" + "{{ local_ip }}" + ":80/bias/freqvsref/results";
   fetch(results_url, {
     "method": "POST",
     "headers" : {

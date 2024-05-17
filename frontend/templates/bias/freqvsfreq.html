@@ -27,7 +27,7 @@ function handle_agg_funcs() {
   var rootvar = document.getElementById("root_var");
   var selected_option = rootvar.options[rootvar.selectedIndex];
   data.append("rv_selected", selected_option.value);
-  const freqvsfreq_url = "http://" + "{{ local_ip }}" + ":5000/bias/freqvsfreq";
+  const freqvsfreq_url = "http://" + "{{ local_ip }}" + ":80/bias/freqvsfreq";
   
   fetch(freqvsfreq_url, {
     "method": "POST",
