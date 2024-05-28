@@ -1,52 +1,86 @@
 {% block content %}
-<h2>Upload files</h2><br>
-<form method="POST" action="{{ url_for('bias.home_bias') }}" enctype="multipart/form-data">
-    <div class="form-group row mb-2 w-50 mx-auto">
-	    <label for="dataset" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold">Dataframe:</label>
-	    <div class="col-sm-10">
-        <input type="file" class="form-control form-control-lg ml-4" name="dataset" id="dataset">
-	    </div>
-	    <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#exampleModal">
-	      Customize your preprocessing pipeline here
-	    </button>
-    </div>
-    <button type="submit" class="btn btn-secondary btn-lg ml-3 mx-auto">Upload</button>
-</form>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Preprocessing customization</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="row">
+  <div class="col-xl-4 themed-grid-col">
+    <div class="card card-mirai animated">
+      <div class="card-header text-uppercase">
+        Preprocessing pipeline (optional)
       </div>
-      <div class="modal-body">
-        <p>
-        You can upload here a raw dataset, a preprocessing pipeline in the form of a jupyter notebook (packages you use must already be installed), and some artifacts. Please note that if you use this customization tool, <u>the original dataframe will be overridden</u>. Notebooks input can be accessed at <b>os.path.abspath("uploads/input_file")</b>. Output dataframe should be a <u>pickle</u> file located at <b>os.path.abspath("uploads/output_file")</b>.
-        </p>
-        <form method="POST" action="{{ url_for('bias.home_bias') }}" enctype="multipart/form-data">
-          <div class="form-group row mb-2 mx-auto">
-	    <label for="dataset_custom" class="col-sm-2 col-form-label col-form-label-sm font-weight-bold">Dataset:</label>
-            <div class="col-sm-10">
-              <input type="file" class="form-control form-control-sm" name="dataset_custom" id="dataset_custom"><br> 
-            </div><br><br>
-            <label for="notebook" class="col-sm-2 col-form-label col-form-label-sm font-weight-bold">Notebook:</label>
-            <div class="col-sm-10">
-              <input type="file" class="form-control form-control-sm" name="notebook" id="notebook">
-            </div><br><br>
-            <label for="artifacts" class="col-sm-2 col-form-label col-form-label-sm font-weight-bold">Artifacts:</label>
-            <div class="col-sm-10">
-              <input type="file" class="form-control form-control-sm" name="artifacts" id="artifacts" multiple>
-            </div><br>
+      <div class="card-body d-flex flex-column justify-content-between" style="min-height: 250px;">
+        <div>
+          <div class="card-text">
+            <p>You can upload here a raw dataset, a preprocessing pipeline in the form of a jupyter notebook (packages you use must already be installed), and some artifacts.</p>
+            <p>Please note that if you use this customization tool, <u>the original dataframe will be overridden</u>.</p>
+            <p>Notebooks input can be accessed at <strong class="text-white">os.path.abspath("uploads/input_file")</strong>.</p>
+            <p>Output dataframe should be a <u>pickle</u> file located at <strong class="text-white">os.path.abspath("uploads/output_file")</strong>.</p>
+            <form method="POST" action="{{ url_for('bias.home_bias') }}" enctype="multipart/form-data">
+              <div class="form-group row mb-2 mx-auto">
+                <label for="dataset_custom" class="col-form-label col-form-label-sm rajdhani-bold ps-0 text-miraiblu">Dataset:</label>
+                <input type="file" class="form-control form-control-sm mb-2 rajdhani-bold" name="dataset_custom" id="dataset_custom"><br> 
+                
+                <label for="notebook" class="col-form-label col-form-label-sm rajdhani-bold ps-0 text-miraiblu">Notebook:</label>
+                <input type="file" class="form-control form-control-sm mb-2 rajdhani-bold" name="notebook" id="notebook">
+
+                <label for="artifacts" class="col-form-label col-form-label-sm rajdhani-bold ps-0 text-miraiblu">Artifacts:</label>
+                <input type="file" class="form-control form-control-sm mb-3 rajdhani-bold" name="artifacts" id="artifacts" multiple>
+
+              </div>
+              <button type="submit" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" id="upload_preprocess">Upload</button>
+            </form>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-secondary" id="upload_preprocess">Upload</button>
-        </div>
-        </form>
+      </div>
+      <div class="card-arrow">
+        <div class="card-arrow-top-left"></div>
+        <div class="card-arrow-top-right"></div>
+        <div class="card-arrow-bottom-left"></div>
+        <div class="card-arrow-bottom-right"></div>
+      </div>
     </div>
+  </div>
+  <div class="col-xl-8 themed-grid-col mt-xl-0 mt-4">
+    <div class="card card-mirai animated">
+      <div class="card-header text-uppercase">
+        Upload Dataframe
+      </div>
+      <div class="card-body d-flex flex-column justify-content-between">
+        <div>
+          <p class="card-text">Upload the Dataframe to analyze.</p>
+          <form method="POST" action="{{ url_for('bias.home_bias') }}" enctype="multipart/form-data">
+              <div class="form-group row mb-2 mx-auto">
+                <label for="dataset" class="col-form-label col-form-label-sm rajdhani-bold ps-0 text-miraiblu">Dataframe:</label>
+                <input type="file" class="form-control form-control-sm mb-3 rajdhani-bold" name="dataset" id="dataset">
+              </div>
+              <button type="submit" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100">Upload</button>
+          </form>
+        </div>
+      </div>
+      <div class="card-arrow">
+        <div class="card-arrow-top-left"></div>
+        <div class="card-arrow-top-right"></div>
+        <div class="card-arrow-bottom-left"></div>
+        <div class="card-arrow-bottom-right"></div>
+      </div>
+    </div>
+
+
+    <div class="card card-mirai animated mt-4">
+      <div class="card-header text-uppercase">
+        Currently uploaded dataframe
+      </div>
+      <div class="card-body d-flex flex-column justify-content-between {{ status }}">
+        <div>
+          <p class="card-text">{{ df_used }}</p>
+          <a href="/bias?reset=True" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">Reset</a>
+        </div>
+      </div>
+      <div class="card-arrow">
+        <div class="card-arrow-top-left"></div>
+        <div class="card-arrow-top-right"></div>
+        <div class="card-arrow-bottom-left"></div>
+        <div class="card-arrow-bottom-right"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 {% endblock %}

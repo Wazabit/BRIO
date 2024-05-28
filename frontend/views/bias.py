@@ -54,7 +54,7 @@ def home_bias():
                     current_app.config['UPLOAD_FOLDER'], dict_vars['dataset']))
                 used_df = dict_vars['dataset']
                 success_status = "text-success"
-                flash('Dataframe uploaded successfully!', 'success')
+                flash('Dataframe successfully uploaded!', 'success')
             else:
                 flash('Unsupported format for dataframe.', 'danger')
                 return redirect('/bias')

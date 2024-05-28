@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block title %}
-BRIO - Bias Assessment
+MIRAI Toolbox - Under Construction
 {% endblock %}
 
 
@@ -26,11 +26,11 @@ BRIO - Bias Assessment
           <a class="nav-link " aria-current="page" href="../">HOME</a>
         </li>
         <li class="nav-item pe-2 dropdown">
-          <a class="nav-link dropdown-toggle active" href="#" id="brioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="brioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             BRIO
           </a>
           <ul class="dropdown-menu dropdown-menu-dark shadow" aria-labelledby="brioDropdown">
-            <li><a class="dropdown-item active" href="/bias">BIAS</a></li>
+            <li><a class="dropdown-item" href="/bias">BIAS</a></li>
             <li><a class="dropdown-item" href="/risk">RISK</a></li>
             <li><a class="dropdown-item" href="/opacity">OPACITY</a></li>
             <li><hr class="dropdown-divider"></li>
@@ -52,22 +52,37 @@ BRIO - Bias Assessment
 
 {% block content %}
 
-<div class="container pt-5">
-  <div class="row mb-3">
-    <div class="col themed-grid-col">
-      <div class="row">
-        <div class="py-3 my-2">
-          <h1 class="text-white text-start rajdhani-bold top-logo">BIAS ASSESSMENT</h1>
-        </div>
-      </div> 
-      {% include 'bias/upload_home.html' %}
-    </div>
-  </div>
+<div class="container-fluid underconstruction pt-5">
+  <div class="row">
+    <div class="col">
+      <div class="container">
+        <div class="row mb-3">
+          <div class="py-3 my-2">
+            <h1 class="text-white text-start rajdhani-bold top-logo">UNDER CONSTRUCTION</h1>
+          </div>
+          <div class="col-xl-4 themed-grid-col">
+            <div class="row">
+              <div class="col">
+                <div class="card card-mirai card-mirai-dark animated">
+                  <div class="card-body">
+                    <p>Sorry for the mess!</p>
+                    <p>We know it’s taking a while but sit tight and we’ll be with you soon.</p>
+                    <p>You’ll be able to use our new tool in the next days. In the meantime, check out our dashboard.</p>
+                    <a href="../" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">Back</button></a>
+                  </div>
 
-  <div class="row mb-3">
-    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center my-3">
-      <a href="/bias/freqvsfreq" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100 animated" role="button">Freq vs freq analysis</a>
-      <a href="/bias/freqvsref" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100 animated" role="button">Freq vs ref analysis</a>
+                  <div class="card-arrow">
+                    <div class="card-arrow-top-left"></div>
+                    <div class="card-arrow-top-right"></div>
+                    <div class="card-arrow-bottom-left"></div>
+                    <div class="card-arrow-bottom-right"></div>
+                  </div>
+                </div>
+              </div>
+            </div> 
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -1,9 +1,33 @@
-.sen-reg {
-  font-family: "Sen", sans-serif;
-  font-optical-sizing: auto;
+.rajdhani-light {
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.rajdhani-regular {
+  font-family: "Rajdhani", sans-serif;
   font-weight: 400;
   font-style: normal;
 }
+
+.rajdhani-medium {
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.rajdhani-semibold {
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.rajdhani-bold {
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
 
 html:before {
   content: "";
@@ -15,11 +39,6 @@ html:before {
   z-index: -5;
   background: rgb(6,33,51);
   background: linear-gradient(0deg, rgba(6,33,51,1) 0%, rgba(10,59,90,0.85) 100%);
-
-  animation-name: bg_appear;
-  animation-duration: 1s;  
-  animation-timing-function: ease-in-out;
-  animation-fill-mode: both;
 }
 
 html:after {
@@ -36,14 +55,7 @@ html:after {
   background-attachment: initial;
   height: 100%;
   background-size: cover;
-
-  animation-name: bg_arrows;
-  animation-duration: 1s;  
-  animation-timing-function: ease-in-out;
-  animation-fill-mode: both;
-  animation-delay: .3s;
 }
-
 body:before {
   content: "";
   position: fixed;
@@ -59,17 +71,19 @@ body:before {
   z-index: -5;
 }
 
+.text-mirai, .text-warning{
+  color: #D91EBA!important;
+}
+.text-miraiblu, .text-success{
+  color: #13DCF2!important;
+}
+
 .navbar.navbar-mirai {
   margin-bottom: 0;
   border-radius: 0;
   background-color: #0A3B5A;
   padding-top: .25rem;
   padding-bottom: .25rem;
-
-  animation-name: navbar;
-  animation-duration: .3s;  
-  animation-timing-function: ease-in-out;
-  animation-fill-mode: both;
 }
 .navbar.navbar-mirai .navbar-brand.brand-mirai{
   font-size: initial;
@@ -84,16 +98,21 @@ body:before {
 
 .navbar.navbar-mirai .dropdown-menu-dark {
   color: #D91EBA;
-  background-color: rgba(0, 0, 0, .35);
+  background-color: rgba(0, 0, 0, .8);
   border-left: 1px solid;
   border-right: 1px solid;
   border-bottom: 1px solid;
 }
+
+.dropdown-menu-dark .dropdown-item.active, .dropdown-menu-dark .dropdown-item:active {
+    background-color: #D91EBA;
+}
+
 .dropdown-menu-dark .dropdown-divider{
   opacity: 1;
 }
 .top-logo{
-  animation-name: top_logo;
+  animation-name: from_left;
   animation-duration: .5s;  
   animation-timing-function: ease-in-out;
   animation-fill-mode: both;
@@ -112,12 +131,9 @@ body:before {
   border-color: #D91EBA;
   border-radius: 0;
   color: rgba(255,255,255,.70);
-
-  animation-name: card_frame;
-  animation-duration: 1.5s;  
-  animation-timing-function: ease-in-out;
-  animation-fill-mode: both;
-  animation-delay: .7s;
+}
+.card.card-mirai.card-mirai-dark{
+  background-color: rgba(0, 0, 0, .75);  
 }
 .card .card-arrow {
   position: absolute;
@@ -161,29 +177,12 @@ body:before {
   position: absolute;
   border-color: #13DCF2;
 }
+
 .card.card-mirai .card-header {
   border-bottom: 1px solid #D91EBA;
   color: #19f0f0;
-
-  animation-name: card_text;
-  animation-duration: 1s;  
-  animation-timing-function: ease-in-out;
-  animation-fill-mode: both;
-  animation-delay: 1.6s;
 }
 
-
-.card.card-mirai .card-title {
-  color: #D91EBA;
-}
-
-.card.card-mirai .card-body {
-  animation-name: card_text;
-  animation-duration: 1s;  
-  animation-timing-function: ease-in-out;
-  animation-fill-mode: both;
-  animation-delay: 2s;
-}
 .btn-outline-primary.btn-mirai{
     color: #13DCF2;
     border-color: #13DCF2;
@@ -193,6 +192,27 @@ body:before {
     background-color: #13DCF2;
     border-color: #13DCF2;
 }
+
+
+input[type="file"]{
+  background-color: transparent;
+  border: 1px solid #13DCF2;
+  color: #13DCF2;
+}
+
+input[type="file"]::file-selector-button {
+  border: 1px solid #13DCF2;
+  color: #13DCF2;
+  background-color: transparent;
+  padding: .2em .4em;
+}
+
+input[type="file"]:focus, input[type="file"]:hover::file-selector-button, input[type="file"]:hover::file-selector-button {
+  background-color: #13DCF2!important;
+  border: 1px solid #13DCF2;
+  color: #0B3B59;
+}
+
 /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
 .row.content {height: 450px}
 
@@ -208,10 +228,93 @@ footer {
   padding: 15px;
 }
 
-@media screen and (max-width: 767px) {
+.flashes{
+  position: absolute;
+  bottom: 0;
+
+  animation-name: from_left;
+  animation-duration: .5s;  
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+  animation-delay: .5s;
+}
+
+.alert-success {
+  color: #13DCF2;
+  background-color: rgba(0, 0, 0, .6);
+  border-color: #13DCF2;
+}
+
+.underconstruction{
+  background-image: url('../img/underconstruction.png');
+  background-size: cover;
+  height: 100vh;
+
+  animation-name: appear;
+  animation-duration: 1s;  
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+}
+/* ANIMATIONS */
+
+html.animated:before{
+  animation-name: appear;
+  animation-duration: 1s;  
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+}
+html.animated:after{
+  animation-name: bg_arrows;
+  animation-duration: 1s;  
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+  animation-delay: .3s;
+}
+
+.navbar.navbar-mirai.animated{
+  animation-name: navbar;
+  animation-duration: .3s;  
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+}
+
+.card.card-mirai.animated {
+  animation-name: card_frame;
+  animation-duration: 1.5s;  
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+  animation-delay: .7s;
+}
+
+.card.card-mirai.animated .card-header {
+  animation-name: appear;
+  animation-duration: 1s;  
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+  animation-delay: 1.6s;
+}
+
+.card.card-mirai.animated .card-body {
+  animation-name: appear;
+  animation-duration: 1s;  
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+  animation-delay: 2s;
+}
+
+.btn.animated{
+  animation-name: appear;
+  animation-duration: 1s;  
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+  animation-delay: 2s;
+}
+
+@media screen and (max-width: 992px) {
   .sidenav {
     height: auto;
     padding: 15px;
   }
   .row.content {height:auto;} 
+
 }

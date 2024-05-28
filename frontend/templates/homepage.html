@@ -7,12 +7,12 @@
 {% endblock %}
 
 {% block title %}
-BRIO X Alkemy homepage
+MIRAI Toolbox
 {% endblock %}
 
 
-{% block content %}
-<nav class="navbar navbar-dark navbar-expand-lg navbar-mirai shadow fixed-top">
+{% block header %}
+<nav class="navbar navbar-dark navbar-expand-lg navbar-mirai shadow fixed-top animated">
   <div class="container-fluid">
     <a class="navbar-brand brand-mirai" href="#">
       <img class="logo" src="{{ url_for('static', filename='img/logo.svg') }}">
@@ -30,10 +30,11 @@ BRIO X Alkemy homepage
             BRIO
           </a>
           <ul class="dropdown-menu dropdown-menu-dark shadow" aria-labelledby="brioDropdown">
-            <li class="dropdown">
-              <a class="dropdown-item" href="#">BRIO ONE</a></li>
-            <li><a class="dropdown-item" href="https://github.com/DLBD-Department/BRIO_x_Alkemy" target="_blank">BRIOxALKEMY</a></li>
+            <li><a class="dropdown-item" href="/bias">BIAS</a></li>
+            <li><a class="dropdown-item" href="/risk">RISK</a></li>
+            <li><a class="dropdown-item" href="/opacity">OPACITY</a></li>
             <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="https://github.com/DLBD-Department/BRIO_x_Alkemy" target="_blank">BRIOxALKEMY</a></li>
             <li><a class="dropdown-item" href="https://sites.unimi.it/brio/" target="_blank">BRIO Project</a></li>
           </ul>
         </li>
@@ -43,11 +44,13 @@ BRIO X Alkemy homepage
       </ul>
     </div>
   </div>
-  <div class="corner">
+  <div class="corner d-none d-lg-block">
     <img src="{{ url_for('static', filename='img/corner.svg') }}">
   </div>
 </nav>
+{% endblock %}
 
+{% block content %}
 <div class="container-fluid pt-5">
   <div class="row mb-3">
     <div class="col-lg-3 themed-grid-col"></div>
@@ -60,7 +63,7 @@ BRIO X Alkemy homepage
 
       <div class="row">
         <div class="col">
-          <div class="card card-mirai">
+          <div class="card card-mirai animated">
             <div class="card-body">
               <p>AI systems have the power to transform industries and enhance lives, but they  also pose significant challenges. From biased algorithms that perpetuate social inequities to opaque decision-making processes that obscure accountability, the risks are substantial. The MIRAI Toolbox is designed to help you:</p>
               <ul>
@@ -82,18 +85,18 @@ BRIO X Alkemy homepage
 
       <div class="row ">
         <div class="col-xl-8 themed-grid-col mt-4">
-          <div class="card card-mirai">
+          <div class="card card-mirai animated">
             <div class="card-header">
               BRIO ONE
             </div>
             <div class="card-body d-flex flex-column justify-content-between" style="min-height: 250px;">
               <div>
-                <h5 class="card-title">The All-In-One tool for Bias, Risk and Opacity</h5>
+                <h5 class="card-title text-mirai rajdhani-bold">The All-In-One tool for Bias, Risk and Opacity</h5>
                 <p class="card-text">Brio One is our online tool you can use to assess Bias, Risk and Opacity in your Machine Learning models.</p>
               </div>
               <div class="d-grid gap-2">
-                <a href="/bias" class="btn btn-outline-primary btn-mirai" role="button">Bias Assessment</button></a>
-                <a href="/opacity" class="btn btn-outline-primary btn-mirai" role="button">Opacity Assessment</button></a>
+                <a href="/bias" class="btn btn-outline-primary btn-mirai rajdhani-bold" role="button">Bias Assessment</button></a>
+                <a href="/opacity" class="btn btn-outline-primary btn-mirai rajdhani-bold" role="button">Opacity Assessment</button></a>
               </div>
             </div>
             <div class="card-arrow">
@@ -105,17 +108,17 @@ BRIO X Alkemy homepage
           </div>
         </div>
         <div class="col-xl-4 themed-grid-col mt-4">
-          <div class="card card-mirai">
+          <div class="card card-mirai animated">
             <div class="card-header">
               BRIOxALKEMY
             </div>
             <div class="card-body d-flex flex-column justify-content-between" style="min-height: 250px;">
               <div>
-                <h5 class="card-title">A bias and risk detection tool for ML models</h5>
+                <h5 class="card-title text-mirai rajdhani-bold">A bias and risk detection tool for ML models</h5>
                 <p class="card-text">Developed within the scope of the industrial partnership between BRIO and Alkemy.</p>
               </div>
               <div class="d-grid gap-2">
-                <a href="https://github.com/DLBD-Department/BRIO_x_Alkemy" class="btn btn-outline-primary btn-mirai" role="button" target="_blank">Git Repo</a>
+                <a href="https://github.com/DLBD-Department/BRIO_x_Alkemy" class="btn btn-outline-primary btn-mirai rajdhani-bold" role="button" target="_blank">Git Repo</a>
               </div>
             </div>
             <div class="card-arrow">

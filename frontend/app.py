@@ -2,7 +2,7 @@ from flask import Flask, render_template
 from flask_cors import CORS
 import os
 
-from frontend.views import bias, opacity
+from frontend.views import bias, opacity, risk
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -15,6 +15,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.register_blueprint(bias.bp)
 app.register_blueprint(opacity.bp)
+app.register_blueprint(risk.bp)
 
 
 @app.route('/', methods=['GET'])
