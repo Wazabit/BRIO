@@ -1,60 +1,136 @@
-{% extends 'base.html' %}
-
-{% block head %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-{% endblock %}
+{% extends 'bias/base.html' %}
 
 {% block title %}
-Results
+BRIO - Bias Assessment - FreqvsFreq - Results
 {% endblock %}
 
 {% block content %}
-<div class="container my-5 mx-5 shadow-lg rounded-3">
-  <div class="row mx-3 pe-lg-0 pt-lg-5">
-    <div class="col border border-5 mx-4">
-      <h2 class="display-6 fw-bold text-center">Overall Result</h2>
-      <p class="text-center" style="font-size: 24px;">
-      (Distance, distance&lt;&#61;threshold, threshold, standard deviation)
-      </p>
-      <p class="text-center" style="font-size: 24px;">
-      ({{ results1[0] }}, <b><span {% if results1[1] %}class="green-text"{% else %}class="red-text"{% endif %}>{{ results1[1] }}</span></b> , {{ results1[2] }}, {{ results1[3] }})
-      </p>
-    </div>
-  </div>
-  <div class="row pb-4 mx-3 pe-lg-0 pt-lg-5">
-    <div class="col border border-5 mx-1">
-      <h2 class="display-6 red-text fw-bold text-center">Violations</h2>
-      <p style="font-size: 18px;">
-      Condition: (num observations, distance, distance&lt;&#61;threshold, threshold, standard deviation)
-      </p>
-      {% for key, value in violations.items() %}
-        {% if violations|length != 1 %}
-          <div style="color: rgba(255, {{ 160*((loop.index - 1) / (violations|length - 1)) }}, 0, 1);">
-            <a href='/bias/freqvsfreq/results/{{ key }}'>{{ key }}</a> : {{ value }}<br>
-          </div>
-        {% endif %}
-      {% endfor %} 
-    </div>
-    <div class="col border border-5 mx-1">
-      <h2 class="display-6 fw-bold text-center">Conditioned Results  <button class="btn btn-primary btn-export" id="export-btn">Export CSV</button></h2>
+<div class="container pt-5">
+  <div class="row mb-3">
+    <div class="col themed-grid-col">
       <div class="row">
-        <div class="col text-center">
-          <h4 class="fw-bold">Condition applied</h4>
+        <div class="py-3 my-2">
+          <h1 class="text-white text-start rajdhani-bold top-logo animated text-uppercase">Overall Result</h1>
         </div>
-        <div class="col text-center">
-          <h4 class="fw-bold">Result</h4>
+      </div> 
+      <div class="row">
+        <div class="col">
+          <div class="card card-mirai animated">
+            <div class="card-body row">
+              <div class="col-lg-3">
+                <h5 class="card-title text-mirai rajdhani-bold">Distance</h5>
+                <p><strong class="text-white">{{ results1[0] }}</strong></p>
+              </div>
+              <div class="col-lg-3">
+                <h5 class="card-title text-mirai rajdhani-bold">Distance ≤ Threshold</h5>
+                <p><strong {% if results1[1] %}class="green-text"{% else %}class="red-text"{% endif %}>{{ results1[1] }}</strong></p>
+              </div>
+              <div class="col-lg-3">
+                <h5 class="card-title text-mirai rajdhani-bold">Threshold</h5>
+                <p><strong class="text-white">{{ results1[2] }}</strong></p>
+              </div>
+              <div class="col-lg-3">
+                <h5 class="card-title text-mirai rajdhani-bold">Standard deviation</h5>
+                <p><strong class="text-white">{{ results1[3] }}</strong></p>
+              </div>
+            </div>
+
+            <div class="card-arrow">
+              <div class="card-arrow-top-left"></div>
+              <div class="card-arrow-top-right"></div>
+              <div class="card-arrow-bottom-left"></div>
+              <div class="card-arrow-bottom-right"></div>
+            </div>
+          </div>
         </div>
       </div>
-      {% for key, value in results2.items() %}
-        <div class="row">
-          <div class="col text-center">
-            {{ key }}
-          </div>
-          <div class="col text-center">
-            ({{ value[0] }}, {{ value[1] }}, <span {% if value[2] == True %}class="green-text"{% elif value[2] == False %}class="red-text"{% endif %}>{{ value[2] }}</span>, {{ value[3] }})
+      <div class="row mt-3">
+        <div class="col-lg-6">
+          <div class="card card-mirai animated">
+            <div class="card-header text-uppercase">
+              Violations
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <p class="text-white">
+                    <strong>Condition:</strong> (num observations, distance, distance ≤ threshold, threshold, standard deviation)
+                  </p>
+                </div>
+              </div>
+              <div class="row" style="max-height: 400px; overflow-x: hidden; overflow-y: scroll;">
+                <div class="col">
+                  {% for key, value in violations.items() %}
+                    {% if violations|length != 1 %}
+                      <p style="color: rgba(255, {{ 160*((loop.index - 1) / (violations|length - 1)) }}, 0, 1);" class="m-0">
+                        <strong><a href='/bias/freqvsfreq/results/{{ key }}' style="color:inherit;">{{ key }}</a> :</strong> {{ value }}
+                      </p>
+                    {% endif %}
+                  {% endfor %} 
+                </div>
+              </div>
+            </div>
+
+            <div class="card-arrow">
+              <div class="card-arrow-top-left"></div>
+              <div class="card-arrow-top-right"></div>
+              <div class="card-arrow-bottom-left"></div>
+              <div class="card-arrow-bottom-right"></div>
+            </div>
           </div>
         </div>
-      {% endfor %}
+
+
+        <div class="col-lg-6">
+          <div class="card card-mirai animated">
+            <div class="card-header text-uppercase">
+              Conditioned Results
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h4 class="card-title text-mirai rajdhani-bold">Condition applied</h4>
+                </div>
+                <div class="col">
+                  <h4 class="card-title text-mirai rajdhani-bold">Result</h4>
+                </div>
+              </div>
+              <div class="row" style="max-height: 400px; overflow-x: hidden; overflow-y: scroll;">
+                <div class="col">
+                  {% for key, value in results2.items() %}
+                    <div class="row">
+                      <div class="col">
+                        {{ key }}
+                      </div>
+                      <div class="col">
+                        ({{ value[0] }}, {{ value[1] }}, <span {% if value[2] == True %}class="green-text"{% elif value[2] == False %}class="red-text"{% endif %}>{{ value[2] }}</span>, {{ value[3] }})
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+
+            <div class="card-arrow">
+              <div class="card-arrow-top-left"></div>
+              <div class="card-arrow-top-right"></div>
+              <div class="card-arrow-bottom-left"></div>
+              <div class="card-arrow-bottom-right"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row {{ d_params }}">
+        <div class="col">
+          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center my-3">
+              <a href="/bias/freqvsfreq" class="btn btn-outline-primary btn-mirai rajdhani-bold w-50 animated" role="button">Back</a>
+              <button class="btn btn-outline-primary btn-mirai rajdhani-bold w-50 animated" id="export-btn">Export CSV</button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

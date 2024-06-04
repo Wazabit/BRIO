@@ -18,6 +18,7 @@ dict_vars = {}
 used_df = ""
 comp_thr = ""
 success_status = "text-warning"
+animation_status = "animated"
 ips = check_output(['hostname', '-I'])
 localhost_ip = ips.decode().split(" ")[0]
 print(f"localhost_ip={localhost_ip}", flush=True)
@@ -34,10 +35,12 @@ if os.system("test -f /.dockerenv") == 0:
 def home_bias():
     global used_df
     global success_status
-    global dict_vars
+    global animation_status
+    global dict_vars  
     if request.method == 'GET' and request.args.get('reset'):
         used_df = ""
         success_status = "text-warning"
+        animation_status = ""
         dict_vars = {}
         session.clear()
     if request.method == 'POST':
@@ -45,6 +48,7 @@ def home_bias():
         uploads = [request.files[x].filename for x in keys if x != '']
         if all(x == '' for x in uploads):
             flash('No files uploaded, try again!', 'danger')
+            animation_status = ""
             return redirect('/bias')
         if 'dataset' in list(request.files.keys()):
             dataframe_file = request.files['dataset']
@@ -56,7 +60,8 @@ def home_bias():
                 success_status = "text-success"
                 flash('Dataframe successfully uploaded!', 'success')
             else:
-                flash('Unsupported format for dataframe.', 'danger')
+                flash('Unsupported dataframe format.', 'danger')
+                animation_status = ""
                 return redirect('/bias')
         if ('dataset_custom' and 'notebook') in list(request.files.keys()):
             dict_vars['dataset_custom'] = request.files['dataset_custom'].filename
@@ -73,7 +78,8 @@ def home_bias():
                 dict_vars = {}
                 session.clear()
                 success_status = "text-warning"
-                flash('Unsupported format for notebook or dataset. Supported types for dataset are .pkl, .csv; for notebook supported types are .py, .ipynb', 'danger')
+                flash('Unsupported notebook or dataset format. Dataset supported types: .pkl, .csv; notebook supported types: .py, .ipynb', 'danger')
+                animation_status = ""
                 return redirect('/bias')
             if request.files['artifacts'].filename != '':
                 handle_multiupload(request, 'artifacts',
@@ -90,6 +96,7 @@ def home_bias():
                     subprocess.run(["python3", os.path.join(
                         current_app.config['UPLOAD_FOLDER'], dict_vars['notebook'])])
             flash(
-                'Custom preprocessing pipeline uploaded and processed successfully!', 'success')
+                'Custom preprocessing pipeline successfully uploaded and processed!', 'success')
+        animation_status = ""
         return redirect('/bias')
-    return render_template('home.html', df_used=used_df, status=success_status)
+    return render_template('home.html', df_used=used_df, status=success_status, animated=animation_status)

@@ -1,53 +1,7 @@
 {% extends 'bias/base.html' %}
 
-{% block head %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/waz.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/animations.css') }}">
-{% endblock %}
-
 {% block title %}
 BRIO - Bias Assessment
-{% endblock %}
-
-
-{% block header %}
-<nav class="navbar navbar-dark navbar-expand-lg navbar-mirai shadow fixed-top">
-  <div class="container-fluid">
-    <a class="navbar-brand brand-mirai" href="../">
-      <img class="logo" src="{{ url_for('static', filename='img/logo.svg') }}">
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item pe-2">
-          <a class="nav-link " aria-current="page" href="../">HOME</a>
-        </li>
-        <li class="nav-item pe-2 dropdown">
-          <a class="nav-link dropdown-toggle active" href="#" id="brioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            BRIO
-          </a>
-          <ul class="dropdown-menu dropdown-menu-dark shadow" aria-labelledby="brioDropdown">
-            <li><a class="dropdown-item active" href="/bias">BIAS</a></li>
-            <li><a class="dropdown-item" href="/risk">RISK</a></li>
-            <li><a class="dropdown-item" href="/opacity">OPACITY</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="https://github.com/DLBD-Department/BRIO_x_Alkemy" target="_blank">BRIOxALKEMY</a></li>
-            <li><a class="dropdown-item" href="https://sites.unimi.it/brio/" target="_blank">BRIO Project</a></li>
-          </ul>
-        </li>
-        <li class="nav-item pe-2">
-          <a class="nav-link" href="#">ACCOUNT</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-  <div class="corner d-none d-lg-block">
-    <img src="{{ url_for('static', filename='img/corner.svg') }}">
-  </div>
-</nav>
 {% endblock %}
 
 {% block content %}
@@ -57,7 +11,7 @@ BRIO - Bias Assessment
     <div class="col themed-grid-col">
       <div class="row">
         <div class="py-3 my-2">
-          <h1 class="text-white text-start rajdhani-bold top-logo">BIAS ASSESSMENT</h1>
+          <h1 class="text-white text-start rajdhani-bold top-logo {{ animated }}">BIAS ASSESSMENT</h1>
         </div>
       </div> 
       {% include 'bias/upload_home.html' %}
@@ -66,15 +20,12 @@ BRIO - Bias Assessment
 
   <div class="row mb-3">
     <div class="d-grid gap-2 d-sm-flex justify-content-sm-center my-3">
-      <a href="/bias/freqvsfreq" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100 animated" role="button">Freq vs freq analysis</a>
-      <a href="/bias/freqvsref" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100 animated" role="button">Freq vs ref analysis</a>
+      <a href="/bias/freqvsfreq" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100 {{ animated }}" role="button">Freq vs freq analysis</a>
+      <a href="/bias/freqvsref" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100 {{ animated }}" role="button">Freq vs ref analysis</a>
     </div>
   </div>
 </div>
 
 {% endblock %}
 
-{% block footer %}
-
-{% endblock %}
 

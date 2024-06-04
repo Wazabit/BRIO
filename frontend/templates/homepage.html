@@ -1,11 +1,5 @@
 {% extends 'base.html' %}
 
-{% block head %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/waz.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/animations.css') }}">
-{% endblock %}
-
 {% block title %}
 MIRAI Toolbox
 {% endblock %}
@@ -57,7 +51,7 @@ MIRAI Toolbox
     <div class="col-lg-6 themed-grid-col">
       <div class="row">
         <div class="py-3 my-2 text-center">
-          <img class="img-fluid top-logo" src="{{ url_for('static', filename='img/logo_big.svg') }}">
+          <img class="img-fluid top-logo animated" src="{{ url_for('static', filename='img/logo_big.svg') }}">
         </div>
       </div> 
 

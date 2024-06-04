@@ -1,10 +1,5 @@
 {% extends 'bias/base.html' %}
 
-{% block head %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/waz.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/animations.css') }}">
-{% endblock %}
 
 {% block title %}
 MIRAI Toolbox - Under Construction
@@ -14,7 +9,7 @@ MIRAI Toolbox - Under Construction
 {% block header %}
 <nav class="navbar navbar-dark navbar-expand-lg navbar-mirai shadow fixed-top">
   <div class="container-fluid">
-    <a class="navbar-brand brand-mirai" href="../">
+    <a class="navbar-brand brand-mirai" href="/">
       <img class="logo" src="{{ url_for('static', filename='img/logo.svg') }}">
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,7 +18,7 @@ MIRAI Toolbox - Under Construction
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item pe-2">
-          <a class="nav-link " aria-current="page" href="../">HOME</a>
+          <a class="nav-link " aria-current="page" href="/">HOME</a>
         </li>
         <li class="nav-item pe-2 dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="brioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -58,7 +53,7 @@ MIRAI Toolbox - Under Construction
       <div class="container">
         <div class="row mb-3">
           <div class="py-3 my-2">
-            <h1 class="text-white text-start rajdhani-bold top-logo">UNDER CONSTRUCTION</h1>
+            <h1 class="text-white text-start rajdhani-bold top-logo animated">UNDER CONSTRUCTION</h1>
           </div>
           <div class="col-xl-4 themed-grid-col">
             <div class="row">
@@ -68,7 +63,7 @@ MIRAI Toolbox - Under Construction
                     <p>Sorry for the mess!</p>
                     <p>We know it’s taking a while but sit tight and we’ll be with you soon.</p>
                     <p>You’ll be able to use our new tool in the next days. In the meantime, check out our dashboard.</p>
-                    <a href="../" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">Back</button></a>
+                    <a href="/" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">Back</button></a>
                   </div>
 
                   <div class="card-arrow">

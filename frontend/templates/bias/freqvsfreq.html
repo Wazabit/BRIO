@@ -1,22 +1,111 @@
-{% extends 'base.html' %}
-
-{% block head %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-{% endblock %}
+{% extends 'bias/home.html' %}
 
 {% block title %}
-FreqvsFreq
+BRIO - Bias Assessment - FreqvsFreq
 {% endblock %}
 
 {% block content %}
-<div class="px-4 py-5 my-2 text-center">
-	<h1 class="display-5 fw-bold text-body-emphasis">Freq vs Freq Analysis</h1>
-	<div class="col-lg-6 mx-auto">
-	<p class="lead mb-4">Check how much the predictions for the target variable differ with respect to the categories of a "root variable", overall and conditioned to the categories of other selected predictors. <br>
-    Using the max as aggregating function, you are checking the "worst case scenario".
-    Using the min as aggregating function, you are checking the "best case scenario".</p>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col themed-grid-col">
+      <div class="row">
+        <div class="py-3 my-2">
+          <h1 class="text-white text-start rajdhani-bold top-logo {{ animated }} text-uppercase">Freq vs Freq Analysis</h1>
+        </div>
+      </div> 
+      <div class="row">
+        <div class="col">
+          <div class="card card-mirai {{ animated }}">
+            <div class="card-body">
+              <p>Check how much the predictions for the target variable differ with respect to the categories of a "root variable", overall and conditioned to the categories of other selected predictors.</p>
+              <ul class="mb-0">
+                <li>Using the <strong class="text-white">max</strong> as aggregating function, you are checking the <strong class="text-white">"worst case scenario"</strong>.</li>
+                <li>Using the <strong class="text-white">min</strong> as aggregating function, you are checking the <strong class="text-white">"best case scenario"</strong>.</li>
+              </ul>
+            </div>
+            <div class="card-arrow">
+              <div class="card-arrow-top-left"></div>
+              <div class="card-arrow-top-right"></div>
+              <div class="card-arrow-bottom-left"></div>
+              <div class="card-arrow-bottom-right"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% include 'bias/upload_freqvsfreq.html' %}
+  <div class="row {{ d_params }}" id="selected_params">
+    <div class="col d-flex justify-content-center">
+      <div class="card card-mirai animated w-100" style="animation-delay: .3s">
+        <div class="card-header text-uppercase">
+          Selected Parameters:
+        </div>
+        <div class="card-body d-flex row">
+          <div class="col-md-4">
+            {% if 'distance' in sel_params %}
+              {% if sel_params['distance'] == 'JS' %}
+                <p><strong class="text-white">Distance:</strong> JSDivergence</p>
+              {% elif sel_params['distance'] == 'TVD' %}
+                <p><strong class="text-white">Distance:</strong> TotalVariation</p>
+              {% endif %}
+            {% endif %} 
+          </div>
+          <div class="col-md-4">
+            {% if 'agg_func' in sel_params %}
+              <p><strong class="text-white">Aggregation function:</strong> {{sel_params['agg_func']}}</p>
+            {% endif %}
+          </div>
+          <div class="col-md-4">
+            {% if sel_params['thr'] == None %}
+              <p><strong class="text-white">Automatic threshold:</strong> {{sel_params['a1_param']}}</p>
+            {% elif 'thr' in sel_params %}
+              <p><strong class="text-white">Threshold:</strong> {{sel_params['thr']}}</p>
+            {% endif %}
+          </div>
+          <div class="col-md-4">
+            {% if 'target_type' in sel_params %}
+              <p><strong class="text-white">Target variable type:</strong> {{sel_params['target_type']}}</p>
+            {% endif %}
+            {% if 'nbins' in sel_params %}
+              <p><strong class="text-white">Number of bins:</strong> {{sel_params['nbins']}}</p>
+            {% endif %}
+          </div>
+          <div class="col-md-4">
+            {% if 'predictions' in sel_params %}
+              <p><strong class="text-white">Predictions:</strong> {{sel_params['predictions']}}</p>
+            {% endif %}
+            {% if 'root_var' in sel_params %}
+              <p><strong class="text-white">Root variable:</strong> {{sel_params['root_var']}}</p>
+            {% endif %}
+          </div> 
+          <div class="col-md-4">
+            {% if 'cond_vars' in sel_params %}
+              <p><strong class="text-white">Conditioning variables:</strong> {{sel_params['cond_vars']}}</p>
+            {% endif %}          
+          </div>
+        </div>
+        <div class="card-arrow">
+          <div class="card-arrow-top-left"></div>
+          <div class="card-arrow-top-right"></div>
+          <div class="card-arrow-bottom-left"></div>
+          <div class="card-arrow-bottom-right"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row {{ d_params }}">
+    <div class="col">
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center my-3">
+          <a href="/bias/freqvsfreq/results" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100 animated" role="button" data-dismiss="modal">Run Analysis</a>
+      </div>
+    </div>
+  </div>
 </div>
-{% include 'bias/upload_freqvsfreq.html' %}
+
+
+
 {% endblock %}
 
 {% block scripts %}
@@ -58,7 +147,6 @@ function handle_agg_funcs() {
 function display_thr() {
   var auto_thr = document.getElementById("auto_thr")
   var params = document.getElementById("a1_params")
-  console.log(auto_thr.checked)
   if (auto_thr.checked == true) {
     params.classList.remove("d-none");
   } else {
@@ -89,10 +177,4 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 </script>
-{% endblock %}
-
-{% block footer %}
-    <div class="modal-footer">
-        <a href="/bias/freqvsfreq/results"><button type="button" class="btn btn-secondary btn-semixl" data-dismiss="modal">Run</button>
-    </div>
 {% endblock %}

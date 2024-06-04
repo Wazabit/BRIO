@@ -104,19 +104,43 @@ body:before {
   border-bottom: 1px solid;
 }
 
-.dropdown-menu-dark .dropdown-item.active, .dropdown-menu-dark .dropdown-item:active {
-    background-color: #D91EBA;
+.dropdown-menu-dark .dropdown-item.active, .dropdown-menu-dark .dropdown-item:active, .dropdown-menu .dropdown-item.active, .dropdown-menu .dropdown-item:active {
+  background-color: #D91EBA;
 }
 
-.dropdown-menu-dark .dropdown-divider{
+.dropdown-menu-dark .dropdown-divider, .dropdown-menu .dropdown-divider{
   opacity: 1;
 }
-.top-logo{
-  animation-name: from_left;
-  animation-duration: .5s;  
-  animation-timing-function: ease-in-out;
-  animation-fill-mode: both;
-  animation-delay: .5s;
+.bootstrap-select .dropdown-menu li a:hover{
+  color: #0B3B59;
+  background-color: #13DCF2;
+}
+
+.dropdown-menu{
+  color: #D91EBA;
+  background-color: rgba(0, 0, 0, .8);
+  border: 1px solid;
+}
+
+.dropdown-item {
+  color: #13DCF2;
+}
+.bootstrap-select>.dropdown-toggle.bs-placeholder, .bootstrap-select>.dropdown-toggle.bs-placeholder:active, .bootstrap-select>.dropdown-toggle.bs-placeholder:focus, .bootstrap-select>.dropdown-toggle.bs-placeholder:hover{
+  color: #13DCF2;
+}
+
+.bs-select-all.btn.btn-light, .bs-deselect-all.btn.btn-light {
+  background-color: transparent;
+  border: 1px solid #D91EBA;
+  color: #D91EBA;
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.bs-select-all.btn.btn-light:hover, .bs-deselect-all.btn.btn-light:hover {
+  color: #fff;
+  background-color: #D91EBA;
 }
 
 .corner{
@@ -184,15 +208,63 @@ body:before {
 }
 
 .btn-outline-primary.btn-mirai{
-    color: #13DCF2;
-    border-color: #13DCF2;
+  color: #13DCF2;
+  border-color: #13DCF2;
+  background-color: transparent;
 }
 .btn-outline-primary.btn-mirai:hover {
-    color: #0B3B59;
-    background-color: #13DCF2;
-    border-color: #13DCF2;
+  color: #0B3B59;
+  background-color: #13DCF2;
+  border-color: #13DCF2;
+}
+.btn-check:active+.btn-outline-primary, .btn-check:checked+.btn-outline-primary, .btn-outline-primary.active, .btn-outline-primary.dropdown-toggle.show, .btn-outline-primary:active {
+  background-color: #13DCF2;
+  border: 1px solid #13DCF2;
+  color: #0B3B59;
+}
+.btn-success{
+  background-color: transparent;
 }
 
+.popover {
+  background: rgba(0, 0, 0, .85);
+  border-color: #D91EBA;
+  color: #13DCF2;
+}
+.popover-header {
+  background: transparent;
+}
+.popover-body {
+  color: #13DCF2;
+  border-top: 1px solid #D91EBA;
+}
+.bs-popover-top .popover-arrow::before {
+  border-top-color: #D91EBA;
+}
+.bs-popover-top .popover-arrow::after {
+  border-top-color: rgba(0, 0, 0, .85);
+}
+
+.bs-popover-end .popover-arrow::before {
+  border-right-color: #D91EBA;
+}
+.bs-popover-end .popover-arrow::after {
+  border-right-color: rgba(0, 0, 0, .85);
+}
+
+.bs-popover-bottom .popover-arrow::before {
+  border-bottom-color: #D91EBA;
+}
+.bs-popover-bottom .popover-arrow::after {
+  border-bottom-color: rgba(0, 0, 0, .85);
+}
+
+.bs-popover-start .popover-arrow::before {
+  border-left-color: #D91EBA;
+}
+.bs-popover-start .popover-arrow::after {
+  border-left-color: rgba(0, 0, 0, .85);
+}
 
 input[type="file"]{
   background-color: transparent;
@@ -213,6 +285,13 @@ input[type="file"]:focus, input[type="file"]:hover::file-selector-button, input[
   color: #0B3B59;
 }
 
+textarea.form-control, textarea.form-control:focus, textarea.form-control:disabled, textarea.form-control[readonly]{
+  background-color: transparent;
+  border-color: #13DCF2;
+  color: #13DCF2;
+  resize: none;
+}
+
 /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
 .row.content {height: 450px}
 
@@ -230,9 +309,13 @@ footer {
 
 .flashes{
   position: absolute;
-  bottom: 0;
+  top: 65px;
+  right: 0;
+  padding-right: 2rem;
+  max-width: 50%;
+  z-index: 10;
 
-  animation-name: from_left;
+  animation-name: appear;
   animation-duration: .5s;  
   animation-timing-function: ease-in-out;
   animation-fill-mode: both;
@@ -245,6 +328,68 @@ footer {
   border-color: #13DCF2;
 }
 
+.alert-danger {
+  color: #D91EBA;
+  background-color: rgba(0, 0, 0, .6);
+  border-color: #D91EBA;
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 30px;
+  background: rgba(0, 0, 0, .35);
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+  color: #13DCF2;
+  border: 1px solid #13DCF2;
+  border-radius: 5px;
+}
+.slider:hover {
+  opacity: 1; 
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; 
+  appearance: none;
+  width: 30px; 
+  height: 30px; 
+  background: #13DCF2; 
+  cursor: pointer;
+  border-radius: 5px; 
+}
+.slider::-moz-range-thumb {
+  width: 30px; 
+  height: 30px; 
+  background: #13DCF2;
+  cursor: pointer; 
+  border-radius: 5px;
+}
+
+.number-mirai {
+  background: rgba(0, 0, 0, .35);
+  border: 1px solid #13DCF2;
+  border-radius: 5px;
+  color: #13DCF2;
+  text-align: center;
+  height: 30px;
+}
+.popup-container{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, .85);
+  z-index: 9999;
+}
 .underconstruction{
   background-image: url('../img/underconstruction.png');
   background-size: cover;
@@ -276,6 +421,14 @@ html.animated:after{
   animation-duration: .3s;  
   animation-timing-function: ease-in-out;
   animation-fill-mode: both;
+}
+
+.top-logo.animated{
+  animation-name: from_left;
+  animation-duration: .5s;  
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+  animation-delay: .5s;
 }
 
 .card.card-mirai.animated {
@@ -310,6 +463,13 @@ html.animated:after{
   animation-delay: 2s;
 }
 
+.popup-container.animated{
+  animation-name: appear;
+  animation-duration: .3s;  
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+  animation-delay: 0s;
+}
 @media screen and (max-width: 992px) {
   .sidenav {
     height: auto;
