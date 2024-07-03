@@ -1,4 +1,5 @@
 import numpy as np
+import logging
 
 class HazardFromBiasDetectionCalculator:
 
@@ -31,7 +32,7 @@ class HazardFromBiasDetectionCalculator:
             conditioning_variables: list, conditioning variables used in FreqVs* analysis
             weight_logic: str, it can be either "group" or "individual", it determines how much each single test will weight on the hazard result
         '''
-        
+
         #tot number features=conditioning + root (+1)
         n_features_total = len(conditioning_variables) + 1
         
@@ -75,7 +76,7 @@ class HazardFromBiasDetectionCalculator:
             else:
                 raise Exception('Only "group" or "individual" are allowed for parameter weight_logic')
 
-
+            hazards = []
             hazard = 0
             for line in test_results:
                 if weight_logic=="group":
@@ -89,8 +90,12 @@ class HazardFromBiasDetectionCalculator:
                 delta = 1 if line[3]==False else 0
                 q = line[2]/tot_observations
                 e = line[0] - line[1]
-                hazard += delta * weight * q * abs(e)**(1./3.) * line[1]**(1./3.)
-                
-            hazard_overall+= hazard
-            
-        return hazard_overall
+                hazard = delta * weight * q * abs(e)**(1./3.) * line[1]**(1./3.)
+                #append single line hazard to hazards array
+                hazards.append(hazard)
+                hazard_overall += hazard
+        #append hazard_overall to hazards array
+        hazards.insert(0, hazard_overall)
+
+        return hazards # hazards = [individual risk, unconditioned hazard, conditioned hazards, ...]
+

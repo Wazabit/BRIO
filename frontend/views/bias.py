@@ -95,8 +95,7 @@ def home_bias():
                 case 'py':
                     subprocess.run(["python3", os.path.join(
                         current_app.config['UPLOAD_FOLDER'], dict_vars['notebook'])])
-            flash(
-                'Custom preprocessing pipeline successfully uploaded and processed!', 'success')
+            flash('Custom preprocessing pipeline successfully uploaded and processed!', 'success')
         animation_status = ""
         return redirect('/bias')
     return render_template('home.html', df_used=used_df, status=success_status, animated=animation_status)

@@ -3,6 +3,8 @@ import os
 import pickle
 from statistics import mean, stdev
 from subprocess import check_output
+import logging
+
 
 import pandas as pd
 import numpy as np
@@ -13,6 +15,7 @@ from brio.bias.FreqVsFreqBiasDetector import FreqVsFreqBiasDetector
 from brio.bias.BiasDetector import BiasDetector
 from brio.utils.funcs import order_violations
 
+from brio.risk.HazardFromBiasDetectionCalculator import HazardFromBiasDetectionCalculator
 bp = Blueprint('FreqvsFreq', __name__,
                template_folder="../../templates/bias", url_prefix="/freqvsfreq")
 
@@ -103,7 +106,7 @@ def results_fvf():
         A1=dict_vars['a1_param'],
         target_variable_type=dict_vars['target_type']
     )
-
+    hc = HazardFromBiasDetectionCalculator()
     if dict_vars['target_type'] == 'probability':
         results1 = bd.compare_root_variable_groups(
             dataframe=dict_vars['df'],
@@ -137,7 +140,42 @@ def results_fvf():
             min_obs_per_group=30
         )
 
-    violations = {k: v for k, v in results2.items() if not v[2]}
+    results3 = hc.compute_hazard_from_freqvsfreq_or_freqvsref(
+        results1,
+        results2,
+        dict_vars['df'].shape[0],
+        dict_vars['cond_vars'],
+        weight_logic="group"
+    )
+
+    individual_risk = results3.pop(0)
+    unconditioned_hazard = results3.pop(0)
+    conditioned_results_with_hazard = {}
+
+    for k, v in results2.items():
+        if v[1] is not None:
+            v_list = list(v)
+            line_risk = results3.pop(0)
+            v_list.insert(1, line_risk)
+            conditioned_results_with_hazard[k] = tuple(v_list)
+
+    violations = {k: v for k, v in conditioned_results_with_hazard.items() if not v[3]}
+
+
+    #logging.warning("conditioned_results_with_risk")
+    #logging.warning(conditioned_results_with_risk)
+    #logging.warning("results1")
+    #logging.warning(results1)
+    #logging.warning("results2")
+    #logging.warning(results2)
+    #logging.warning("results3")
+    #logging.warning(results3)
+    #logging.warning("violations")
+    #logging.warning(violations)
+    #logging.warning("individual_risk")
+    #logging.warning(individual_risk)
+    #logging.warning("unconditioned_risk")
+    #logging.warning(unconditioned_risk)
 
     if request.method == "POST":
         csv_data = "condition,num_observations,distance,distance_gt_threshold,threshold,standard_deviation\n"
@@ -149,7 +187,7 @@ def results_fvf():
         # Create a Response with CSV data
         return jsonify({"csv_data": csv_data})
 
-    return render_template('results_freqvsfreq.html', results1=results1, results2=results2, violations=order_violations(violations), local_ip=localhost_ip)
+    return render_template('results_freqvsfreq.html', results1=results1, results2=results2, individual_risk=individual_risk, unconditioned_hazard=unconditioned_hazard, violations=order_violations(violations), local_ip=localhost_ip, sel_params=selected_params)
 
 
 @bp.route('/results/<violation>') # USA IN QUALCHE MODO get_frequencies_list_from_probs O I SUO CONTENUTO
@@ -169,4 +207,4 @@ def details_fvf(violation):
     else:
         results_viol2 = focus_df.groupby(dict_vars['root_var'])[
             dict_vars['predictions']].value_counts(normalize=True)
-    return render_template('violation_specific_fvf.html', viol=violation, res2=results_viol2.to_frame().to_html(classes=['table table-hover mx-auto w-75']))
+    return render_template('violation_specific_fvf.html', viol=violation, res2=results_viol2.to_frame().to_html(classes=['table border-0 table-mirai table-hover w-100 rajdhani-bold text-white m-0']))

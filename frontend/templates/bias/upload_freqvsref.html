@@ -1,69 +1,241 @@
 {% block content %}
 <form action="{{ url_for('bias.FreqvsRef.freqvsref') }}" method="POST" enctype="multipart/form-data">
-    <fieldset>
-	<legend>Distance:</legend>
-        <div class="btn-group">
-            <input type="radio" class="btn-check" name="distance" id="distance1" value="KLDivergence" checked>
-            <label class="btn btn-success btn-lg" for="distance1" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-container="body" data-bs-placement="top" title="KLDivergence" data-bs-content="This distance is used to measure how much the model is off with respect to the reference distribution.">KLDivergence</label>
+    <div class="row">
+        <div class="col-xl-4 themed-grid-col mt-4">
+            <div class="card card-mirai {{ animated }}">
+                <div class="card-header text-uppercase">
+                  Distance:
+                </div>
+                <div class="card-body d-flex flex-column justify-content-center" style="min-height: 120px;">
+                    <fieldset>
+                        <div class="btn-group w-100">
+                            <input type="radio" class="btn-check" name="distance" id="distance1" value="KLDivergence" checked>
+                            <label class="btn btn-success btn-outline-primary btn-mirai rajdhani-bold" for="distance1" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-container="body" data-bs-placement="top" title="KLDivergence" data-bs-content="This distance is used to measure how much the model is off with respect to the reference distribution.">KLDivergence</label>
+                        </div>
+                    </fieldset> 
+                </div>
+                <div class="card-arrow">
+                  <div class="card-arrow-top-left"></div>
+                  <div class="card-arrow-top-right"></div>
+                  <div class="card-arrow-bottom-left"></div>
+                  <div class="card-arrow-bottom-right"></div>
+                </div>
+            </div>
         </div>
-    </fieldset><br><br>
-    <legend>Select other parameters:</legend><br><br>
-    <a for="slider" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-container="body" data-bs-placement="top" title="Threshold" data-bs-content="The threshold value is used to decide when the behaviour of the model should be considered biased.  If the threshold is low (closer to 0 than to 1), then the checks will be strict and only a very unbiased model will pass them.">Threshold:</a>
-    <input type="range" name="Slider" min="0" max="1" value="0" step="0.05" oninput="this.form.amountInput.value=this.value" />
-    <input type="number" name="amountInput" min="0" max="1" step="0.05" oninput="this.form.Slider.value=this.value" />
-    <input type="checkbox" class="form-check-input" name="auto_thr" id="auto_thr" value="active">
-    <label class="form-check-label" for="auto_thr">Set automatic threshold <b>{{ thr }}</b></label>
-    <div class="container d-none" id="a1_params">
-      <input type="radio" class="form-check-input" name="a1_param" id="a1_high" value="high">
-      <label class="form-check-label" for="a1_high">A1=high</label>
-      <input type="radio" class="form-check-input" name="a1_param" id="a1_low" value="low">
-      <label class="form-check-label" for="a1_low">A1=low</label>
-    </div><br><br>
-    <div class="container" id="adj_div">
-        <a for="adj_div" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-container="body" data-bs-placement="top" title="Adjust div" data-bs-content="When a bin of the observed distribution is 0 the relative combination to KL is inf. If you want to avoid this, select zero (if present, inf contributions are forced to zero - not suggested when you have many empty bins) or laplace (implement add-1 Laplace smoothing only if empty bins are present - add 1 to each bin and recompute frequencies)">Empty bin adjustment:</a>
-        <input type="radio" class="form-check-input" name="adjust_div" id="adj_div_no" value="no" checked>
-        <label class="form-check-label" for="adj_div_no">no</label>
-        <input type="radio" class="form-check-input" name="adjust_div" id="adj_div_zero" value="zero">
-        <label class="form-check-label" for="adj_div_zero">zero</label>
-        <input type="radio" class="form-check-input" name="adjust_div" id="adj_div_laplace" value="laplace">
-        <label class="form-check-label" for="adj_div_laplace">laplace</label>
-      </div><br><br>
-    <legend>Select the target variable type:</legend>
-      <div class="btn-group" id="target_types">
-        <input type="radio" class="btn-check" name="target_type" id="target_type1" value="class">
-        <label class="btn btn-success btn-lg" for="target_type1">Class</label>
-        <input type="radio" class="btn-check" name="target_type" id="target_type2" value="probability">
-        <label class="btn btn-success btn-lg" for="target_type2">Probability</label>
-      </div>
-    </fieldset><br><br>
-    <div class="container d-none" id="binning">
-      <label for="nbins">Select the number of bins: <label>
-      <input type="range" name="nbins" min="1" max="20" value="10" step="1" oninput="this.form.tgInput.value=this.value" />
-      <input type="number" name="tgInput" min="1" max="20" step="1" oninput="this.form.nbins.value=this.value" />
-    </div><br>
-    <label for="predictions">Predictions:</label>
-	<select class="selectpicker" data-style="btn-info" name="predictions" id="predictions">
-        {% for item in var_list -%}
-		<option value="{{item}}">{{ item }}</option>
-        {%- endfor %}
-    </select><br><br>
-    <label for="root_var">Root Variable:</label>
-    <select class="selectpicker" data-style="btn-info" name="root_var" id="root_var">
-        {% for item in var_list -%}
-            <option value="{{item}}">{{ item }}</option>
-        {%- endfor %}
-    </select><br><br>
-    <label for="cond_var">Conditioning variables:</label>
-    <select class="selectpicker" data-style="btn-info" name="cond_var" id="cond_var" multiple data-actions-box="true">
-        {% for item in var_list -%}
-            <option value="{{item}}" >{{ item }}</option>
-        {%- endfor %}
-    </select>
-    <textarea class="form-control w-50 mx-auto mt-2" rows="3" name="mytext" id="mytext"></textarea><br>
-    <label for="ref_dist" id="ref_dist_label">Reference distributions:</label><br>
-    <div class="container" id="ref_dist">
-    {% include 'bias/ref_dist.html' %}
+        <div class="col-xl-3 themed-grid-col mt-4">
+            <div class="card card-mirai {{ animated }}">
+                <div class="card-header text-uppercase" for="adj_div" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-container="body" data-bs-placement="top" title="Adjust div" data-bs-content="When a bin of the observed distribution is 0 the relative combination to KL is inf. If you want to avoid this, select zero (if present, inf contributions are forced to zero - not suggested when you have many empty bins) or laplace (implement add-1 Laplace smoothing only if empty bins are present - add 1 to each bin and recompute frequencies)">
+                  Empty bin adjustment:
+                </div>
+                <div class="card-body d-flex flex-column justify-content-center" style="min-height: 120px;">
+                    <fieldset>
+                        <div class="btn-group w-100" id="adj_div">
+                            <input type="radio" class="btn-check" name="adjust_div" id="adj_div_no" value="no" checked>
+                            <label class="btn btn-success btn-outline-primary btn-mirai rajdhani-bold" for="adj_div_no">no</label>
+                            <input type="radio" class="btn-check" name="adjust_div" id="adj_div_zero" value="zero">
+                            <label class="btn btn-success btn-outline-primary btn-mirai rajdhani-bold" for="adj_div_zero">zero</label>
+                            <input type="radio" class="btn-check" name="adjust_div" id="adj_div_laplace" value="laplace">
+                            <label class="btn btn-success btn-outline-primary btn-mirai rajdhani-bold" for="adj_div_laplace">laplace</label>
+                          </div>
+                    </fieldset> 
+                </div>
+                <div class="card-arrow">
+                  <div class="card-arrow-top-left"></div>
+                  <div class="card-arrow-top-right"></div>
+                  <div class="card-arrow-bottom-left"></div>
+                  <div class="card-arrow-bottom-right"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-5 themed-grid-col mt-4">
+
+            <div class="card card-mirai {{ animated }}">
+                <div class="card-header text-uppercase">
+                  Select Threshold:
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between" style="min-height: 120px;">
+                    <div class="row">
+                        <div class="col-10">
+                            <a for="slider" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-container="body" data-bs-placement="top" title="Threshold" data-bs-content="The threshold value is used to decide when the behaviour of the model should be considered biased.  If the threshold is low (closer to 0 than to 1), then the checks will be strict and only a very unbiased model will pass them.">
+                                <input class="slider w-100" type="range" name="Slider" min="0" max="1" value="0" step="0.05" oninput="this.form.amountInput.value=this.value" />
+                            </a>
+                        </div>
+                        <div class="col-2">
+                            <input class="number-mirai w-100" type="number" name="amountInput" min="0" max="1" step="0.05" oninput="this.form.Slider.value=this.value" />
+                        </div>
+                    </div> 
+                    <div class="row mt-2">
+                        <div class="col-xl-6">
+                            <input type="checkbox" class="btn-check" name="auto_thr" id="auto_thr" value="active">
+                            <label class="form-check-label btn btn-outline-primary btn-mirai rajdhani-bold w-100" for="auto_thr">Automatic threshold</label>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="btn-group w-100 d-none" id="a1_params">
+                                <input type="radio" class="form-check-input btn-check" name="a1_param" id="a1_high" value="high">
+                                <label class="form-check-label btn btn-success btn-outline-primary btn-mirai rajdhani-bold" for="a1_high">A1=high</label>
+                                <input type="radio" class="form-check-input btn-check" name="a1_param" id="a1_low" value="low">
+                                <label class="form-check-label btn btn-success btn-outline-primary btn-mirai rajdhani-bold" for="a1_low">A1=low</label>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+                <div class="card-arrow">
+                  <div class="card-arrow-top-left"></div>
+                  <div class="card-arrow-top-right"></div>
+                  <div class="card-arrow-bottom-left"></div>
+                  <div class="card-arrow-bottom-right"></div>
+                </div>
+            </div>
+        </div>
     </div>
-    <input class="btn btn-primary btn-lg mb-3 mt-3" type="submit" value="Upload">
+
+    <div class="row">
+        <div class="col-xl-4 themed-grid-col mt-4">
+            <div class="card card-mirai {{ animated }}">
+                <div class="card-header text-uppercase">
+                  target variable type:
+                </div>
+                <div class="card-body d-flex flex-column justify-content-center" >
+                    <fieldset>
+                        <div class="btn-group w-100">
+                            <input type="radio" class="btn-check" name="target_type" id="target_type1" value="class">
+                            <label class="btn btn-success btn-outline-primary btn-mirai rajdhani-bold" for="target_type1">Class</label>
+                            <input type="radio" class="btn-check" name="target_type" id="target_type2" value="probability">
+                            <label class="btn btn-success btn-outline-primary btn-mirai rajdhani-bold" for="target_type2">Probability</label>
+                        </div>
+                    </fieldset> 
+                </div>
+                <div class="card-arrow">
+                  <div class="card-arrow-top-left"></div>
+                  <div class="card-arrow-top-right"></div>
+                  <div class="card-arrow-bottom-left"></div>
+                  <div class="card-arrow-bottom-right"></div>
+                </div>
+            </div>
+            <div class="card card-mirai {{ animated }} mt-4 d-none" id="binning" style="animation-delay: 0s;">
+                <div class="card-header text-uppercase" style="animation-delay: .9s;">
+                  number of bins:
+                </div>
+                <div class="card-body d-flex flex-column justify-content-center" style="min-height: 70px; animation-delay: 1.3s;">
+                    <div class="row">
+                        <div class="col-10 d-flex">
+                            <input class="slider w-100" type="range" name="nbins" min="1" max="20" value="10" step="1" oninput="this.form.tgInput.value=this.value" />
+                        </div>
+                        <div class="col-2 d-flex">
+                            <input class="number-mirai w-100" type="number" name="tgInput" min="1" max="20" step="1" oninput="this.form.nbins.value=this.value" />
+                        </div>
+                    </div> 
+                </div>
+                <div class="card-arrow">
+                  <div class="card-arrow-top-left"></div>
+                  <div class="card-arrow-top-right"></div>
+                  <div class="card-arrow-bottom-left"></div>
+                  <div class="card-arrow-bottom-right"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 themed-grid-col mt-4">
+            <div class="card card-mirai {{ animated }}" style="z-index: 1030;">
+
+                <div class="card-arrow">
+                  <div class="card-arrow-top-left"></div>
+                  <div class="card-arrow-top-right"></div>
+                  <div class="card-arrow-bottom-left"></div>
+                  <div class="card-arrow-bottom-right"></div>
+                </div>
+                <div class="card-header text-uppercase">
+                  variables:
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between" style="min-height: 207px;">
+                    <div class="row">
+                       <div class="col-6 d-flex">
+                           <label class="align-self-center" for="predictions">Predictions:</label>
+                       </div>
+                       <div class="col-6 d-flex">
+                           <select class="selectpicker w-100" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="predictions" id="predictions">
+                               {% for item in var_list -%}
+                                   <option value="{{item}}">{{ item }}</option>
+                               {%- endfor %}
+                           </select>
+                       </div>
+                    </div> 
+                    <div class="row">
+                        <div class="col-6 d-flex">
+                            <label class="align-self-center" for="root_var">Root Variable:</label>
+                        </div>
+                        <div class="col-6 d-flex">
+                            <select class="selectpicker w-100" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="root_var" id="root_var">
+                                {% for item in var_list -%}
+                                    <option value="{{item}}">{{ item }}</option>
+                                {%- endfor %}
+                            </select>
+                        </div>
+                   </div>
+                    <div class="row">
+                        <div class="col-6 d-flex">
+                            <label class="align-self-center" for="cond_var">Conditioning variables:</label>
+                        </div>
+                        <div class="col-6 d-flex">
+                            <select class="selectpicker w-100" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="cond_var" id="cond_var" multiple data-actions-box="true">
+                                {% for item in var_list -%}
+                                    <option value="{{item}}" >{{ item }}</option>
+                                {%- endfor %}
+                            </select>
+                        </div>
+                   </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 themed-grid-col mt-4">
+            <div class="card card-mirai {{ animated }}">
+                <div class="card-header text-uppercase">
+                  Selected Conditioning variables:
+                </div>
+                <div class="card-body d-flex flex-column justify-content-center" style="min-height: 207px;">
+                    <div class="row">
+                       <div class="col d-flex">
+                           <textarea class="form-control w-100" rows="6" name="mytext" id="mytext" placeholder="Nothing Selected" readonly></textarea><br>
+                       </div>
+                   </div>
+                </div>
+                <div class="card-arrow">
+                  <div class="card-arrow-top-left"></div>
+                  <div class="card-arrow-top-right"></div>
+                  <div class="card-arrow-bottom-left"></div>
+                  <div class="card-arrow-bottom-right"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col themed-grid-col mt-4">
+            <div class="card card-mirai {{ animated }}">
+                <div class="card-header text-uppercase">
+                  Reference distributions:
+                </div>
+                <div class="card-body d-flex flex-column" style="max-height: 200px; overflow: scroll;">
+                    <div class="row">
+                       <div class="col" id="ref_dist">
+                          Please, select predictions and root variables
+                       </div>
+                   </div>
+                </div>
+                <div class="card-arrow">
+                  <div class="card-arrow-top-left"></div>
+                  <div class="card-arrow-top-right"></div>
+                  <div class="card-arrow-bottom-left"></div>
+                  <div class="card-arrow-bottom-right"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center my-3">
+            <input class="btn btn-outline-primary btn-mirai rajdhani-bold w-100 {{ animated }}" type="submit" value="Select parameters">
+        </div>
+    </div>
 </form>
 {% endblock %}

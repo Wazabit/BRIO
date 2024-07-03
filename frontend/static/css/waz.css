@@ -152,6 +152,10 @@ body:before {
 .card.card-mirai {
   position: relative;
   background-color: rgba(0, 0, 0, .25);
+  background-color: transparent;
+  backdrop-filter: blur(10px);
+  background-image: linear-gradient(225deg, rgba(0,0,0,.3),rgba(0,0,0,.2));
+  background-size: 10px 10px;
   border-color: #D91EBA;
   border-radius: 0;
   color: rgba(255,255,255,.70);
@@ -399,6 +403,38 @@ footer {
   animation-duration: 1s;  
   animation-timing-function: ease-in-out;
   animation-fill-mode: both;
+}
+thead, tboby{
+  border-color: #D91EBA!important;
+}
+tbody{
+  color: rgba(255, 255, 255, .70);
+}
+.table-hover>tbody>tr:hover {
+  color: #13DCF2;
+}
+tbody>tr:last-child>th,tbody>tr:last-child>td{
+  border:none;
+}
+#power-gauge{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#power-gauge g.arc {
+  fill: steelblue;
+}
+
+#power-gauge g.pointer {
+  fill: #ffffff;
+  stroke: #ffffff;
+}
+
+#power-gauge g.label text {
+  text-anchor: middle;
+  font-size: 10px;
+  font-weight: bold;
+  fill: #fff;
 }
 /* ANIMATIONS */
 

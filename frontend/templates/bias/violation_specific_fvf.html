@@ -1,16 +1,50 @@
-{% extends 'base.html' %}
+{% extends 'bias/base.html' %}
 
 {% block title %}
 Violation: {{ violation }}
 {% endblock %}
 
 {% block content %}
-   <div class="containter my-5 mx-5">
-    <div class="row pb-4 mx-5 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
-	<h2 class="display-6 fw-bold text-center">Violation: {{ viol }}</h2>
-	{{ res2 | safe}}
+  <div class="container pt-5">
+    <div class="row mb-3">
+      <div class="col themed-grid-col">
+        <div class="row">
+          <div class="py-3 my-2">
+            <h1 class="text-white text-start rajdhani-bold top-logo animated text-uppercase">Violation</h1>
+          </div>
+        </div> 
+        <div class="row">
+          <div class="col">
+            <div class="card card-mirai animated">
+              <div class="card-header text-uppercase">
+                {{ viol }}
+              </div>
+              <div class="card-body row pb-0" style="max-height: 600px;overflow: scroll;">
+                 <div class="col">
+                    {{ res2 | safe}}
+                 </div>
+              </div>
+              <div class="card-arrow">
+                <div class="card-arrow-top-left"></div>
+                <div class="card-arrow-top-right"></div>
+                <div class="card-arrow-bottom-left"></div>
+                <div class="card-arrow-bottom-right"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center my-3">
+                <a href="/bias/freqvsfreq/results" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100 animated" role="button">Back</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
-   </div>
+  </div>
 {% endblock %}
 
 
