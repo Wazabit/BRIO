@@ -106,7 +106,6 @@ def results_fvf():
         A1=dict_vars['a1_param'],
         target_variable_type=dict_vars['target_type']
     )
-    hc = HazardFromBiasDetectionCalculator()
     if dict_vars['target_type'] == 'probability':
         results1 = bd.compare_root_variable_groups(
             dataframe=dict_vars['df'],
@@ -140,6 +139,7 @@ def results_fvf():
             min_obs_per_group=30
         )
 
+    hc = HazardFromBiasDetectionCalculator()
     results3 = hc.compute_hazard_from_freqvsfreq_or_freqvsref(
         results1,
         results2,
@@ -150,8 +150,8 @@ def results_fvf():
 
     individual_risk = results3.pop(0)
     unconditioned_hazard = results3.pop(0)
+    
     conditioned_results_with_hazard = {}
-
     for k, v in results2.items():
         if v[1] is not None:
             v_list = list(v)
@@ -161,21 +161,24 @@ def results_fvf():
 
     violations = {k: v for k, v in conditioned_results_with_hazard.items() if not v[3]}
 
-
-    #logging.warning("conditioned_results_with_risk")
-    #logging.warning(conditioned_results_with_risk)
-    #logging.warning("results1")
-    #logging.warning(results1)
-    #logging.warning("results2")
-    #logging.warning(results2)
-    #logging.warning("results3")
-    #logging.warning(results3)
-    #logging.warning("violations")
-    #logging.warning(violations)
-    #logging.warning("individual_risk")
-    #logging.warning(individual_risk)
-    #logging.warning("unconditioned_risk")
-    #logging.warning(unconditioned_risk)
+    csv_plot = "condition,num_observations,hazard,distance,standard_deviation\n"
+    h_min = 1
+    h_max = 0
+    d_min = 1
+    d_max = 0
+    for key in list(violations.keys()):
+        csv_plot += f"{key},{violations[key][0]},{violations[key][1]},{violations[key][2]},{violations[key][5]}\n"
+        if violations[key][1] < h_min: h_min=violations[key][1]
+        if violations[key][1] > h_max: h_max=violations[key][1]
+        if violations[key][2] < d_min: d_min=violations[key][2]
+        if violations[key][2] > d_max: d_max=violations[key][2]
+    logging.warning("data to plot")
+    logging.warning(h_min)
+    logging.warning(h_max)
+    logging.warning(d_min)
+    logging.warning(d_max)
+    # Create CSV data to plot
+    #jsonify({"csv_data": csv_data})
 
     if request.method == "POST":
         csv_data = "condition,num_observations,distance,distance_gt_threshold,threshold,standard_deviation\n"
@@ -187,7 +190,7 @@ def results_fvf():
         # Create a Response with CSV data
         return jsonify({"csv_data": csv_data})
 
-    return render_template('results_freqvsfreq.html', results1=results1, results2=results2, individual_risk=individual_risk, unconditioned_hazard=unconditioned_hazard, violations=order_violations(violations), local_ip=localhost_ip, sel_params=selected_params)
+    return render_template('results_freqvsfreq.html', results1=results1, results2=results2, individual_risk=individual_risk, unconditioned_hazard=unconditioned_hazard, violations=order_violations(violations), local_ip=localhost_ip, sel_params=selected_params, plot_data=csv_plot, h_min=h_min, h_max=h_max, d_min=d_min, d_max=d_max)
 
 
 @bp.route('/results/<violation>') # USA IN QUALCHE MODO get_frequencies_list_from_probs O I SUO CONTENUTO

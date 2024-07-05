@@ -3,6 +3,7 @@ import os
 import pickle
 from statistics import mean, stdev
 from subprocess import check_output
+import logging
 
 import pandas as pd
 import numpy as np
@@ -14,6 +15,7 @@ from brio.bias.BiasDetector import BiasDetector
 from brio.utils.funcs import (handle_ref_distributions, order_violations,
                              write_reference_distributions_html)
 
+from brio.risk.HazardFromBiasDetectionCalculator import HazardFromBiasDetectionCalculator
 bp = Blueprint('FreqvsRef', __name__,
                template_folder="../../templates/bias", url_prefix="/freqvsref")
 
@@ -116,6 +118,8 @@ def results_fvr():
         adjust_div=dict_vars['adjust_div'],
         target_variable_type=dict_vars['target_type'])
 
+    hc = HazardFromBiasDetectionCalculator()
+
     ref_distribution = handle_ref_distributions(
         dict_vars['root_var'], dict_vars['predictions'], dict_vars['df'], dict_vars)
 
@@ -157,8 +161,40 @@ def results_fvr():
             min_obs_per_group=30
         )
 
-    violations = {k: v for k, v in results2.items() if (
-        not v[2][0] or not v[2][1])}
+    results3 = hc.compute_hazard_from_freqvsfreq_or_freqvsref(
+        results1,
+        results2,
+        dict_vars['df'].shape[0],
+        dict_vars['cond_vars'],
+        weight_logic="group"
+    )
+
+    
+    logging.warning("results1")
+    logging.warning(results1)
+    logging.warning("results2")
+    logging.warning(results2)
+    logging.warning("results3")
+    logging.warning(results3)
+
+    individual_risk = results3.pop(0)
+    unconditioned_hazard = results3.pop(0)
+    conditioned_results_with_hazard = {}
+    
+    logging.warning("individual_risk")
+    logging.warning(individual_risk)
+    logging.warning("unconditioned_hazard")
+    logging.warning(unconditioned_hazard)
+
+    for k, v in results2.items():
+        if v[1][0] is not None:
+            v_list = list(v)
+            line_risk = results3.pop(0)
+            v_list.insert(1, line_risk)
+            conditioned_results_with_hazard[k] = tuple(v_list)
+
+    violations = {k: v for k, v in conditioned_results_with_hazard.items() if (not v[3][0] or not v[3][1])}
+
     if request.method == "POST":
         csv_data = "condition;num_observations;distance;distance_gt_threshold;threshold\n"
         for key in list(results2.keys()):
@@ -168,7 +204,7 @@ def results_fvr():
             csv_data += f"{key};{results2[key][0]};{results2[key][1]};{results2[key][2]};{results2[key][3]}\n"
         # Create a Response with CSV data
         return jsonify({"csv_data": csv_data})
-    return render_template('results_freqvsref.html', results1=results1, results2=results2, violations=order_violations(violations), local_ip=localhost_ip, sel_params=selected_params)
+    return render_template('results_freqvsref.html', results1=results1, results2=results2, individual_risk=individual_risk, unconditioned_hazard=unconditioned_hazard, violations=order_violations(violations), local_ip=localhost_ip, sel_params=selected_params)
 
 
 @bp.route('/results/<violation>')

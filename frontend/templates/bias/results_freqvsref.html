@@ -1,5 +1,9 @@
 {% extends 'bias/base.html' %}
 
+{% block head %}
+<script src="https://d3js.org/d3.v4.min.js"></script>
+{% endblock %}
+
 {% block title %}
 BRIO - Bias Assessment - FreqvsRef - Results
 {% endblock %}
@@ -14,7 +18,12 @@ BRIO - Bias Assessment - FreqvsRef - Results
         </div>
       </div> 
       <div class="row d-flex mb-3" id="selected_params">
-        <div class="col d-flex justify-content-center">
+         <div class="col-lg-3">
+          <h5 class="card-title text-miraiblu rajdhani-bold text-center">Individual Risk</h5>
+          <div id="power-gauge" val="{{ individual_risk*100 }}"></div>
+          <p class="text-center"><strong class="text-white">{{ individual_risk }}</strong></p>
+        </div>
+        <div class="col-lg-9 d-flex justify-content-center">
           <div class="card card-mirai animated w-100" style="animation-delay: .3s">
             <div class="card-header text-uppercase">
               Selected Parameters:
@@ -68,19 +77,27 @@ BRIO - Bias Assessment - FreqvsRef - Results
           </div>
         </div>
       </div>
+
       <div class="row">
         <div class="col">
           <div class="card card-mirai animated">
+            <div class="card-header text-uppercase">
+              Unconditioned Results
+            </div>
             <div class="card-body row pb-0">
-              <div class="col-lg-4">
+              <div class="col-lg-3">
+                <h5 class="card-title text-mirai rajdhani-bold">Hazard</h5>
+                <p><strong class="text-white">{{ unconditioned_hazard }}</strong></p>
+              </div>
+              <div class="col-lg-3">
                 <h5 class="card-title text-mirai rajdhani-bold">Distance[ref]</h5>
                 <p><strong class="text-white">{{ results1[0] }}</strong></p>
               </div>
-              <div class="col-lg-4">
+              <div class="col-lg-3">
                 <h5 class="card-title text-mirai rajdhani-bold">Distance[ref] ≤ Threshold</h5>
-                <p><strong {% if results1[1] %}class="green-text"{% else %}class="red-text"{% endif %}>{{ results1[1] }}</strong></p>
+                <p><strong {% if results1[1][0] %}class="green-text"{% else %}class="red-text"{% endif %}>{{ results1[1][0] }}</strong>, <strong {% if results1[1][1] %}class="green-text"{% else %}class="red-text"{% endif %}>{{ results1[1][1] }}</strong></p>
               </div>
-              <div class="col-lg-4">
+              <div class="col-lg-3">
                 <h5 class="card-title text-mirai rajdhani-bold">Threshold</h5>
                 <p><strong class="text-white">{{ results1[2] }}</strong></p>
               </div>
@@ -95,66 +112,54 @@ BRIO - Bias Assessment - FreqvsRef - Results
           </div>
         </div>
       </div>
+
       <div class="row mt-3">
-        <div class="col-lg-6">
-          <div class="card card-mirai animated">
-            <div class="card-header text-uppercase">
-              Violations
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <p class="text-white">
-                    <strong>Condition:</strong> (num observations, distance[ref], distance[ref] ≤ threshold, threshold)
-                  </p>
-                </div>
-              </div>
-              <div class="row" style="max-height: 300px; overflow-x: hidden; overflow-y: scroll;">
-                <div class="col">
-                  {% for key, value in violations.items() %}
-                    {% if violations|length != 1 %}
-                      <p style="color: rgba(255, {{ 160*((loop.index - 1) / (violations|length - 1)) }}, 0, 1);" class="m-0">
-                        <strong><a href='/bias/freqvsref/results/{{ key }}' style="color:inherit;">{{ key }}</a> :</strong> {{ value }}
-                      </p>
-                    {% endif %}
-                  {% endfor %} 
-                </div>
-              </div>
-            </div>
-
-            <div class="card-arrow">
-              <div class="card-arrow-top-left"></div>
-              <div class="card-arrow-top-right"></div>
-              <div class="card-arrow-bottom-left"></div>
-              <div class="card-arrow-bottom-right"></div>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="col-lg-6">
+        <div class="col">
           <div class="card card-mirai animated">
             <div class="card-header text-uppercase">
               Conditioned Results
             </div>
             <div class="card-body">
-              <div class="row">
+              <div class="row row-cols-5">
                 <div class="col">
-                  <h4 class="card-title text-mirai rajdhani-bold">Condition applied</h4>
+                  <h5 class="card-title text-mirai rajdhani-bold">Condition</h5>
                 </div>
                 <div class="col">
-                  <h4 class="card-title text-mirai rajdhani-bold">Result</h4>
+                  <h5 class="card-title text-mirai rajdhani-bold">Observations</h5>
+                </div>
+                <div class="col">
+                  <h5 class="card-title text-mirai rajdhani-bold">Distance[ref]</h5>
+                </div>
+                <div class="col">
+                  <h5 class="card-title text-mirai rajdhani-bold">Dist[ref] ≤ Thr</h5>
+                </div>
+                <div class="col">
+                  <h5 class="card-title text-mirai rajdhani-bold">Threshold</h5>
                 </div>
               </div>
               <div class="row" style="max-height: 300px; overflow-x: hidden; overflow-y: scroll;">
                 <div class="col">
                   {% for key, value in results2.items() %}
-                    <div class="row">
+                    <div class="row row-cols-5">
                       <div class="col">
                         {{ key }}
                       </div>
                       <div class="col">
-                        ({{ value[0] }}, {{ value[1] }}, <span {% if value[2] == True %}class="green-text"{% elif value[2] == False %}class="red-text"{% endif %}>{{ value[2] }}</span>, {{ value[3] }})
+                        {{ value[0] }}
+                      </div>
+                      <div class="col">
+                        {{ value[1] }}
+                      </div>
+                      <div class="col">
+                        {% if value[1][0] != None %}
+                          <span {% if value[2][0] == True %}class="green-text"{% elif value[2][0] == False %}class="red-text"{% endif %}>{{ value[2][0] }}</span>,
+                          <span {% if value[2][1] == True %}class="green-text"{% elif value[2][1] == False %}class="red-text"{% endif %}>{{ value[2][1] }}</span>
+                        {% else %}
+                          {{ value[2] }}
+                        {% endif %}
+                      </div>
+                      <div class="col">
+                        {{ value[3] }}
                       </div>
                     </div>
                   {% endfor %}
@@ -171,6 +176,64 @@ BRIO - Bias Assessment - FreqvsRef - Results
           </div>
         </div>
 
+      </div>
+
+      <div class="row mt-3">
+        <div class="col">
+          <div class="card card-mirai animated">
+            <div class="card-header text-uppercase">
+              Violations
+            </div>
+            <div class="card-body">
+              <div class="row row-cols-7">
+                <div class="col">
+                  <p class="text-white"><strong>Condition:</strong></p>
+                </div>
+                <div class="col">
+                  <p class="text-white">Observations</p>
+                </div>
+                <div class="col">
+                  <p class="text-white">Hazard</p>
+                </div>
+                <div class="col">
+                  <p class="text-white">Distance[ref]</p>
+                </div>
+                <div class="col">
+                  <p class="text-white">Dist[ref] ≤ Thr</p>
+                </div>
+                <div class="col">
+                  <p class="text-white">Threshold</p>
+                </div>
+              </div>
+              <div class="row" style="max-height: 300px; overflow-x: hidden; overflow-y: scroll;">
+                <div class="col">
+                  {% for key, value in violations.items() %}
+                    {% if violations|length != 1 %}
+                      <div class="row row-cols-7" style="color: rgba(255, {{160-255 * value[1]**(1/3)}}, 0, 1);">
+                        <div class="col"><strong><a href='/bias/freqvsfreq/results/{{ key }}' style="color:inherit;">{{ key }}</a></strong></div>
+                        <div class="col">{{ value[0] }}</div>
+                        <div class="col" style="overflow: hidden; text-overflow: ellipsis; text-wrap: nowrap;">{{ value[1] }}</div>
+                        <div class="col">{{ value[2] }}</div>
+                        <div class="col">{{ value[3] }}</div>
+                        <div class="col">{{ value[4] }}</div>
+                      </div>
+                      <!--p style="color: rgba(255, {{ 160*((loop.index - 1) / (violations|length - 1)) }}, 0, 1);" class="m-0">
+                        <strong><a href='/bias/freqvsfreq/results/{{ key }}' style="color:inherit;">{{ key }}</a> :</strong> {{ value }}
+                      </p-->
+                    {% endif %}
+                  {% endfor %} 
+                </div>
+              </div>
+            </div>
+
+            <div class="card-arrow">
+              <div class="card-arrow-top-left"></div>
+              <div class="card-arrow-top-right"></div>
+              <div class="card-arrow-bottom-left"></div>
+              <div class="card-arrow-bottom-right"></div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="row {{ d_params }}">
@@ -226,4 +289,6 @@ document.addEventListener("DOMContentLoaded", function() {
     disabfromroot.addEventListener("click", handle_export);
 });
 </script>
+
+<script src="{{ url_for('static', filename='js/gauge.js') }}"></script>
 {% endblock %}

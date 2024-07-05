@@ -70,7 +70,10 @@ body:before {
   background-attachment: initial;
   z-index: -5;
 }
-
+hr{
+  background-color: #D91EBA;
+  opacity: 1;
+}
 .text-mirai, .text-warning{
   color: #D91EBA!important;
 }
@@ -416,6 +419,8 @@ tbody{
 tbody>tr:last-child>th,tbody>tr:last-child>td{
   border:none;
 }
+/*D3 CHARTS*/
+/*Gauge*/
 #power-gauge{
   display: flex;
   align-items: center;
@@ -435,6 +440,20 @@ tbody>tr:last-child>th,tbody>tr:last-child>td{
   font-size: 10px;
   font-weight: bold;
   fill: #fff;
+}
+
+/*Bubbles and Bars*/
+.domain {
+  stroke: #13DCF2;
+}
+.tick line {
+  stroke: #13DCF2;
+}
+.bubbles:hover, .bars:hover{
+  opacity: 1!important;
+}
+#hazard_chart{
+  position: relative;
 }
 /* ANIMATIONS */
 
