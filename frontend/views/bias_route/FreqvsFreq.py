@@ -1,3 +1,5 @@
+import json
+
 import glob
 import os
 import pickle
@@ -8,8 +10,8 @@ import logging
 
 import pandas as pd
 import numpy as np
-from flask import (Blueprint, current_app, flash, jsonify,
-                   redirect, render_template, request)
+from flask import (Blueprint, Flask, Response, current_app, flash, jsonify,
+                   redirect, render_template, request, session, url_for)
 
 from brio.bias.FreqVsFreqBiasDetector import FreqVsFreqBiasDetector
 from brio.bias.BiasDetector import BiasDetector
@@ -40,62 +42,74 @@ if os.system("test -f /.dockerenv") == 0:
 
 @bp.route('/', methods=['GET', 'POST'])
 def freqvsfreq():
-    global comp_thr
-    global animation_status
-    global selected_params
-    global display_params
-    list_of_files = glob.glob(os.path.join(
-        current_app.config['UPLOAD_FOLDER']) + "/*")
-    latest_file = max(list_of_files, key=os.path.getctime)
-    extension = latest_file.rsplit('.', 1)[1].lower()
-    match extension:
-        case 'pkl':
-            df_pickle = open(latest_file, "rb")
-            dict_vars['df'] = pickle.load(df_pickle)
-        case 'csv':
-            dict_vars['df'] = pd.read_csv(latest_file)
+    if session.get("user") == None:
+        return redirect(url_for('login'))
+    else:
+        global comp_thr
+        global animation_status
+        global selected_params
+        global display_params
+        list_of_files = glob.glob(os.path.join(
+            current_app.config['UPLOAD_FOLDER']) + "/*")
+        latest_file = max(list_of_files, key=os.path.getctime)
+        extension = latest_file.rsplit('.', 1)[1].lower()
+        match extension:
+            case 'pkl':
+                df_pickle = open(latest_file, "rb")
+                dict_vars['df'] = pickle.load(df_pickle)
+            case 'csv':
+                dict_vars['df'] = pd.read_csv(latest_file)
 
-    list_var = dict_vars['df'].columns
-    if request.method == 'POST':
-        if list(request.form.keys()):
-            if 'rv_selected' in list(request.form.keys()):
-                rvar = request.form['rv_selected']
-                if len(dict_vars['df'][rvar].unique()) < 3:
-                    return {'response': 'True'}
-                return {'response': 'False'}
-            dict_vars['target_type'] = request.form['target_type']
-            selected_params['target_type'] = dict_vars['target_type']  
-            if 'nbins' in list(request.form.keys()):
-                dict_vars['nbins'] = int(request.form['nbins'])
-                selected_params['nbins'] = dict_vars['nbins']  
-            dict_vars['root_var'] = request.form['root_var']
-            selected_params['root_var'] = dict_vars['root_var']
-            dict_vars['distance'] = request.form['distance']
-            selected_params['distance'] = dict_vars['distance'] 
-            dict_vars['predictions'] = request.form['predictions']   
-            selected_params['predictions'] = dict_vars['predictions']
-            if 'agg_func' in list(request.form.keys()):
-                dict_vars['agg_func'] = request.form['agg_func']
-                selected_params['agg_func'] = dict_vars['agg_func']  
-            if float(request.form['Slider']) > 0:
-                dict_vars['thr'] = float(request.form['Slider'])
-            else:
-                dict_vars['thr'] = None
-            dict_vars['cond_vars'] = request.form.getlist('cond_var')      
-            selected_params['cond_vars'] = dict_vars['cond_vars']
-            dict_vars['a1_param'] = "high"
-            if 'auto_thr' in list(request.form.keys()):
-                if request.form['auto_thr'] == 'active':
-                    if 'a1_param' in list(request.form.keys()):
-                        dict_vars['a1_param'] = request.form['a1_param']
-                        dict_vars['thr'] = None   
-            selected_params['thr'] = dict_vars['thr']  
-            selected_params['a1_param'] = dict_vars['a1_param'] 
-            display_params = "d-flex"  
-            flash('Parameters selected successfully!', 'success')
-        animation_status = ""
-        return redirect('/bias/freqvsfreq/#selected_params')
-    return render_template('freqvsfreq.html', var_list=list_var, local_ip=localhost_ip, animated=animation_status, sel_params=selected_params, d_params=display_params)
+        list_var = dict_vars['df'].columns
+        if request.method == 'POST':
+            if list(request.form.keys()):
+                if 'rv_selected' in list(request.form.keys()):
+                    rvar = request.form['rv_selected']
+                    if len(dict_vars['df'][rvar].unique()) < 3:
+                        return {'response': 'True'}
+                    return {'response': 'False'}
+                dict_vars['target_type'] = request.form['target_type']
+                selected_params['target_type'] = dict_vars['target_type']
+                if 'nbins' in list(request.form.keys()):
+                    dict_vars['nbins'] = int(request.form['nbins'])
+                    selected_params['nbins'] = dict_vars['nbins']
+                dict_vars['root_var'] = request.form['root_var']
+                selected_params['root_var'] = dict_vars['root_var']
+                dict_vars['distance'] = request.form['distance']
+                selected_params['distance'] = dict_vars['distance']
+                dict_vars['predictions'] = request.form['predictions']
+                selected_params['predictions'] = dict_vars['predictions']
+                if 'agg_func' in list(request.form.keys()):
+                    dict_vars['agg_func'] = request.form['agg_func']
+                    selected_params['agg_func'] = dict_vars['agg_func']
+                if float(request.form['Slider']) > 0:
+                    dict_vars['thr'] = float(request.form['Slider'])
+                else:
+                    dict_vars['thr'] = None
+                dict_vars['cond_vars'] = request.form.getlist('cond_var')
+                selected_params['cond_vars'] = dict_vars['cond_vars']
+                dict_vars['a1_param'] = "high"
+                if 'auto_thr' in list(request.form.keys()):
+                    if request.form['auto_thr'] == 'active':
+                        if 'a1_param' in list(request.form.keys()):
+                            dict_vars['a1_param'] = request.form['a1_param']
+                            dict_vars['thr'] = None
+                selected_params['thr'] = dict_vars['thr']
+                selected_params['a1_param'] = dict_vars['a1_param']
+                display_params = "d-flex"
+                flash('Parameters selected successfully!', 'success')
+            animation_status = ""
+            return redirect('/bias/freqvsfreq/#selected_params')
+        return render_template(
+            'freqvsfreq.html',
+            session=session.get("user"),
+            pretty=json.dumps(session.get("user"), indent=4),
+            var_list=list_var,
+            local_ip=localhost_ip,
+            animated=animation_status,
+            sel_params=selected_params,
+            d_params=display_params
+        )
 
 
 @bp.route('/results', methods=['GET', 'POST'])
