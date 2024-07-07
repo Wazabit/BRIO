@@ -45,6 +45,7 @@ def freqvsfreq():
     if session.get("user") == None:
         return redirect(url_for('login'))
     else:
+        btn_login = True
         global comp_thr
         global animation_status
         global selected_params
@@ -104,6 +105,7 @@ def freqvsfreq():
             'freqvsfreq.html',
             session=session.get("user"),
             pretty=json.dumps(session.get("user"), indent=4),
+            btn_login=btn_login,
             var_list=list_var,
             local_ip=localhost_ip,
             animated=animation_status,
@@ -114,6 +116,10 @@ def freqvsfreq():
 
 @bp.route('/results', methods=['GET', 'POST'])
 def results_fvf():
+    if session.get("user") == None:
+        btn_login = False
+    else:
+        btn_login = True
 
     bd = FreqVsFreqBiasDetector(
         distance=dict_vars['distance'],
@@ -204,11 +210,31 @@ def results_fvf():
         # Create a Response with CSV data
         return jsonify({"csv_data": csv_data})
 
-    return render_template('results_freqvsfreq.html', results1=results1, results2=results2, individual_risk=individual_risk, unconditioned_hazard=unconditioned_hazard, violations=order_violations(violations), local_ip=localhost_ip, sel_params=selected_params, plot_data=csv_plot, h_min=h_min, h_max=h_max, d_min=d_min, d_max=d_max)
+    return render_template(
+        'results_freqvsfreq.html',
+        btn_login=btn_login,
+        results1=results1,
+        results2=results2,
+        individual_risk=individual_risk,
+        unconditioned_hazard=unconditioned_hazard,
+        violations=order_violations(violations),
+        local_ip=localhost_ip,
+        sel_params=selected_params,
+        plot_data=csv_plot,
+        h_min=h_min,
+        h_max=h_max,
+        d_min=d_min,
+        d_max=d_max
+    )
 
 
 @bp.route('/results/<violation>') # USA IN QUALCHE MODO get_frequencies_list_from_probs O I SUO CONTENUTO
 def details_fvf(violation):
+    if session.get("user") == None:
+        btn_login = False
+    else:
+        btn_login = True
+
     focus_df = dict_vars['df'].query(violation)
 
     if dict_vars['target_type'] == 'probability':
@@ -224,4 +250,9 @@ def details_fvf(violation):
     else:
         results_viol2 = focus_df.groupby(dict_vars['root_var'])[
             dict_vars['predictions']].value_counts(normalize=True)
-    return render_template('violation_specific_fvf.html', viol=violation, res2=results_viol2.to_frame().to_html(classes=['table border-0 table-mirai table-hover w-100 rajdhani-bold text-white m-0']))
+
+    return render_template(
+        'violation_specific_fvf.html',
+        btn_login=btn_login,
+        viol=violation,
+        res2=results_viol2.to_frame().to_html(classes=['table border-0 table-mirai table-hover w-100 rajdhani-bold text-white m-0']))

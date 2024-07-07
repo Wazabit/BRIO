@@ -37,6 +37,7 @@ def home_bias():
     if session.get("user") == None:
         return redirect(url_for('login'))
     else:
+        btn_login = True
         global used_df
         global success_status
         global animation_status
@@ -104,8 +105,10 @@ def home_bias():
                 flash('Custom preprocessing pipeline successfully uploaded and processed!', 'success')
             animation_status = ""
             return redirect('/bias')
+
         return render_template('home.html',
                                session=session.get("user"),
+                               btn_login=btn_login,
                                pretty=json.dumps(session.get("user"), indent=4),
                                df_used=used_df,
                                status=success_status,

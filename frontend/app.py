@@ -60,8 +60,14 @@ app.register_blueprint(risk.bp)
 #def home():
 #    return render_template('homepage.html')
 def home():
+    if session.get("user") == None:
+        btn_login = False
+    else:
+        btn_login = True
+
     return render_template(
         "homepage.html",
+        btn_login=btn_login,
         session=session.get("user"),
         pretty=json.dumps(session.get("user"), indent=4),
     )
