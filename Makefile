@@ -1,5 +1,9 @@
 IMAGE_NAME="brio_frontend"
 CONTAINER_NAME="brio"
+MONGO_CONTAINER_NAME="mongodb"
+MONGO_VERSION="7.0-ubi8"
+MONGO_USER="brio"
+MONGO_PWD="q+Y!h2s+JH*10La"
 
 UNAME := $(shell uname -o)
 ifeq ($(UNAME), GNU/Linux)
@@ -20,6 +24,10 @@ help:
 
 .DEFAULT_GOAL := help
 
+.PHONY: network
+network:
+	@docker network create -d bridge ${MONGO_CONTAINER_NAME}
+
 .PHONY: build
 build:
 	@docker build \
@@ -33,6 +41,20 @@ frontend: build
 		--name ${CONTAINER_NAME} \
 		--env HOST_IP=$(HOST_IP) \
 		${IMAGE_NAME}
+
+.PHONY: mongodb
+mongodb:
+	@docker run --name ${MONGO_CONTAINER_NAME} \
+		-d -p 27017:27017 \
+		mongodb/mongodb-community-server:${MONGO_VERSION}
+	@docker cp  datasources/* ${MONGO_CONTAINER_NAME}:data
+	@docker exec -i ${MONGO_CONTAINER_NAME} /usr/bin/mongorestore \
+		-d brio \
+		data/mongo/brio/
+
+mongodb_stop:
+	@docker stop ${MONGO_CONTAINER_NAME} && docker rm ${MONGO_CONTAINER_NAME}
+
 
 .PHONY: shell
 shell:

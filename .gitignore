@@ -145,3 +145,8 @@ dmypy.json
 /lib/
 /share/
 /pyvenv.cfg
+
+#Mongo Files
+/data
+
+mongo_test.py

@@ -11,6 +11,15 @@ import os
 
 from frontend.views import bias, opacity, risk
 
+from pymongo import MongoClient
+import urllib.parse
+
+from pymongo.collation import Collation
+
+
+username = urllib.parse.quote_plus('brio')
+password = urllib.parse.quote_plus('q+Y!h2s+JH*10La')
+
 ENV_FILE = find_dotenv()
 if ENV_FILE:
     load_dotenv(ENV_FILE)
@@ -100,6 +109,20 @@ def logout():
             },
             quote_via=quote_plus,
         )
+    )
+
+@app.route("/mongo")
+def mongo():
+    client = MongoClient('mongodb://%s:%s@127.0.0.1' % (username, password))
+    client.list_database_names()
+    #dbs = client.list_database_names()
+
+    return render_template(
+        "underconstruction.html",
+        message=client,
+        btn_login=False,
+        session=session.get("user"),
+        pretty=json.dumps(session.get("user"), indent=4),
     )
 
 if __name__ == '__main__':
