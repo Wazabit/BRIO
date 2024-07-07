@@ -4,6 +4,7 @@ MONGO_CONTAINER_NAME="mongodb"
 MONGO_VERSION="7.0-ubi8"
 MONGO_USER="brio"
 MONGO_PWD="q+Y!h2s+JH*10La"
+CURRENT_TIME := $(shell date +"%Y%m%d_%H%M%S")
 
 UNAME := $(shell uname -o)
 ifeq ($(UNAME), GNU/Linux)
@@ -47,14 +48,18 @@ mongodb:
 	@docker run --name ${MONGO_CONTAINER_NAME} \
 		-d -p 27017:27017 \
 		mongodb/mongodb-community-server:${MONGO_VERSION}
-	@docker cp  datasources/* ${MONGO_CONTAINER_NAME}:data
+	@docker cp  datasources/restore/mongo/schema/* ${MONGO_CONTAINER_NAME}:data
 	@docker exec -i ${MONGO_CONTAINER_NAME} /usr/bin/mongorestore \
 		-d brio \
-		data/mongo/brio/
+		data/brio/
 
 mongodb_stop:
+	@docker exec -i ${MONGO_CONTAINER_NAME} mkdir -p tmp/brio_${CURRENT_TIME}
+	@docker exec -i ${MONGO_CONTAINER_NAME} /usr/bin/mongodump \
+		-d brio \
+		-o tmp/brio_${CURRENT_TIME}
+	@docker cp  ${MONGO_CONTAINER_NAME}:tmp/brio_${CURRENT_TIME}/ 	datasources/backups/mongo/${CURRENT_TIME}/
 	@docker stop ${MONGO_CONTAINER_NAME} && docker rm ${MONGO_CONTAINER_NAME}
-
 
 .PHONY: shell
 shell:
