@@ -4,11 +4,21 @@ import os
 import subprocess
 from subprocess import check_output
 
+from dotenv import find_dotenv, load_dotenv
+from os import environ as env
 from flask import (Blueprint, Flask, Response, current_app, flash, jsonify,
                    redirect, render_template, request, session, url_for)
 
+from frontend.classes.database import Database
+from frontend.classes.file import File
+from frontend.classes.fileType import FileType
+from frontend.classes.user import User
 from frontend.views.bias_route import FreqvsFreq, FreqvsRef
-from brio.utils.funcs import allowed_file, handle_multiupload
+from brio.utils.funcs import allowed_file, handle_multiupload, upload_folder
+
+ENV_FILE = find_dotenv()
+if ENV_FILE:
+    load_dotenv(ENV_FILE)
 
 bp = Blueprint('bias', __name__,
                template_folder="../templates/bias", url_prefix="/bias")
@@ -31,12 +41,20 @@ if os.system("test -f /.dockerenv") == 0:
     localhost_ip = os.environ['HOST_IP']
     print(f"localhost_ip={localhost_ip}", flush=True)
 
+app = Flask(__name__)
+app.db = Database()
+
+UPLOAD_FOLDER = os.path.abspath(env.get('UPLOAD_FOLDER'))
 
 @bp.route('/', methods=['GET', 'POST'])
 def home_bias():
-    if session.get("user") == None:
+    if session.get("user") is None:
         return redirect(url_for('login'))
     else:
+        data = session.get("user")
+        user = User(data.get("userinfo"))
+        user.register_update(user, app.db)
+        app.config['UPLOAD_FOLDER'] = upload_folder(UPLOAD_FOLDER, user.sub)
         btn_login = True
         global used_df
         global success_status
@@ -60,9 +78,11 @@ def home_bias():
                 dict_vars['dataset'] = dataframe_file.filename
                 if allowed_file(dict_vars['dataset']):
                     dataframe_file.save(os.path.join(
-                        current_app.config['UPLOAD_FOLDER'], dict_vars['dataset']))
+                        app.config['UPLOAD_FOLDER'], dict_vars['dataset']))
                     used_df = dict_vars['dataset']
                     success_status = "text-success"
+                    current_file = File(dict_vars['dataset'], user.sub, FileType.DATASET, app.config['UPLOAD_FOLDER'])
+                    current_file.dbInsert(current_file, app.db)
                     flash('Dataframe successfully uploaded!', 'success')
                 else:
                     flash('Unsupported dataframe format.', 'danger')
@@ -75,9 +95,11 @@ def home_bias():
                 success_status = "text-success"
                 if allowed_file(dict_vars['notebook']) and allowed_file(dict_vars['dataset_custom']):
                     request.files['dataset_custom'].save(os.path.join(
-                        current_app.config['UPLOAD_FOLDER'], dict_vars['dataset_custom']))
+                        app.config['UPLOAD_FOLDER'], dict_vars['dataset_custom']))
                     request.files['notebook'].save(os.path.join(
-                        current_app.config['UPLOAD_FOLDER'], dict_vars['notebook']))
+                        app.config['UPLOAD_FOLDER'], dict_vars['notebook']))
+                    current_file = File(dict_vars['notebook'], user.sub, FileType.NOTEBOOK, app.config['UPLOAD_FOLDER'])
+                    current_file.dbInsert(current_file, app.db)
                 else:
                     used_df = ""
                     dict_vars = {}
@@ -90,18 +112,22 @@ def home_bias():
                     return redirect('/bias')
                 if request.files['artifacts'].filename != '':
                     handle_multiupload(request, 'artifacts',
-                                       current_app.config['UPLOAD_FOLDER'])
+                                       app.config['UPLOAD_FOLDER'])
+
                 notebook_extension = dict_vars['notebook'].split('.')[1]
                 match notebook_extension:
                     case 'ipynb':
                         os.system("jupyter nbconvert --to python " +
-                                  os.path.join(current_app.config['UPLOAD_FOLDER'], dict_vars['notebook']))
+                                  os.path.join(app.config['UPLOAD_FOLDER'], dict_vars['notebook']))
                         note_name = dict_vars['notebook'].split('.')[0]
                         subprocess.run(["python3", os.path.join(
-                            current_app.config['UPLOAD_FOLDER'], note_name + ".py")])
+                            app.config['UPLOAD_FOLDER'], note_name + ".py")])
                     case 'py':
                         subprocess.run(["python3", os.path.join(
-                            current_app.config['UPLOAD_FOLDER'], dict_vars['notebook'])])
+                            app.config['UPLOAD_FOLDER'], dict_vars['notebook'])])
+
+                current_file = File(dict_vars['notebook'], user.sub, FileType.ARTIFACTS, app.config['UPLOAD_FOLDER'])
+                current_file.dbInsert(current_file, app.db)
                 flash('Custom preprocessing pipeline successfully uploaded and processed!', 'success')
             animation_status = ""
             return redirect('/bias')

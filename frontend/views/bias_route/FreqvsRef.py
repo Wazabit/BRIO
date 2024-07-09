@@ -15,9 +15,19 @@ from flask import (Blueprint, Flask, Response, current_app, flash, jsonify,
 from brio.bias.FreqVsRefBiasDetector import FreqVsRefBiasDetector
 from brio.bias.BiasDetector import BiasDetector
 from brio.utils.funcs import (handle_ref_distributions, order_violations,
-                             write_reference_distributions_html)
+                              write_reference_distributions_html, upload_folder)
 
 from brio.risk.HazardFromBiasDetectionCalculator import HazardFromBiasDetectionCalculator
+from frontend.classes.database import Database
+from frontend.classes.user import User
+
+from dotenv import find_dotenv, load_dotenv
+from os import environ as env
+
+ENV_FILE = find_dotenv()
+if ENV_FILE:
+    load_dotenv(ENV_FILE)
+
 bp = Blueprint('FreqvsRef', __name__,
                template_folder="../../templates/bias", url_prefix="/freqvsref")
 
@@ -42,19 +52,26 @@ localhost_ip = ips.decode().split(" ")[0]
 if os.system("test -f /.dockerenv") == 0:
     localhost_ip = os.environ['HOST_IP']
 
+app = Flask(__name__)
+app.db = Database()
+UPLOAD_FOLDER = os.path.abspath(env.get('UPLOAD_FOLDER'))
 
 @bp.route('/', methods=['GET', 'POST'])
 def freqvsref():
-    if session.get("user") == None:
+    if session.get("user") is None:
         return redirect(url_for('login'))
     else:
+        data = session.get("user")
+        user = User(data.get("userinfo"))
+        user.register_update(user, app.db)
+        app.config['UPLOAD_FOLDER'] = upload_folder(UPLOAD_FOLDER, user.sub)
         btn_login = True
         global comp_thr
         global animation_status
         global selected_params
         global display_params
         list_of_files = glob.glob(os.path.join(
-            current_app.config['UPLOAD_FOLDER']) + "/*")
+            app.config['UPLOAD_FOLDER']) + "/*")
         latest_file = max(list_of_files, key=os.path.getctime)
         extension = latest_file.rsplit('.', 1)[1].lower()
         match extension:
@@ -126,9 +143,13 @@ def freqvsref():
 
 @bp.route('/results', methods=['GET', 'POST'])
 def results_fvr():
-    if session.get("user") == None:
+    if session.get("user") is None:
         btn_login = False
     else:
+        data = session.get("user")
+        user = User(data.get("userinfo"))
+        user.register_update(user, app.db)
+        app.config['UPLOAD_FOLDER'] = upload_folder(UPLOAD_FOLDER, user.sub)
         btn_login = True
 
     bd = FreqVsRefBiasDetector(
@@ -238,9 +259,13 @@ def results_fvr():
 
 @bp.route('/results/<violation>')
 def details_fvr(violation):
-    if session.get("user") == None:
+    if session.get("user") is None:
         btn_login = False
     else:
+        data = session.get("user")
+        user = User(data.get("userinfo"))
+        user.register_update(user, app.db)
+        app.config['UPLOAD_FOLDER'] = upload_folder(UPLOAD_FOLDER, user.sub)
         btn_login = True
 
     focus_df = dict_vars['df'].query(violation)

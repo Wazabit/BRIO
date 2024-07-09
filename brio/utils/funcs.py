@@ -7,7 +7,7 @@ import os
 def allowed_file(filename: str) -> str:
     ALLOWED_EXTENSIONS = {'pkl', 'csv', 'ipynb', 'py'}
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def handle_multiupload(req: request, label: str, path: str) -> None:
@@ -43,16 +43,19 @@ def order_violations(viol: dict) -> dict:
         return middle_value
 
     # Sort entries with valid middle values
-    sorted_entries_with_middle_values = sorted(((key, value) for key, value in viol.items() if get_middle_value(value) is not None),
-                                               key=lambda x: get_middle_value(x[1]), reverse=True)
+    sorted_entries_with_middle_values = sorted(
+        ((key, value) for key, value in viol.items() if get_middle_value(value) is not None),
+        key=lambda x: get_middle_value(x[1]), reverse=True)
 
     # Sort entries with None middle values and append them at the end
     sorted_dict = dict(sorted_entries_with_middle_values + [(key, value)
-                       for key, value in viol.items() if get_middle_value(value) is None])
+                                                            for key, value in viol.items() if
+                                                            get_middle_value(value) is None])
     return sorted_dict
 
 
-def write_reference_distributions_html(rootvar: str, targetvar: str, df: pd.DataFrame, target_type: str, n_bins: int) -> str:
+def write_reference_distributions_html(rootvar: str, targetvar: str, df: pd.DataFrame, target_type: str,
+                                       n_bins: int) -> str:
     nroot = len(df[rootvar].unique())
     if target_type == 'probability':
         ntarget = n_bins
@@ -81,3 +84,10 @@ def write_reference_distributions_html(rootvar: str, targetvar: str, df: pd.Data
             tot_html += '</div>'
         tot_html += '</div>'
     return tot_html
+
+
+def upload_folder(folder: str, user_id: str) -> str:
+    user_folder = folder + "/" + user_id
+    if not os.path.exists(user_folder):
+        os.makedirs(user_folder)
+    return user_folder

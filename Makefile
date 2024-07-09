@@ -40,12 +40,14 @@ build:
 frontend: build
 	@docker run -dp 80:80 \
 		--name ${CONTAINER_NAME} \
+		--network ${MONGO_CONTAINER_NAME} \
 		--env HOST_IP=$(HOST_IP) \
 		${IMAGE_NAME}
 
 .PHONY: mongodb
-mongodb:
+mongodb: network
 	@docker run --name ${MONGO_CONTAINER_NAME} \
+		--network ${MONGO_CONTAINER_NAME} \
 		-d -p 27017:27017 \
 		mongodb/mongodb-community-server:${MONGO_VERSION}
 	@docker cp  datasources/restore/mongo/schema/* ${MONGO_CONTAINER_NAME}:data
@@ -60,6 +62,8 @@ mongodb_stop:
 		-o tmp/brio_${CURRENT_TIME}
 	@docker cp  ${MONGO_CONTAINER_NAME}:tmp/brio_${CURRENT_TIME}/ 	datasources/backups/mongo/${CURRENT_TIME}/
 	@docker stop ${MONGO_CONTAINER_NAME} && docker rm ${MONGO_CONTAINER_NAME}
+	@docker network rm ${MONGO_CONTAINER_NAME}
+	@docker image rm mongodb/mongodb-community-server
 
 .PHONY: shell
 shell:
@@ -69,6 +73,8 @@ shell:
 stop:
 	@docker stop ${CONTAINER_NAME}
 	@docker rm ${CONTAINER_NAME}
+	@docker image rm ${IMAGE_NAME}
+	@docker image rm ${IMAGE_NAME}:$$(cat VERSION.txt)
 
 .PHONY: test
 test:
