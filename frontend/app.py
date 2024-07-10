@@ -1,5 +1,4 @@
 import json
-from bson import json_util
 from os import environ as env
 from urllib.parse import quote_plus, urlencode
 
@@ -27,6 +26,8 @@ app.register_blueprint(opacity.bp)
 app.register_blueprint(risk.bp)
 
 app.secret_key = env.get("APP_SECRET_KEY")
+
+
 
 oauth = OAuth(app)
 

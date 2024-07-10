@@ -47,6 +47,21 @@ class Analysis:
     def dbUpdate(md5_hash, data, db):
         db.update_one("analysis", {"md5_hash": md5_hash}, data)
 
+    @staticmethod
+    def getAnalysis(sub, db):
+        # define the keys to remove
+        keys = ['_id', 'owner_id','file_md5_hash']
+        analysis = []
+        results = db.find("analysis", {"owner_id": sub})
+        for result in results:
+            for key in keys:
+                result.pop(key, None)
+            file = db.find_one("files", {"md5_hash": result["file_md5_hash"]}, ('created_at', -1))
+            analysis.append({
+                'filename': file["name"],
+                'analysis': result
+            })
+        return analysis
     def toJSON(self):
         return json.dumps(
             self,
