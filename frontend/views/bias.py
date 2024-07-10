@@ -1,4 +1,5 @@
 import json
+import logging
 
 import os
 import subprocess
@@ -11,6 +12,7 @@ from flask import (Blueprint, Flask, Response, current_app, flash, jsonify,
 
 from frontend.classes.database import Database
 from frontend.classes.file import File
+from frontend.classes.fileStatus import FileStatus
 from frontend.classes.fileType import FileType
 from frontend.classes.user import User
 from frontend.views.bias_route import FreqvsFreq, FreqvsRef
@@ -46,8 +48,12 @@ app.db = Database()
 
 UPLOAD_FOLDER = os.path.abspath(env.get('UPLOAD_FOLDER'))
 
+btn_login = False
+user = False
+
 @bp.route('/', methods=['GET', 'POST'])
 def home_bias():
+    global btn_login, user
     if session.get("user") is None:
         return redirect(url_for('login'))
     else:
@@ -60,12 +66,13 @@ def home_bias():
         global success_status
         global animation_status
         global dict_vars
+
         if request.method == 'GET' and request.args.get('reset'):
             used_df = ""
             success_status = "text-warning"
             animation_status = ""
             dict_vars = {}
-            session.clear()
+            user.update_all_status_files(app.db, FileStatus.USED)
         if request.method == 'POST':
             keys = list(request.files.keys())
             uploads = [request.files[x].filename for x in keys if x != '']
@@ -81,7 +88,7 @@ def home_bias():
                         app.config['UPLOAD_FOLDER'], dict_vars['dataset']))
                     used_df = dict_vars['dataset']
                     success_status = "text-success"
-                    current_file = File(dict_vars['dataset'], user.sub, FileType.DATASET, app.config['UPLOAD_FOLDER'])
+                    current_file = File(dict_vars['dataset'], user.sub, FileType.DATASET, FileStatus.IN_USE, app.config['UPLOAD_FOLDER'])
                     current_file.dbInsert(current_file, app.db)
                     flash('Dataframe successfully uploaded!', 'success')
                 else:
@@ -98,7 +105,7 @@ def home_bias():
                         app.config['UPLOAD_FOLDER'], dict_vars['dataset_custom']))
                     request.files['notebook'].save(os.path.join(
                         app.config['UPLOAD_FOLDER'], dict_vars['notebook']))
-                    current_file = File(dict_vars['notebook'], user.sub, FileType.NOTEBOOK, app.config['UPLOAD_FOLDER'])
+                    current_file = File(dict_vars['notebook'], user.sub, FileType.NOTEBOOK, FileStatus.IN_USE, app.config['UPLOAD_FOLDER'])
                     current_file.dbInsert(current_file, app.db)
                 else:
                     used_df = ""
@@ -126,16 +133,22 @@ def home_bias():
                         subprocess.run(["python3", os.path.join(
                             app.config['UPLOAD_FOLDER'], dict_vars['notebook'])])
 
-                current_file = File(dict_vars['notebook'], user.sub, FileType.ARTIFACTS, app.config['UPLOAD_FOLDER'])
+                current_file = File(dict_vars['notebook'], user.sub, FileType.ARTIFACTS, FileStatus.IN_USE, app.config['UPLOAD_FOLDER'])
                 current_file.dbInsert(current_file, app.db)
                 flash('Custom preprocessing pipeline successfully uploaded and processed!', 'success')
             animation_status = ""
             return redirect('/bias')
 
+        current_file = user.get_use_file(app.db)
+        filename = ''
+        if current_file:
+            filename = current_file["name"]
+
         return render_template('home.html',
                                session=session.get("user"),
                                btn_login=btn_login,
+                               user=user.toJSON(),
                                pretty=json.dumps(session.get("user"), indent=4),
-                               df_used=used_df,
+                               df_used=filename,
                                status=success_status,
                                animated=animation_status)

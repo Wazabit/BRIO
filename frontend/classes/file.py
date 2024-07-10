@@ -1,8 +1,9 @@
 import hashlib
 from dataclasses import dataclass
+from datetime import datetime
 
+from frontend.classes.fileStatus import FileStatus
 from frontend.classes.fileType import FileType
-from frontend.classes.user import User
 
 BUF_SIZE = 65536
 
@@ -24,13 +25,21 @@ class File:
     owner_id: str
     type: FileType
     md5_hash: str
+    status: FileStatus
+    created_at: datetime
 
-    def __init__(self, filename: str, owner_id: str, filetype: FileType, path: str):
+    def __init__(self, filename: str, owner_id: str, filetype: FileType, filestatus: FileStatus, path: str):
         self.name = filename
         self.owner_id = owner_id
         self.type = filetype.value
         self.md5_hash = get_md5_hash(path, filename)
+        self.status = filestatus.value
+        self.created_at = datetime.now()
 
     def dbInsert(self, file, db):
         if len(db.find("files", {"md5_hash": file.md5_hash})) == 0:
+            db.update_many("files", {"owner_id": file.owner_id}, {"status": FileStatus.USED.value})
             db.insert("files", file)
+        else:
+            db.update_many("files", {"owner_id": file.owner_id}, {"status": FileStatus.USED.value})
+            db.update_one("files", {"md5_hash": file.md5_hash}, {"status": FileStatus.IN_USE.value})

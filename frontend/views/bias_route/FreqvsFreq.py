@@ -1,6 +1,5 @@
 import json
 
-import glob
 import os
 import pickle
 from statistics import mean, stdev
@@ -9,7 +8,7 @@ import logging
 
 import pandas as pd
 import numpy as np
-from flask import (Blueprint, Flask, Response, current_app, flash, jsonify,
+from flask import (Blueprint, Flask, flash, jsonify,
                    redirect, render_template, request, session, url_for)
 
 from brio.bias.FreqVsFreqBiasDetector import FreqVsFreqBiasDetector
@@ -17,12 +16,13 @@ from brio.bias.BiasDetector import BiasDetector
 from brio.utils.funcs import order_violations, upload_folder
 
 from brio.risk.HazardFromBiasDetectionCalculator import HazardFromBiasDetectionCalculator
+from frontend.classes.analysis import Analysis
+from frontend.classes.analysisType import AnalysisType
 from frontend.classes.database import Database
 from frontend.classes.user import User
 
 from dotenv import find_dotenv, load_dotenv
 from os import environ as env
-
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -53,6 +53,9 @@ app = Flask(__name__)
 app.db = Database()
 UPLOAD_FOLDER = os.path.abspath(env.get('UPLOAD_FOLDER'))
 
+analysis = None
+
+
 @bp.route('/', methods=['GET', 'POST'])
 def freqvsfreq():
     if session.get("user") == None:
@@ -67,9 +70,14 @@ def freqvsfreq():
         global animation_status
         global selected_params
         global display_params
-        list_of_files = glob.glob(os.path.join(
-            app.config['UPLOAD_FOLDER']) + "/*")
-        latest_file = max(list_of_files, key=os.path.getctime)
+        global analysis
+
+        current_file = user.get_use_file(app.db)
+        if current_file:
+            latest_file = app.config['UPLOAD_FOLDER'] + "/" + current_file["name"]
+        else:
+            return redirect('/bias')
+
         extension = latest_file.rsplit('.', 1)[1].lower()
         match extension:
             case 'pkl':
@@ -117,10 +125,16 @@ def freqvsfreq():
                 display_params = "d-flex"
                 flash('Parameters selected successfully!', 'success')
             animation_status = ""
+            analysis = Analysis(current_file["md5_hash"], user.sub, AnalysisType.FREQVSFREQ, list_var,
+                                selected_params)
+            Analysis.dbInsert(analysis, app.db)
+            dict_vars['analysis'] = analysis.md5_hash
             return redirect('/bias/freqvsfreq/#selected_params')
+
         return render_template(
             'freqvsfreq.html',
             session=session.get("user"),
+            user=user.toJSON(),
             pretty=json.dumps(session.get("user"), indent=4),
             btn_login=btn_login,
             var_list=list_var,
@@ -133,6 +147,7 @@ def freqvsfreq():
 
 @bp.route('/results', methods=['GET', 'POST'])
 def results_fvf():
+    global user
     if session.get("user") is None:
         btn_login = False
     else:
@@ -188,6 +203,16 @@ def results_fvf():
         weight_logic="group"
     )
 
+    Analysis.dbUpdate(
+        dict_vars['analysis'],
+        {
+            'groups': repr(results1),
+            'conditioned': repr(results2),
+            'hazard': repr(results3)
+        },
+        app.db
+    )
+
     individual_risk = results3.pop(0)
     unconditioned_hazard = results3.pop(0)
 
@@ -233,6 +258,7 @@ def results_fvf():
     return render_template(
         'results_freqvsfreq.html',
         btn_login=btn_login,
+        user=user.toJSON(),
         results1=results1,
         results2=results2,
         individual_risk=individual_risk,
@@ -250,6 +276,7 @@ def results_fvf():
 
 @bp.route('/results/<violation>')  # USA IN QUALCHE MODO get_frequencies_list_from_probs O I SUO CONTENUTO
 def details_fvf(violation):
+    global user
     if session.get("user") is None:
         btn_login = False
     else:
@@ -283,6 +310,7 @@ def details_fvf(violation):
     return render_template(
         'violation_specific_fvf.html',
         btn_login=btn_login,
+        user=user.toJSON(),
         viol=violation,
         res2=results_viol2.to_frame().to_html(
             classes=['table border-0 table-mirai table-hover w-100 rajdhani-bold text-white m-0']))

@@ -1,4 +1,7 @@
+import json
 from dataclasses import dataclass
+
+from frontend.classes.fileStatus import FileStatus
 
 
 @dataclass
@@ -30,4 +33,17 @@ class User:
         if len(db.find("users", {"sub": user.sub})) == 0:
             db.insert("users", user)
         else:
-            db.update("users", {"sub": user.sub}, user)
+            db.update_one("users", {"sub": user.sub}, user)
+
+    def toJSON(self):
+        return json.dumps(
+            self,
+            default=lambda o: o.__dict__,
+            sort_keys=True,
+            indent=4)
+
+    def get_use_file(self, db):
+        return db.find_one("files", {"owner_id": self.sub, "status": FileStatus.IN_USE.value}, ('created_at', -1))
+
+    def update_all_status_files(self, db, status: FileStatus):
+        db.update_many("files", {"owner_id": self.sub}, {"status": status.value})
