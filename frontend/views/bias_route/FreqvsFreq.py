@@ -149,7 +149,7 @@ def freqvsfreq():
 def results_fvf():
     global user
     if session.get("user") is None:
-        btn_login = False
+        return redirect(url_for('login'))
     else:
         data = session.get("user")
         user = User(data.get("userinfo"))
