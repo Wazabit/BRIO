@@ -149,4 +149,3 @@ dmypy.json
 #Mongo Files
 /datasources/backups/mongo/*
 
-mongo_test.py
