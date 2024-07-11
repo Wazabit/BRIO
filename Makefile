@@ -1,5 +1,10 @@
 IMAGE_NAME="brio_frontend"
 CONTAINER_NAME="brio"
+MONGO_CONTAINER_NAME="mongodb"
+MONGO_VERSION="7.0-ubi8"
+MONGO_USER="brio"
+MONGO_PWD="q+Y!h2s+JH*10La"
+CURRENT_TIME := $(shell date +"%Y%m%d_%H%M%S")
 
 UNAME := $(shell uname -o)
 ifeq ($(UNAME), GNU/Linux)
@@ -20,6 +25,10 @@ help:
 
 .DEFAULT_GOAL := help
 
+.PHONY: network
+network:
+	@docker network create -d bridge ${MONGO_CONTAINER_NAME}
+
 .PHONY: build
 build:
 	@docker build \
@@ -31,8 +40,30 @@ build:
 frontend: build
 	@docker run -dp 80:80 \
 		--name ${CONTAINER_NAME} \
+		--network ${MONGO_CONTAINER_NAME} \
 		--env HOST_IP=$(HOST_IP) \
 		${IMAGE_NAME}
+
+.PHONY: mongodb
+mongodb: network
+	@docker run --name ${MONGO_CONTAINER_NAME} \
+		--network ${MONGO_CONTAINER_NAME} \
+		-d -p 27017:27017 \
+		mongodb/mongodb-community-server:${MONGO_VERSION}
+	@docker cp  datasources/restore/mongo/schema/* ${MONGO_CONTAINER_NAME}:data
+	@docker exec -i ${MONGO_CONTAINER_NAME} /usr/bin/mongorestore \
+		-d brio \
+		data/brio/
+
+mongodb_stop:
+	@docker exec -i ${MONGO_CONTAINER_NAME} mkdir -p tmp/brio_${CURRENT_TIME}
+	@docker exec -i ${MONGO_CONTAINER_NAME} /usr/bin/mongodump \
+		-d brio \
+		-o tmp/brio_${CURRENT_TIME}
+	@docker cp  ${MONGO_CONTAINER_NAME}:tmp/brio_${CURRENT_TIME}/ 	datasources/backups/mongo/${CURRENT_TIME}/
+	@docker stop ${MONGO_CONTAINER_NAME} && docker rm ${MONGO_CONTAINER_NAME}
+	@docker network rm ${MONGO_CONTAINER_NAME}
+	@docker image rm mongodb/mongodb-community-server
 
 .PHONY: shell
 shell:
@@ -42,6 +73,8 @@ shell:
 stop:
 	@docker stop ${CONTAINER_NAME}
 	@docker rm ${CONTAINER_NAME}
+	@docker image rm ${IMAGE_NAME}
+	@docker image rm ${IMAGE_NAME}:$$(cat VERSION.txt)
 
 .PHONY: test
 test:

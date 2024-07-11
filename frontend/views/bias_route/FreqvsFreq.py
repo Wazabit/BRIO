@@ -1,23 +1,33 @@
 import json
 
-import glob
 import os
 import pickle
 from statistics import mean, stdev
 from subprocess import check_output
 import logging
 
-
 import pandas as pd
 import numpy as np
-from flask import (Blueprint, Flask, Response, current_app, flash, jsonify,
+from flask import (Blueprint, Flask, flash, jsonify,
                    redirect, render_template, request, session, url_for)
 
 from brio.bias.FreqVsFreqBiasDetector import FreqVsFreqBiasDetector
 from brio.bias.BiasDetector import BiasDetector
-from brio.utils.funcs import order_violations
+from brio.utils.funcs import order_violations, upload_folder
 
 from brio.risk.HazardFromBiasDetectionCalculator import HazardFromBiasDetectionCalculator
+from frontend.classes.analysis import Analysis
+from frontend.classes.analysisType import AnalysisType
+from frontend.classes.database import Database
+from frontend.classes.user import User
+
+from dotenv import find_dotenv, load_dotenv
+from os import environ as env
+
+ENV_FILE = find_dotenv()
+if ENV_FILE:
+    load_dotenv(ENV_FILE)
+
 bp = Blueprint('FreqvsFreq', __name__,
                template_folder="../../templates/bias", url_prefix="/freqvsfreq")
 
@@ -28,7 +38,7 @@ agg_funcs = {
     'mean': mean,
     'stdev': stdev
 }
-selected_params = { 
+selected_params = {
 }
 display_params = "d-none"
 used_df = ""
@@ -39,20 +49,35 @@ localhost_ip = ips.decode().split(" ")[0]
 if os.system("test -f /.dockerenv") == 0:
     localhost_ip = os.environ['HOST_IP']
 
+app = Flask(__name__)
+app.db = Database()
+UPLOAD_FOLDER = os.path.abspath(env.get('UPLOAD_FOLDER'))
+
+analysis = None
+
 
 @bp.route('/', methods=['GET', 'POST'])
 def freqvsfreq():
     if session.get("user") == None:
         return redirect(url_for('login'))
     else:
+        data = session.get("user")
+        user = User(data.get("userinfo"))
+        user.register_update(user, app.db)
+        app.config['UPLOAD_FOLDER'] = upload_folder(UPLOAD_FOLDER, user.sub)
         btn_login = True
         global comp_thr
         global animation_status
         global selected_params
         global display_params
-        list_of_files = glob.glob(os.path.join(
-            current_app.config['UPLOAD_FOLDER']) + "/*")
-        latest_file = max(list_of_files, key=os.path.getctime)
+        global analysis
+
+        current_file = user.get_use_file(app.db)
+        if current_file:
+            latest_file = app.config['UPLOAD_FOLDER'] + "/" + current_file["name"]
+        else:
+            return redirect('/bias')
+
         extension = latest_file.rsplit('.', 1)[1].lower()
         match extension:
             case 'pkl':
@@ -100,10 +125,16 @@ def freqvsfreq():
                 display_params = "d-flex"
                 flash('Parameters selected successfully!', 'success')
             animation_status = ""
+            analysis = Analysis(current_file["md5_hash"], user.sub, AnalysisType.FREQVSFREQ, list_var,
+                                selected_params)
+            Analysis.dbInsert(analysis, app.db)
+            dict_vars['analysis'] = analysis.md5_hash
             return redirect('/bias/freqvsfreq/#selected_params')
+
         return render_template(
             'freqvsfreq.html',
             session=session.get("user"),
+            user=user.toJSON(),
             pretty=json.dumps(session.get("user"), indent=4),
             btn_login=btn_login,
             var_list=list_var,
@@ -116,9 +147,13 @@ def freqvsfreq():
 
 @bp.route('/results', methods=['GET', 'POST'])
 def results_fvf():
-    if session.get("user") == None:
-        btn_login = False
+    global user
+    if session.get("user") is None:
+        return redirect(url_for('login'))
     else:
+        data = session.get("user")
+        user = User(data.get("userinfo"))
+        user.register_update(user, app.db)
         btn_login = True
 
     bd = FreqVsFreqBiasDetector(
@@ -168,9 +203,11 @@ def results_fvf():
         weight_logic="group"
     )
 
+    Analysis.analysisUpdate(dict_vars['analysis'], results1, results2, results3, app.db)
+
     individual_risk = results3.pop(0)
     unconditioned_hazard = results3.pop(0)
-    
+
     conditioned_results_with_hazard = {}
     for k, v in results2.items():
         if v[1] is not None:
@@ -188,10 +225,10 @@ def results_fvf():
     d_max = 0
     for key in list(violations.keys()):
         csv_plot += f"{key},{violations[key][0]},{violations[key][1]},{violations[key][2]},{violations[key][5]}\n"
-        if violations[key][1] < h_min: h_min=violations[key][1]
-        if violations[key][1] > h_max: h_max=violations[key][1]
-        if violations[key][2] < d_min: d_min=violations[key][2]
-        if violations[key][2] > d_max: d_max=violations[key][2]
+        if violations[key][1] < h_min: h_min = violations[key][1]
+        if violations[key][1] > h_max: h_max = violations[key][1]
+        if violations[key][2] < d_min: d_min = violations[key][2]
+        if violations[key][2] > d_max: d_max = violations[key][2]
     logging.warning("data to plot")
     logging.warning(h_min)
     logging.warning(h_max)
@@ -213,6 +250,7 @@ def results_fvf():
     return render_template(
         'results_freqvsfreq.html',
         btn_login=btn_login,
+        user=user.toJSON(),
         results1=results1,
         results2=results2,
         individual_risk=individual_risk,
@@ -228,24 +266,34 @@ def results_fvf():
     )
 
 
-@bp.route('/results/<violation>') # USA IN QUALCHE MODO get_frequencies_list_from_probs O I SUO CONTENUTO
+@bp.route('/results/<violation>')  # USA IN QUALCHE MODO get_frequencies_list_from_probs O I SUO CONTENUTO
 def details_fvf(violation):
-    if session.get("user") == None:
+    global user
+    if session.get("user") is None:
         btn_login = False
     else:
+        data = session.get("user")
+        user = User(data.get("userinfo"))
+        user.register_update(user, app.db)
+        app.config['UPLOAD_FOLDER'] = upload_folder(UPLOAD_FOLDER, user.sub)
         btn_login = True
 
     focus_df = dict_vars['df'].query(violation)
 
     if dict_vars['target_type'] == 'probability':
         bd = BiasDetector()
-        freqs, _ = bd.get_frequencies_list_from_probs(focus_df, dict_vars['predictions'], 
-                                dict_vars['root_var'], sorted(focus_df[dict_vars['root_var']].unique()), dict_vars['nbins'])
+        freqs, _ = bd.get_frequencies_list_from_probs(focus_df, dict_vars['predictions'],
+                                                      dict_vars['root_var'],
+                                                      sorted(focus_df[dict_vars['root_var']].unique()),
+                                                      dict_vars['nbins'])
         #transform list of frequencies in a Series with multiindex
-        predicted_probs_limits = np.round(np.arange(0, 1 + 1/dict_vars['nbins'], 1/dict_vars['nbins']),2)
-        predicted_probs_range = [f'{start}-{end}' for start, end in zip(predicted_probs_limits[:-1], predicted_probs_limits[1:])]
+        predicted_probs_limits = np.round(np.arange(0, 1 + 1 / dict_vars['nbins'], 1 / dict_vars['nbins']), 2)
+        predicted_probs_range = [f'{start}-{end}' for start, end in
+                                 zip(predicted_probs_limits[:-1], predicted_probs_limits[1:])]
         # Create a multi-index
-        multi_index = pd.MultiIndex.from_product([sorted(focus_df[dict_vars['root_var']].unique()), predicted_probs_range], names=[dict_vars['root_var'], dict_vars['predictions']])
+        multi_index = pd.MultiIndex.from_product(
+            [sorted(focus_df[dict_vars['root_var']].unique()), predicted_probs_range],
+            names=[dict_vars['root_var'], dict_vars['predictions']])
         results_viol2 = pd.Series(np.concatenate(freqs), index=multi_index, name='freqs')
     else:
         results_viol2 = focus_df.groupby(dict_vars['root_var'])[
@@ -254,5 +302,7 @@ def details_fvf(violation):
     return render_template(
         'violation_specific_fvf.html',
         btn_login=btn_login,
+        user=user.toJSON(),
         viol=violation,
-        res2=results_viol2.to_frame().to_html(classes=['table border-0 table-mirai table-hover w-100 rajdhani-bold text-white m-0']))
+        res2=results_viol2.to_frame().to_html(
+            classes=['table border-0 table-mirai table-hover w-100 rajdhani-bold text-white m-0']))

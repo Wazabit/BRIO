@@ -525,6 +525,16 @@ html.animated:after{
   animation-fill-mode: both;
   animation-delay: 0s;
 }
+.btn-disabled{
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.btn-outline-primary.btn-mirai.btn-disabled{
+  color: rgba(255, 255, 255, .70);
+  border-color: rgba(255, 255, 255, .70);
+  background-color: transparent;
+}
+
 @media screen and (max-width: 992px) {
   .sidenav {
     height: auto;

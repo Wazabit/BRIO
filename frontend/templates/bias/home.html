@@ -20,8 +20,8 @@ BRIO - Bias Assessment
 
   <div class="row mb-3">
     <div class="d-grid gap-2 d-sm-flex justify-content-sm-center my-3">
-      <a href="/bias/freqvsfreq" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100 {{ animated }}" role="button">Freq vs freq analysis</a>
-      <a href="/bias/freqvsref" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100 {{ animated }}" role="button">Freq vs ref analysis</a>
+      <a href="/bias/freqvsfreq" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100 {{ animated }} {% if df_used == '' %} btn-disabled {% endif %}" role="button" >Freq vs freq analysis</a>
+      <a href="/bias/freqvsref" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100 {{ animated }} {% if df_used == '' %} btn-disabled {% endif %}" role="button">Freq vs ref analysis</a>
     </div>
   </div>
 </div>

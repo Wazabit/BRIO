@@ -1,23 +1,31 @@
-import json
-
-import glob
 import os
 import pickle
 from statistics import mean, stdev
 from subprocess import check_output
-import logging
 
 import pandas as pd
 import numpy as np
-from flask import (Blueprint, Flask, Response, current_app, flash, jsonify,
+from flask import (Blueprint, Flask, flash, jsonify,
                    redirect, render_template, request, session, url_for)
 
 from brio.bias.FreqVsRefBiasDetector import FreqVsRefBiasDetector
 from brio.bias.BiasDetector import BiasDetector
 from brio.utils.funcs import (handle_ref_distributions, order_violations,
-                             write_reference_distributions_html)
+                              write_reference_distributions_html, upload_folder)
 
 from brio.risk.HazardFromBiasDetectionCalculator import HazardFromBiasDetectionCalculator
+from frontend.classes.analysis import Analysis
+from frontend.classes.analysisType import AnalysisType
+from frontend.classes.database import Database
+from frontend.classes.user import User
+
+from dotenv import find_dotenv, load_dotenv
+from os import environ as env
+
+ENV_FILE = find_dotenv()
+if ENV_FILE:
+    load_dotenv(ENV_FILE)
+
 bp = Blueprint('FreqvsRef', __name__,
                template_folder="../../templates/bias", url_prefix="/freqvsref")
 
@@ -42,20 +50,34 @@ localhost_ip = ips.decode().split(" ")[0]
 if os.system("test -f /.dockerenv") == 0:
     localhost_ip = os.environ['HOST_IP']
 
+app = Flask(__name__)
+app.db = Database()
+UPLOAD_FOLDER = os.path.abspath(env.get('UPLOAD_FOLDER'))
+
+analysis = None
 
 @bp.route('/', methods=['GET', 'POST'])
 def freqvsref():
-    if session.get("user") == None:
+    if session.get("user") is None:
         return redirect(url_for('login'))
     else:
+        data = session.get("user")
+        user = User(data.get("userinfo"))
+        user.register_update(user, app.db)
+        app.config['UPLOAD_FOLDER'] = upload_folder(UPLOAD_FOLDER, user.sub)
         btn_login = True
         global comp_thr
         global animation_status
         global selected_params
         global display_params
-        list_of_files = glob.glob(os.path.join(
-            current_app.config['UPLOAD_FOLDER']) + "/*")
-        latest_file = max(list_of_files, key=os.path.getctime)
+        global analysis
+
+        current_file = user.get_use_file(app.db)
+        if current_file:
+            latest_file = app.config['UPLOAD_FOLDER'] + "/" + current_file["name"]
+        else:
+            return redirect('/bias')
+
         extension = latest_file.rsplit('.', 1)[1].lower()
         match extension:
             case 'pkl':
@@ -111,11 +133,19 @@ def freqvsref():
                         dict_vars[cat] = float(request.form[cat])
                 display_params = "d-flex"
                 flash('Parameters selected successfully!', 'success')
+
+            analysis = Analysis(current_file["md5_hash"], user.sub, AnalysisType.FREQVSREF, list_var,
+                                selected_params)
+            Analysis.dbInsert(analysis, app.db)
+
+            dict_vars['analysis'] = analysis.md5_hash
             animation_status = ""
             return redirect('/bias/freqvsref/#selected_params')
+
         return render_template(
             'freqvsref.html',
             btn_login=btn_login,
+            user=user.toJSON(),
             var_list=list_var,
             local_ip=localhost_ip,
             animated=animation_status,
@@ -126,9 +156,14 @@ def freqvsref():
 
 @bp.route('/results', methods=['GET', 'POST'])
 def results_fvr():
-    if session.get("user") == None:
-        btn_login = False
+    global user
+    if session.get("user") is None:
+        return redirect(url_for('login'))
     else:
+        data = session.get("user")
+        user = User(data.get("userinfo"))
+        user.register_update(user, app.db)
+        app.config['UPLOAD_FOLDER'] = upload_folder(UPLOAD_FOLDER, user.sub)
         btn_login = True
 
     bd = FreqVsRefBiasDetector(
@@ -187,22 +222,11 @@ def results_fvr():
         weight_logic="group"
     )
 
-    
-    logging.warning("results1")
-    logging.warning(results1)
-    logging.warning("results2")
-    logging.warning(results2)
-    logging.warning("results3")
-    logging.warning(results3)
+    Analysis.analysisUpdate(dict_vars['analysis'], results1, results2, results3, app.db)
 
     individual_risk = results3.pop(0)
     unconditioned_hazard = results3.pop(0)
     conditioned_results_with_hazard = {}
-    
-    logging.warning("individual_risk")
-    logging.warning(individual_risk)
-    logging.warning("unconditioned_hazard")
-    logging.warning(unconditioned_hazard)
 
     for k, v in results2.items():
         if v[1][0] is not None:
@@ -226,6 +250,7 @@ def results_fvr():
     return render_template(
         'results_freqvsref.html',
         btn_login=btn_login,
+        user=user.toJSON(),
         results1=results1,
         results2=results2,
         individual_risk=individual_risk,
@@ -238,9 +263,14 @@ def results_fvr():
 
 @bp.route('/results/<violation>')
 def details_fvr(violation):
-    if session.get("user") == None:
+    global user
+    if session.get("user") is None:
         btn_login = False
     else:
+        data = session.get("user")
+        user = User(data.get("userinfo"))
+        user.register_update(user, app.db)
+        app.config['UPLOAD_FOLDER'] = upload_folder(UPLOAD_FOLDER, user.sub)
         btn_login = True
 
     focus_df = dict_vars['df'].query(violation)
@@ -262,5 +292,6 @@ def details_fvr(violation):
     return render_template(
         'violation_specific_fvr.html',
         btn_login=btn_login,
+        user=user.toJSON(),
         viol=violation,
         res2=results_viol2.to_frame().to_html(classes=['table border-0 table-mirai table-hover w-100 rajdhani-bold text-white m-0']))

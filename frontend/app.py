@@ -7,9 +7,11 @@ from dotenv import find_dotenv, load_dotenv
 
 from flask import Flask, render_template, redirect, session, url_for
 from flask_cors import CORS
-import os
 
 from frontend.views import bias, opacity, risk
+
+from frontend.classes.user import User
+from frontend.classes.database import Database
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -18,17 +20,14 @@ if ENV_FILE:
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-UPLOAD_FOLDER = os.path.abspath("uploads")
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
 
 app.register_blueprint(bias.bp)
 app.register_blueprint(opacity.bp)
 app.register_blueprint(risk.bp)
 
 app.secret_key = env.get("APP_SECRET_KEY")
+
+
 
 oauth = OAuth(app)
 
@@ -42,27 +41,19 @@ oauth.register(
     server_metadata_url=f'https://{env.get("AUTH0_DOMAIN")}/.well-known/openid-configuration',
 )
 
-app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-UPLOAD_FOLDER = os.path.abspath("uploads")
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-
-app.register_blueprint(bias.bp)
-app.register_blueprint(opacity.bp)
-app.register_blueprint(risk.bp)
+app.db = Database()
 
 
 @app.route('/', methods=['GET'])
 #def home():
 #    return render_template('homepage.html')
 def home():
-    if session.get("user") == None:
+    if session.get("user") is None:
         btn_login = False
     else:
+        data = session.get("user")
+        user = User(data.get("userinfo"))
+        user.register_update(user, app.db)
         btn_login = True
 
     return render_template(
@@ -71,6 +62,7 @@ def home():
         session=session.get("user"),
         pretty=json.dumps(session.get("user"), indent=4),
     )
+
 
 @app.route("/callback", methods=["GET", "POST"])
 def callback():
@@ -101,6 +93,7 @@ def logout():
             quote_via=quote_plus,
         )
     )
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
