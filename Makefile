@@ -65,6 +65,16 @@ mongodb_stop:
 	@docker network rm ${MONGO_CONTAINER_NAME}
 	@docker image rm mongodb/mongodb-community-server
 
+mongodb_restore: network
+	@docker run --name ${MONGO_CONTAINER_NAME} \
+		--network ${MONGO_CONTAINER_NAME} \
+		-d -p 27017:27017 \
+		mongodb/mongodb-community-server:${MONGO_VERSION}
+	@docker cp  ${path}/* ${MONGO_CONTAINER_NAME}:data
+	@docker exec -i ${MONGO_CONTAINER_NAME} /usr/bin/mongorestore \
+		-d brio \
+		data/brio/
+
 .PHONY: shell
 shell:
 	@docker exec -it ${CONTAINER_NAME} /bin/bash

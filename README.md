@@ -14,6 +14,7 @@ The tool can be used through a web browser interacting with the provided fronten
 Provided that you have Docker up and running, to build the application (needed only the first time the tool is used) run:
 - `make mongodb`
 - `make build`
+
 To run the application:
 - `make frontend`
 Using your preferred web browser, navigate to `localhost` in order to access the tool frontend.
@@ -23,7 +24,7 @@ To stop the application, run:
 
 To stop the database, run:
 - `make mongodb_stop`
-- 
+
 ## Usage via python library
 The main functionalities of the tools are also available as python library, named `brio`. You can install it via pip, doing `pip install brio`. The bias detection analyses can be performed directly using the `FreqVsRefBiasDetector` and `FreqVsFreqBiasDetector` classes' interfaces. 
 
