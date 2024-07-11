@@ -203,15 +203,7 @@ def results_fvf():
         weight_logic="group"
     )
 
-    Analysis.dbUpdate(
-        dict_vars['analysis'],
-        {
-            'groups': repr(results1),
-            'conditioned': repr(results2),
-            'hazard': repr(results3)
-        },
-        app.db
-    )
+    Analysis.analysisUpdate(dict_vars['analysis'], results1, results2, results3, app.db)
 
     individual_risk = results3.pop(0)
     unconditioned_hazard = results3.pop(0)

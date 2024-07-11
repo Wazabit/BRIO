@@ -1,5 +1,4 @@
 from pymongo import MongoClient
-from bson import json_util
 from os import environ as env
 from dotenv import find_dotenv, load_dotenv
 
@@ -16,30 +15,30 @@ class Database(object):
     def insert(self, collection, data):
         return self.db[collection].insert_one(data.__dict__)
 
-    def update_one(self, collection, filter, data):
+    def update_one(self, collection, condition, data):
         if isinstance(data, dict):
             values = {"$set": data}
         else:
             values = {"$set": data.__dict__}
 
-        return self.db[collection].update_one(filter, values)
+        return self.db[collection].update_one(condition, values)
 
-    def update_many(self, collection, filter, data):
+    def update_many(self, collection, condition, data):
         if isinstance(data, dict):
             values = {"$set": data}
         else:
             values = {"$set": data.__dict__}
 
-        return self.db[collection].update_many(filter, values)
+        return self.db[collection].update_many(condition, values)
 
-    def delete(self, collection, filter):
-        return self.db[collection].delete_one(filter)
+    def delete(self, collection, condition):
+        return self.db[collection].delete_one(condition)
 
-    def find_one(self, collection, filter, sort):
+    def find_one(self, collection, condition, sort):
         if sort:
-            result = self.db[collection].find_one(filter, sort=[sort])
+            result = self.db[collection].find_one(condition, sort=[sort])
         else:
-            result = self.db[collection].find_one(filter)
+            result = self.db[collection].find_one(condition)
 
         if result is None:
             return False
@@ -48,3 +47,6 @@ class Database(object):
 
     def find(self, collection, filter):
         return list(self.db[collection].find(filter))
+
+    def aggregate(self, collection, pipeline):
+        return list(self.db[collection].aggregate(pipeline))
