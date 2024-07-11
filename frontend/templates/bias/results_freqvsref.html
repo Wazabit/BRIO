@@ -255,7 +255,7 @@ BRIO - Bias Assessment - FreqvsRef - Results
 {% block scripts %}
 <script type="text/javascript">
 function handle_export() {
-  const results_url = "http://" + "{{ local_ip }}" + ":80/bias/freqvsref/results";
+  const results_url = window.location.origin + "/bias/freqvsref/results";
   fetch(results_url, {
     "method": "POST",
     "headers" : {
