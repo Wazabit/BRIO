@@ -147,4 +147,6 @@ dmypy.json
 /pyvenv.cfg
 
 #Mongo Files
-/datasources/backups/*
+/datasources/backups/mongo/*
+
+mongo_test.py
