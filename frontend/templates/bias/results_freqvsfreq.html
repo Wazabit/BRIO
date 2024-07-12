@@ -66,12 +66,12 @@ BRIO - Bias Assessment - FreqvsFreq - Results
                     <p><strong class="text-white">Predictions:</strong> {{sel_params['predictions']}}</p>
                   {% endif %}
                   {% if 'root_var' in sel_params %}
-                    <p><strong class="text-white">Root variable:</strong> {{sel_params['root_var']}}</p>
+                    <p><strong class="text-white">Sensitive feature:</strong> {{sel_params['root_var']}}</p>
                   {% endif %}
                 </div> 
                 <div class="col-md-4">
                   {% if 'cond_vars' in sel_params %}
-                    <p><strong class="text-white">Conditioning variables:</strong> {{sel_params['cond_vars']}}</p>
+                    <p><strong class="text-white">Conditioning features:</strong> {{sel_params['cond_vars']}}</p>
                   {% endif %}          
                 </div>
               </div>
