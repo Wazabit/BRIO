@@ -54,6 +54,7 @@ mongodb: network
 	@docker exec -i ${MONGO_CONTAINER_NAME} /usr/bin/mongorestore \
 		-d brio \
 		data/brio/
+	@docker cp  datasources/services/* ${MONGO_CONTAINER_NAME}:home
 
 mongodb_stop:
 	@docker exec -i ${MONGO_CONTAINER_NAME} mkdir -p tmp/brio_${CURRENT_TIME}
@@ -64,6 +65,9 @@ mongodb_stop:
 	@docker stop ${MONGO_CONTAINER_NAME} && docker rm ${MONGO_CONTAINER_NAME}
 	@docker network rm ${MONGO_CONTAINER_NAME}
 	@docker image rm mongodb/mongodb-community-server
+
+mongodb_reset_files_status:
+	@docker exec -i ${MONGO_CONTAINER_NAME} mongosh  -f home/files_reset_status.js
 
 mongodb_restore: network
 	@docker run --name ${MONGO_CONTAINER_NAME} \
@@ -85,6 +89,7 @@ stop:
 	@docker rm ${CONTAINER_NAME}
 	@docker image rm ${IMAGE_NAME}
 	@docker image rm ${IMAGE_NAME}:$$(cat VERSION.txt)
+	@docker exec -i ${MONGO_CONTAINER_NAME} mongosh  -f home/files_reset_status.js
 
 .PHONY: test
 test:
