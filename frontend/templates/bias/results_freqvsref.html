@@ -91,15 +91,15 @@ BRIO - Bias Assessment - FreqvsRef - Results
               </div>
               <div class="col-lg-3">
                 <h5 class="card-title text-mirai rajdhani-bold">Distance[ref]</h5>
-                <p><strong class="text-white">{{ results1[0] }}</strong></p>
+                <p><strong class="text-white">{{ results1['distance'] }}</strong></p>
               </div>
               <div class="col-lg-3">
                 <h5 class="card-title text-mirai rajdhani-bold">Distance[ref] ≤ Threshold</h5>
-                <p><strong {% if results1[1][0] %}class="green-text"{% else %}class="red-text"{% endif %}>{{ results1[1][0] }}</strong>, <strong {% if results1[1][1] %}class="green-text"{% else %}class="red-text"{% endif %}>{{ results1[1][1] }}</strong></p>
+                <p><strong {% if results1['threshold'][0] %}class="green-text"{% else %}class="red-text"{% endif %}>{{ results1['threshold'][0] }}</strong>, <strong {% if results1['threshold'][1] %}class="green-text"{% else %}class="red-text"{% endif %}>{{ results1['threshold'][1] }}</strong></p>
               </div>
               <div class="col-lg-3">
                 <h5 class="card-title text-mirai rajdhani-bold">Threshold</h5>
-                <p><strong class="text-white">{{ results1[2] }}</strong></p>
+                <p><strong class="text-white">{{ results1['computed_threshold'] }}</strong></p>
               </div>
             </div>
 

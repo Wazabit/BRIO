@@ -4,8 +4,9 @@ import json
 from dataclasses import dataclass
 from datetime import datetime
 
+import numpy as np
+
 from frontend.classes.analysisType import AnalysisType
-from ast import literal_eval
 
 
 def get_md5(file_md5_hash: str, owner_id: str, analysis_type: str, list_var: str, selected_params: dict,
@@ -13,6 +14,11 @@ def get_md5(file_md5_hash: str, owner_id: str, analysis_type: str, list_var: str
     str2hash = (file_md5_hash + owner_id + analysis_type + list_var + json.dumps(selected_params) + created_at)
     return hashlib.md5(str2hash.encode()).hexdigest()
 
+class CustomJSONizer(json.JSONEncoder):
+    def default(self, obj):
+        return super().encode(bool(obj)) \
+            if isinstance(obj, np.bool_) \
+            else super().default(obj)
 
 @dataclass
 class Analysis:
@@ -47,18 +53,10 @@ class Analysis:
 
     @staticmethod
     def analysisUpdate(md5_hash, results1, results2, results3, db):
-        conditioned = {}
-        for key, value in results2.items():
-            conditioned[key] = (repr(value).replace("(", "").replace(")", "")
-                                .replace("[", "").replace("]", "")
-                                .split(','))
-
         data = {
-            'unconditioned': repr(results1).replace("(", "").replace(")", "")
-            .replace("[", "").replace("]", "")
-            .split(','),
-            'conditioned': conditioned,
-            'hazard': repr(results3).replace("[", "").replace("]", "").split(',')
+            'unconditioned': json.dumps(results1, cls=CustomJSONizer),
+            'conditioned': json.dumps(results2, cls=CustomJSONizer),
+            'hazard': json.dumps(results3, cls=CustomJSONizer)
         }
         db.update_one("analysis", {"md5_hash": md5_hash}, data)
 
@@ -89,6 +87,9 @@ class Analysis:
 
                     if 'created_at' in data:
                         data['created_at'] = data['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+
+                    if 'hazard' in data:
+                        data['hazard'] = json.loads(data['hazard'])
 
                     analysis[len(analysis) - 1]['analysis'].append(data)
         return analysis

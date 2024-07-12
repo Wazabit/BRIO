@@ -39,17 +39,17 @@ class HazardFromBiasDetectionCalculator:
         hazard_overall = 0
         # Iterating over each reference distribution, if available (FreqVsRef)
         # In case of FreqVsFreq, there will be a single iteration
-        num_iterations = len(self.as_list(overall_result[0]))
+        num_iterations = len(self.as_list(overall_result['distance']))
         for k in np.arange(0, num_iterations):
         
             # test result, threshold, num_samples, boolean, num_used_features
             #TODO use dict instead, and use explicit keys for readibility
             test_results = []
             test_results.append((
-                            self.as_list(overall_result[0])[k], 
-                            overall_result[2], 
+                            self.as_list(overall_result['distance'])[k],
+                            overall_result['computed_threshold'],
                             tot_observations, 
-                            self.as_list(overall_result[1])[k],
+                            self.as_list(overall_result['threshold'])[k],
                             1 #for the overall test, only 1 feature used, the root variable
                         ))
 
