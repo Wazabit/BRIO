@@ -115,8 +115,21 @@ class FreqVsFreqBiasDetector(BiasDetector):
         A3 = sum(sum(abs_freqs))
         computed_threshold = threshold_calculator(self.A1, A2, A3, default_threshold=threshold)
         distance, stds = self.compute_distance_between_frequencies(freqs)
-        return (distance, distance<=computed_threshold, computed_threshold, stds)
+        #return (distance, distance<=computed_threshold, computed_threshold, stds)
 
+        threshold = False
+
+        try:
+            threshold = distance<=computed_threshold
+        except:
+            threshold = False
+
+        return {
+            "distance": distance,
+            "threshold": threshold,
+            "computed_threshold": computed_threshold,
+            "standard_deviation": stds
+        }
 
     def compare_root_variable_conditioned_groups(self, 
             dataframe,

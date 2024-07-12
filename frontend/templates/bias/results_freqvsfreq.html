@@ -99,19 +99,19 @@ BRIO - Bias Assessment - FreqvsFreq - Results
               </div>
               <div class="col">
                 <h5 class="card-title text-mirai rajdhani-bold">Distance</h5>
-                <p><strong class="text-white">{{ results1[0] }}</strong></p>
+                <p><strong class="text-white">{{ results1['distance'] }}</strong></p>
               </div>
               <div class="col">
                 <h5 class="card-title text-mirai rajdhani-bold">Threshold</h5>
-                <p><strong class="text-white">{{ results1[2] }}</strong></p>
+                <p><strong class="text-white">{{ results1['computed_threshold'] }}</strong></p>
               </div>
               <div class="col">
                 <h5 class="card-title text-mirai rajdhani-bold">Dist ≤ Thr</h5>
-                <p><strong {% if results1[1] %}class="green-text"{% else %}class="red-text"{% endif %}>{{ results1[1] }}</strong></p>
+                <p><strong {% if results1['threshold'] %}class="green-text"{% else %}class="red-text"{% endif %}>{{ results1['threshold'] }}</strong></p>
               </div>
               <div class="col">
                 <h5 class="card-title text-mirai rajdhani-bold">Standard deviation</h5>
-                <p><strong class="text-white">{{ results1[3] }}</strong></p>
+                <p><strong class="text-white">{{ results1['standard_deviation'] }}</strong></p>
               </div>
             </div>
 
