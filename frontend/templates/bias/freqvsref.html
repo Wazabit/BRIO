@@ -106,23 +106,24 @@ BRIO - Bias Assessment - FreqvsRef
 {% block scripts %}
 <script type="text/javascript" src="{{ url_for('static', filename='js/handle_parameters.js') }}"></script>
 <script type="text/javascript">
-function handle_refs() {
+async function handle_refs() {
     let data = new FormData();
-    var rootvar = document.getElementById("root_var");
-    var selected_option_rv = rootvar.options[rootvar.selectedIndex];
-    var predvar = document.getElementById("predictions");
-    var selected_option_pr = predvar.options[predvar.selectedIndex];  
-    var target_type1 = document.getElementById("target_type1");
-    var target_type2 = document.getElementById('target_type2');
+    const rootvar = document.getElementById("root_var");
+    const selected_option_rv = rootvar.options[rootvar.selectedIndex];
+    const predvar = document.getElementById("predictions");
+    const selected_option_pr = predvar.options[predvar.selectedIndex];
+    const target_type1 = document.getElementById("target_type1");
+    const target_type2 = document.getElementById('target_type2');
+    let selected_option_tt = '';
     if (target_type1.checked) {
-      var selected_option_tt = target_type1;
+        selected_option_tt = target_type1;
     } else {
-      var selected_option_tt = target_type2;
+        selected_option_tt = target_type2;
     }
-    var nbins = document.getElementById("binning");
-    var selected_option_nb = nbins.querySelector('input[name="nbins"]');
-    
-    if (selected_option_pr.value != "id" && selected_option_rv.value != "id") {
+    const nbins = document.getElementById("binning");
+    const selected_option_nb = nbins.querySelector('input[name="nbins"]');
+
+    if (selected_option_pr.value !== "id" && selected_option_rv.value !== "id") {
       data.append("rv_selected", selected_option_rv.value);
       data.append("pr_selected", selected_option_pr.value);
 
@@ -130,36 +131,38 @@ function handle_refs() {
       data.append("nb_selected", selected_option_nb.value);
       const freqvsref_url = window.location.origin + "/bias/freqvsref";
       const preds_id = document.getElementById("ref_dist");
-      fetch(freqvsref_url, {
-      "method": "POST",
-      "body": data
-          }).then((response) => response.json())
-        .then((data) => {
-          preds_id.innerHTML = data.response_refs;
-        })
-  } 
-};
 
-function handle_agg_funcs() {
-  let data = new FormData();
-  var rootvar = document.getElementById("root_var");
-  var selected_option_rv = rootvar.options[rootvar.selectedIndex];
-  var predvar = document.getElementById("predictions");
-  var selected_option_pr = predvar.options[predvar.selectedIndex];
-  if (selected_option_pr.value != predvar.options[0].value && selected_option_rv.value != rootvar.options[0].value) {
+      const response = await fetch(freqvsref_url, {"method": "POST","body": data})
+      if (!response.ok) {
+          console.log(`Response status: ${response.status}`);
+      } else {
+          const data = await response.json();
+          preds_id.innerHTML = data.response_refs;
+      }
+  } 
+}
+
+async function handle_agg_funcs() {
+    let data = new FormData();
+    const rootvar = document.getElementById("root_var");
+    const selected_option_rv = rootvar.options[rootvar.selectedIndex];
+    const predvar = document.getElementById("predictions");
+    const selected_option_pr = predvar.options[predvar.selectedIndex];
+    if (selected_option_pr.value !== predvar.options[0].value && selected_option_rv.value !== rootvar.options[0].value) {
     data.append("rv_selected", selected_option_rv.value);
     data.append("pr_selected", selected_option_pr.value);
     const freqvsref_url = window.location.origin + "/bias/freqvsref";
     const preds_id = document.getElementById("ref_dist");
-    fetch(freqvsref_url, {
-    "method": "POST",
-    "body": data
-        }).then((response) => response.json())
-      .then((data) => {
-        preds_id.innerHTML = data.response_refs;
-      })
+
+    const response = await fetch(freqvsref_url, {"method": "POST","body": data})
+    if (!response.ok) {
+      console.log(`Response status: ${response.status}`);
+    } else {
+      const data = await response.json();
+      preds_id.innerHTML = data.response_refs;
+    }
   }
-};
+}
 
 function display_thr() {
   var auto_thr = document.getElementById("auto_thr")
