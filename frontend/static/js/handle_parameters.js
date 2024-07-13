@@ -91,3 +91,40 @@ document.addEventListener("DOMContentLoaded", function() {
   var deselect_all = document.getElementsByClassName("bs-actionsbox")[0].firstElementChild.children[1];
   deselect_all.addEventListener("click", desel_all);
 });
+
+function calculate_value(current_value, current_target) {
+    return parseFloat(current_value / current_target).toFixed(2)
+}
+
+const inputs_changed = {};
+
+function get_current_value(v_root) {
+    var current_value = 1
+    inputs_changed[v_root].forEach(function (i, el) {
+        const input = document.getElementById(i);
+        current_value = current_value - input.value
+    })
+    return current_value
+}
+
+function updateRefValue(v_root,v_pred) {
+    const inputs = document.querySelectorAll('[id*="prob_' + v_root + '"]');
+
+    if(!inputs_changed[v_root] || ((inputs.length - 1) === inputs_changed[v_root].length))
+     inputs_changed[v_root] = ["prob_" + v_root + "_" + v_pred]
+    else if(!inputs_changed[v_root].includes("prob_" + v_root + "_" + v_pred))
+        inputs_changed[v_root].push("prob_" + v_root + "_" + v_pred)
+
+    let current_value = get_current_value(v_root)
+    let current_target = inputs.length - inputs_changed[v_root].length
+
+    inputs.forEach(function (i, el) {
+        if(!inputs_changed[v_root].includes(i.id)){
+            i.value = calculate_value(current_value, current_target)
+            current_value = current_value - i.value
+            current_target = current_target - 1
+        }
+
+     });
+
+}
