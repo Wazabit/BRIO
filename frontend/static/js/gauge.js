@@ -1,60 +1,60 @@
 var gauge = function(container, configuration) {
-	var that = {};
-	var config = {
-		size						: 400,
-		clipWidth					: 400,
-		clipHeight					: 220,
-		ringInset					: 20,
-		ringWidth					: 20,
-		
-		pointerWidth				: 20,
-		pointerTailLength			: 10,
-		pointerHeadLengthPercent	: 0.9,
-		
-		minValue					: 0,
-		maxValue					: 100,
-		
-		minAngle					: -90,
-		maxAngle					: 90,
-		
-		transitionMs				: 750,
-		
-		majorTicks					: 5,
-		labelFormat					: d3.format('d'),
-		labelInset					: 10,
-		
-		arcColorFn					: d3.interpolateHsl(d3.rgb('#eecc00'), d3.rgb('#FF0000'))
-	};
-	var range = undefined;
-	var r = undefined;
-	var pointerHeadLength = undefined;
-	var value = 0;
-	
-	var svg = undefined;
-	var arc = undefined;
-	var scale = undefined;
-	var ticks = undefined;
-	var tickData = undefined;
-	var pointer = undefined;
+	const that = {};
+	const config = {
+		size: 400,
+		clipWidth: 400,
+		clipHeight: 220,
+		ringInset: 20,
+		ringWidth: 20,
 
-	var donut = d3.pie();
-	
+		pointerWidth: 20,
+		pointerTailLength: 10,
+		pointerHeadLengthPercent: 0.9,
+
+		minValue: 0,
+		maxValue: 100,
+
+		minAngle: -90,
+		maxAngle: 90,
+
+		transitionMs: 750,
+
+		majorTicks: 5,
+		labelFormat: d3.format('d'),
+		labelInset: 10,
+
+		arcColorFn: d3.interpolateHsl(d3.rgb('#eecc00'), d3.rgb('#FF0000'))
+	};
+	let range = undefined;
+	let r = undefined;
+	let pointerHeadLength = undefined;
+	const value = 0;
+
+	let svg = undefined;
+	let arc = undefined;
+	let scale = undefined;
+	let ticks = undefined;
+	let tickData = undefined;
+	let pointer = undefined;
+
+	const donut = d3.pie();
+
 	function deg2rad(deg) {
 		return deg * Math.PI / 180;
 	}
-	
+
 	function newAngle(d) {
-		var ratio = scale(d);
-		var newAngle = config.minAngle + (ratio * range);
+		const ratio = scale(d);
+		const newAngle = config.minAngle + (ratio * range);
 		return newAngle;
 	}
-	
+
 	function configure(configuration) {
-		var prop = undefined;
+		let prop = undefined;
 		for ( prop in configuration ) {
 			config[prop] = configuration[prop];
 		}
-		
+
 		range = config.maxAngle - config.minAngle;
 		r = config.size / 2;
 		pointerHeadLength = Math.round(r * config.pointerHeadLengthPercent);
@@ -63,10 +63,10 @@ var gauge = function(container, configuration) {
 		scale = d3.scaleLinear()
 			.range([0,1])
 			.domain([config.minValue, config.maxValue]);
-			
+
 		ticks = scale.ticks(config.majorTicks);
 		tickData = d3.range(config.majorTicks).map(function() {return 1/config.majorTicks;});
-		
+
 		arc = d3.arc()
 			.innerRadius(r - config.ringWidth - config.ringInset)
 			.outerRadius(r - config.ringInset)
@@ -80,29 +80,29 @@ var gauge = function(container, configuration) {
 			});
 	}
 	that.configure = configure;
-	
+
 	function centerTranslation() {
 		return 'translate('+r +','+ r +')';
 	}
-	
+
 	function isRendered() {
 		return (svg !== undefined);
 	}
 	that.isRendered = isRendered;
-	
+
 	function render(newValue) {
 		svg = d3.select(container)
 			.append('svg:svg')
 				.attr('class', 'gauge')
 				.attr('width', config.clipWidth)
 				.attr('height', config.clipHeight);
-		
+
 		var centerTx = centerTranslation();
-		
+
 		var arcs = svg.append('g')
 				.attr('class', 'arc')
 				.attr('transform', centerTx);
-		
+
 		arcs.selectAll('path')
 				.data(tickData)
 			.enter().append('path')
@@ -110,7 +110,7 @@ var gauge = function(container, configuration) {
 					return config.arcColorFn(d * i);
 				})
 				.attr('d', arc);
-		
+
 		var lg = svg.append('g')
 				.attr('class', 'label')
 				.attr('transform', centerTx);
@@ -124,7 +124,7 @@ var gauge = function(container, configuration) {
 				})
 				.text(config.labelFormat);
 
-		var lineData = [ [config.pointerWidth / 2, 0], 
+		var lineData = [ [config.pointerWidth / 2, 0],
 						[0, -pointerHeadLength],
 						[-(config.pointerWidth / 2), 0],
 						[0, config.pointerTailLength],
@@ -133,11 +133,11 @@ var gauge = function(container, configuration) {
 		var pg = svg.append('g').data([lineData])
 				.attr('class', 'pointer')
 				.attr('transform', centerTx);
-				
+
 		pointer = pg.append('path')
 			.attr('d', pointerLine/*function(d) { return pointerLine(d) +'Z';}*/ )
 			.attr('transform', 'rotate(' +config.minAngle +')');
-			
+
 		update(newValue === undefined ? 0 : newValue);
 	}
 	that.render = render;
@@ -155,7 +155,7 @@ var gauge = function(container, configuration) {
 	that.update = update;
 
 	configure(configuration);
-	
+
 	return that;
 };
 

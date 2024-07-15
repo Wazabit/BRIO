@@ -224,7 +224,7 @@ def results_fvr():
 
     Analysis.analysisUpdate(dict_vars['analysis'], results1, results2, results3, app.db)
 
-    individual_risk = results3.pop(0)
+    individual_risk = results3.pop(0) / results3.pop(len(results3) - 1)
     unconditioned_hazard = results3.pop(0)
     conditioned_results_with_hazard = {}
 
