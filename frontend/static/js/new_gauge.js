@@ -170,16 +170,8 @@ function onDocumentReady() {
 	});
 	powerGauge.render();
 	
-	function updateReadings() {
-		// just pump in random data here...
-		powerGauge.update(document.getElementById("power-gauge").getAttribute("val"));
-	}
+	powerGauge.update(document.getElementById("power-gauge").getAttribute("val"));
 	
-	// every few seconds update reading values
-	updateReadings();
-	setInterval(function() {
-		updateReadings();
-	}, 5 * 1000);
 }
 
 function updateGauge() {

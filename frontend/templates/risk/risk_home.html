@@ -1,31 +1,309 @@
 {% extends 'risk/base.html' %}
 
+{% block head %}
+<script src="https://d3js.org/d3.v4.min.js"></script>
+{% endblock %}
+
 {% block title %}
 BRIO - Risk
 {% endblock %}
 
 {% block content %}
-
+<ul class="flashes d-none" id="alert">  
+  <div class="alert alert-danger" role="alert">
+    Select at least two tests from the same battery to compute risk.
+  </div>
+</ul>
 <div class="container pt-5">
   <div class="row mb-3">
     <div class="col themed-grid-col">
       <div class="row">
         <div class="py-3 my-2">
-          <h1 class="text-white text-start rajdhani-bold top-logo {{ animated }}">RISK</h1>
+          <h1 class="text-white text-start rajdhani-bold top-logo {{ animated }}">RISK ASSESSMENT</h1>
         </div>
-          <pre>
+          <pre style="display: none;">
+
               {{ analysis }}
           </pre>
 
 
       </div> 
-
+      {% for result in analysis %}
+        <div class="row">
+          <div class="col themed-grid-col mt-xl-0 mt-4 d-flex flex-column justify-content-between">
+            <div class="card card-mirai {{ animated }} mb-4">
+              <div class="card-header text-uppercase">
+                filename: <span name="filename-header">{{ result['filename'] }}</span>
+              </div>
+              <div class="card-body d-flex flex-column justify-content-between">
+                <div class="row">
+                  <div class="col-1">
+                    <label class="checkbox-container checkbox-all-container d-block">
+                      <input type="checkbox" id="select-all-{{ result['filename'] }}" name="select-all" value="all" onClick="toggle(this)">
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                  <div class="col-2">
+                    <h5 class="card-title text-mirai rajdhani-bold">Test Risk (%)</h5>
+                  </div>
+                  <div class="col-2">
+                    <h5 class="card-title text-mirai rajdhani-bold">Analysis Type</h5>
+                  </div>
+                  <div class="col-2">
+                    <h5 class="card-title text-mirai rajdhani-bold">Sensitive Feature</h5>
+                  </div>
+                  <div class="col-2">
+                    <h5 class="card-title text-mirai rajdhani-bold">Predictions</h5>
+                  </div>
+                  <div class="col-3">
+                    <h5 class="card-title text-mirai rajdhani-bold">Conditioning Features</h5>
+                  </div>
+                </div>
+                <!--form method="POST" action="{{ url_for('risk.risk_home') }}" enctype="multipart/form-data"-->
+                <div>
+                    <div class="form-group mb-2">
+                        {% for data in result['analysis'] %}
+                          <label class="checkbox-container row">
+                            <div class="col-1 position-relative">
+                              <input type="checkbox" id="select-{{ data['md5_hash'] }}" name="select" value="{{data['hazard'][0] / data['hazard'][data['hazard']|length - 1] * 100}}" class="risk-checkbox" onClick="checkSelAll(this)">
+                              <span class="checkmark"></span>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0" name="testrisk" >{{ '%0.2f'| format(data['hazard'][0] / data['hazard'][data['hazard']|length - 1] * 100) }}</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0" name="analysis_type">{{ data['analysis_type'] }}</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0" name="root_var">{{ data['selected_params']['root_var'] }}</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0" name="predictions">{{ data['selected_params']['predictions'] }}</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="text-white m-0" name="cond_vars">{{ data['selected_params']['cond_vars'] }}</p>
+                            </div>
+                          </label>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" onClick="computeRisk(this)">Compute Risk</button>
+                </div>
+                <!--/form-->
+              </div>
+              <div class="card-arrow">
+                <div class="card-arrow-top-left"></div>
+                <div class="card-arrow-top-right"></div>
+                <div class="card-arrow-bottom-left"></div>
+                <div class="card-arrow-bottom-right"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
     </div>
   </div>
 
 
 </div>
+<div class="modal justify-content-center align-items-center" id="modal">
+  <div class="container pt-5">
+    <div class="row mb-3">
+      <div class="col themed-grid-col">
+        <div class="row">
+          <div class="col themed-grid-col mt-xl-0 mt-4 d-flex flex-column justify-content-between">
+            <div class="card card-mirai {{ animated }}">
+              <div class="card-header text-uppercase">
+                Risk Assessment Results
+              </div>
+              <div class="card-body d-flex flex-column justify-content-start" style="max-height: 600px;">
+                <div class="row">
+                  <div class="col">
+                    <h5 class="card-title text-miraiblu rajdhani-bold text-center">Overall Risk</h5>
+                    <div id="power-gauge" val="70"></div>
+                    <p class="text-center"><strong class="text-white" id="risk-value">70%</strong></p>
+                  </div>
+                </div>
 
+                <div class="row row-cols-5">
+                  <div class="col">
+                    <h5 class="card-title text-mirai rajdhani-bold">Test Risk (%)</h5>
+                  </div>
+                  <div class="col">
+                    <h5 class="card-title text-mirai rajdhani-bold">Analysis Type</h5>
+                  </div>
+                  <div class="col">
+                    <h5 class="card-title text-mirai rajdhani-bold">Sensitive Feature</h5>
+                  </div>
+                  <div class="col">
+                    <h5 class="card-title text-mirai rajdhani-bold">Predictions</h5>
+                  </div>
+                  <div class="col">
+                    <h5 class="card-title text-mirai rajdhani-bold">Conditioning Features</h5>
+                  </div>
+                </div>
+                <div id="results" style="overflow-y: scroll;">
+                  
+                </div>
+              </div>
+              <div class="card-arrow">
+                <div class="card-arrow-top-left"></div>
+                <div class="card-arrow-top-right"></div>
+                <div class="card-arrow-bottom-left"></div>
+                <div class="card-arrow-bottom-right"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-3">
+                <a href="#" class="btn btn-outline-primary btn-mirai rajdhani-bold w-50 animated" role="button" onClick="closeResults()">Back</a>
+                <a href="#" class="btn btn-outline-primary btn-mirai rajdhani-bold w-50 animated" role="button" onClick="saveResults()">Save Results</a>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
+{% block scripts %}
+
+<script src="{{ url_for('static', filename='js/new_gauge.js') }}"></script>
+<script type="text/javascript">
+function toggle(source) {
+  card = source.parentElement.parentElement.parentElement.parentElement;
+  checkboxes = card.querySelectorAll('[name=select]');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
+}
+function checkSelAll(source) {
+  card = source.parentElement.parentElement.parentElement.parentElement.parentElement;
+  checkboxes = card.querySelectorAll('[name=select-all]');
+  if (!source.checked){
+    for(var i=0, n=checkboxes.length;i<n;i++) {
+      checkboxes[i].checked = source.checked;
+    }
+  }
+}
+var risk_analysis = {};
+function computeRisk(source) {
+  container = source.parentElement;
+  hazards = container.querySelectorAll('[name=select]');
+  testrisk = container.querySelectorAll('[name=testrisk]');
+  analysis_type = container.querySelectorAll('[name=analysis_type]');
+  root_vars = container.querySelectorAll('[name=root_var]');
+  predictions = container.querySelectorAll('[name=predictions]');
+  cond_vars = container.querySelectorAll('[name=cond_vars]');
+  result_container  = document.querySelector("#results");
+  modal = document.querySelector("#modal");
+  powergauge = document.querySelector("#power-gauge");
+  riskvalue = document.querySelector("#risk-value");
+  alert = document.querySelector("#alert");
+  card = source.parentElement.parentElement.parentElement;
+  header = card.querySelector('[name=filename-header]');
+  sum = 0;
+  denum = 0;
+  analysis = {};
+  for(var i=0, n=hazards.length;i<n;i++) {
+    if (hazards[i].checked){
+      test = {};
+      test["testrisk"] = testrisk[i].innerHTML;
+      test["analysis_type"] = analysis_type[i].innerHTML;
+      test["root_vars"] = root_vars[i].innerHTML;
+      test["predictions"] = predictions[i].innerHTML;
+      test["cond_vars"] = cond_vars[i].innerHTML;
+      analysis[denum] = test;
+      denum ++;
+      sum = sum + Number(hazards[i].value);
+    }
+  }
+  if (denum>1) {
+    risk = sum/denum;
+    powergauge.setAttribute("val", risk);
+    riskvalue.innerHTML = risk+"%";
+    result_container.innerHTML = "";
+    /*console.log("sum = " + sum);
+    console.log("denum = " + denum);
+    console.log("risk = " + sum/denum);
+    console.log("analysis = " + JSON.stringify(analysis));*/
+    for(var j=0, m=Object.keys(analysis).length;j<m;j++) {
+
+      const row = document.createElement("div");
+      row.classList.add("row");
+      row.classList.add("row-cols-5");
+
+      const risk_col = document.createElement("div");
+      risk_col.classList.add("col");
+      const risk_p = document.createElement("p");
+      risk_p.classList.add("text-white");
+      risk_p.innerHTML = analysis[j]["testrisk"];
+      risk_col.appendChild(risk_p);
+      row.appendChild(risk_col);
+
+      const type_col = document.createElement("div");
+      type_col.classList.add("col");
+      const type_p = document.createElement("p");
+      type_p.classList.add("text-white");
+      type_p.innerHTML = analysis[j]["analysis_type"];
+      type_col.appendChild(type_p);
+      row.appendChild(type_col);
+
+      const root_col = document.createElement("div");
+      root_col.classList.add("col");
+      const root_p = document.createElement("p");
+      root_p.classList.add("text-white");
+      root_p.innerHTML = analysis[j]["root_vars"];
+      root_col.appendChild(root_p);
+      row.appendChild(root_col);
+
+      const pred_col = document.createElement("div");
+      pred_col.classList.add("col");
+      const pred_p = document.createElement("p");
+      pred_p.classList.add("text-white");
+      pred_p.innerHTML = analysis[j]["predictions"];
+      pred_col.appendChild(pred_p);
+      row.appendChild(pred_col);
+
+      const cond_col = document.createElement("div");
+      cond_col.classList.add("col");
+      const cond_p = document.createElement("p");
+      cond_p.classList.add("text-white");
+      cond_p.innerHTML = analysis[j]["cond_vars"];
+      cond_col.appendChild(cond_p);
+      row.appendChild(cond_col);
+
+      result_container.appendChild(row);
+    }
+    alert.classList.add("d-none");
+    alert.classList.remove("d-flex");
+    modal.classList.add("d-flex");
+    updateGauge();
+    risk_analysis["filename"] = header.innerHTML;
+    risk_analysis["analysis"] = analysis;
+    risk_analysis["risk"] = risk;
+  } else {
+    alert.classList.add("d-flex");
+    alert.classList.remove("d-none");
+  }
+}
+function saveResults(){
+
+  console.log("-------------Analisys-------------");
+  console.log("filename " + risk_analysis["filename"]);
+  console.log("risk " + risk_analysis["risk"]);
+  console.log("analysis " + JSON.stringify(risk_analysis["analysis"]));
+}
+function closeResults(){
+  modal.classList.remove("d-flex");
+}
+</script>
+
+{% endblock %}
+  
 

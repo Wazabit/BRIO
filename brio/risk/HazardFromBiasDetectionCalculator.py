@@ -103,4 +103,4 @@ class HazardFromBiasDetectionCalculator:
         hazards.insert(0, hazard_overall)
         hazards.insert(len(hazards) + 1, hazard_overall_max)
 
-        return hazards  # hazards = [individual risk, unconditioned hazard, conditioned hazards, ...]
+        return hazards  # hazards = [individual risk, unconditioned hazard, conditioned hazards, ..., hazard_overall_max]

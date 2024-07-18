@@ -229,11 +229,11 @@ def results_fvf():
         if violations[key][1] > h_max: h_max = violations[key][1]
         if violations[key][2] < d_min: d_min = violations[key][2]
         if violations[key][2] > d_max: d_max = violations[key][2]
-    logging.warning("data to plot")
-    logging.warning(h_min)
-    logging.warning(h_max)
-    logging.warning(d_min)
-    logging.warning(d_max)
+    #logging.warning("data to plot")
+    #logging.warning(h_min)
+    #logging.warning(h_max)
+    #logging.warning(d_min)
+    #logging.warning(d_max)
     # Create CSV data to plot
     #jsonify({"csv_data": csv_data})
 
