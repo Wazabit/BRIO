@@ -78,6 +78,7 @@ mongodb_restore: network
 	@docker exec -i ${MONGO_CONTAINER_NAME} /usr/bin/mongorestore \
 		-d brio \
 		data/brio/
+	@docker cp  datasources/services/* ${MONGO_CONTAINER_NAME}:home
 
 .PHONY: shell
 shell:
