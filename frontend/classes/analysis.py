@@ -66,7 +66,7 @@ class Analysis:
         keys = ['_id', 'owner_id', 'file_md5_hash', 'unconditioned', 'conditioned', 'list_var']
         analysis = []
         pipeline = [
-            {'$match': {'owner_id': sub}},
+            {'$match': {'owner_id': sub, 'hazard':{'$ne': ''}}},
             {'$group': {'_id': '$file_md5_hash', "results": {"$push": "$$ROOT"}}},
             {'$project': {'_id': 0, 'owner_id': 0}}
         ]
