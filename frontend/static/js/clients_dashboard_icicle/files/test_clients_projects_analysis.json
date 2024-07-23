@@ -1,0 +1,277 @@
+{
+ "name": "Violations",
+ "children": [
+  {
+   "name": "CRIF",
+   "children": [
+    {
+     "name": "CRIF Bias Report #1",
+     "children": [
+      {"name": "Gender - FreqVsFreq", "value": 1302},
+      {"name": "Gender - FreqVsRef", "value": 24593},
+      {"name": "Age - FreqVsFreq", "value": 652},
+      {"name": "Age - FreqVsRef", "value": 636},
+      {"name": "Attribute 20 - FreqVsFreq", "value": 6703},
+      {"name": "Attribute 20 - FreqVsRef", "value": 6403}
+     ]
+    },
+    {
+     "name": "CRIF Risk Report #1",
+     "children": [
+      {"name": "Gender - FreqVsFreq", "value": 1302},
+      {"name": "Gender - FreqVsRef", "value": 24593},
+      {"name": "Age - FreqVsFreq", "value": 652},
+      {"name": "Age - FreqVsRef", "value": 636},
+      {"name": "Attribute 20 - FreqVsFreq", "value": 6703},
+      {"name": "Attribute 20 - FreqVsRef", "value": 6403},
+      {
+       "name": "Risk - FreqVsFreq",
+       "children": [
+        {"name": "Gender - FreqVsFreq", "value": 1302},
+        {"name": "Age - FreqVsFreq", "value": 652},
+        {"name": "Attribute 20 - FreqVsFreq", "value": 6703}
+       ]
+      },
+      {
+       "name": "Risk - FreqVsRef",
+       "children": [
+        {"name": "Gender - FreqVsRef", "value": 24593},   
+        {"name": "Age - FreqVsRef", "value": 636},
+        {"name": "Attribute 20 - FreqVsRef", "value": 6403}
+       ]
+      }
+     ]
+    },
+    {
+     "name": "Standalone Analysis",
+     "children": [
+      {"name": "Gender - FreqVsFreq", "value": 2313},
+      {"name": "Attribute 20 - FreqVsRef", "value": 1880},
+      {"name": "Age - FreqVsRef", "value": 1701},
+      {"name": "VisualizationEvent", "value": 1117},
+      {
+       "name": "Risk - FreqVsRef",
+       "children": [
+        {"name": "Gender - FreqVsRef", "value": 20859},   
+        {"name": "Age - FreqVsRef", "value": 4614},
+        {"name": "Attribute 20 - FreqVsRef", "value": 10530}
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Immanence",
+   "children": [
+    {
+     "name": "Immanence Bias Report #1",
+     "children": [
+      {"name": "Gender - FreqVsFreq", "value": 3938},
+      {"name": "Gender - FreqVsRef", "value": 4593},
+      {"name": "Age - FreqVsFreq", "value": 6527},
+      {"name": "Age - FreqVsRef", "value": 6366},
+      {"name": "Attribute 20 - FreqVsFreq", "value": 673},
+      {"name": "Attribute 20 - FreqVsRef", "value": 12403}
+     ]
+    },
+    {
+     "name": "Immanence Risk Report #1",
+     "children": [
+      {"name": "Gender - FreqVsFreq", "value": 16302},
+      {"name": "Gender - FreqVsRef", "value": 2593},
+      {"name": "Age - FreqVsFreq", "value": 6522},
+      {"name": "Age - FreqVsRef", "value": 2636},
+      {"name": "Attribute 20 - FreqVsFreq", "value": 16703},
+      {"name": "Attribute 20 - FreqVsRef", "value": 26403},
+      {
+       "name": "Risk - FreqVsFreq",
+       "children": [
+        {"name": "Gender - FreqVsFreq", "value": 12302},
+        {"name": "Age - FreqVsFreq", "value": 1652},
+        {"name": "Attribute 20 - FreqVsFreq", "value": 3703}
+       ]
+      },
+      {
+       "name": "Risk - FreqVsRef",
+       "children": [
+        {"name": "Gender - FreqVsRef", "value": 4593},   
+        {"name": "Age - FreqVsRef", "value": 5636},
+        {"name": "Attribute 20 - FreqVsRef", "value": 6403}
+       ]
+      }
+     ]
+    },
+    {
+     "name": "Standalone Analysis",
+     "children": [
+      {"name": "Gender - FreqVsFreq", "value": 313},
+      {"name": "Attribute 20 - FreqVsRef", "value": 1880},
+      {"name": "Age - FreqVsRef", "value": 1701},
+      {"name": "VisualizationEvent", "value": 1117},
+      {
+       "name": "Risk - FreqVsRef",
+       "children": [
+        {"name": "Gender - FreqVsRef", "value": 859},   
+        {"name": "Age - FreqVsRef", "value": 4614},
+        {"name": "Attribute 20 - FreqVsRef", "value": 1530}
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Alkemy",
+   "children": [
+    {
+     "name": "Alkemy Risk Report #1",
+     "children": [
+      {"name": "Gender - FreqVsFreq", "value": 16302},
+      {"name": "Gender - FreqVsRef", "value": 2593},
+      {"name": "Age - FreqVsFreq", "value": 6522},
+      {"name": "Age - FreqVsRef", "value": 2636},
+      {"name": "Attribute 20 - FreqVsFreq", "value": 16703},
+      {"name": "Attribute 20 - FreqVsRef", "value": 26403},
+      {
+       "name": "Risk - FreqVsFreq",
+       "children": [
+        {"name": "Gender - FreqVsFreq", "value": 12302},
+        {"name": "Age - FreqVsFreq", "value": 1652},
+        {"name": "Attribute 20 - FreqVsFreq", "value": 3703}
+       ]
+      },
+      {
+       "name": "Risk - FreqVsRef",
+       "children": [
+        {"name": "Gender - FreqVsRef", "value": 4593},   
+        {"name": "Age - FreqVsRef", "value": 5636},
+        {"name": "Attribute 20 - FreqVsRef", "value": 6403}
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "P4I",
+   "children": [
+    {
+     "name": "P4I Bias Report #1",
+     "children": [
+      {"name": "Gender - FreqVsFreq", "value": 1302},
+      {"name": "Gender - FreqVsRef", "value": 4593},
+      {"name": "Age - FreqVsFreq", "value": 6152},
+      {"name": "Age - FreqVsRef", "value": 7636},
+      {"name": "Attribute 20 - FreqVsFreq", "value": 703},
+      {"name": "Attribute 20 - FreqVsRef", "value": 643}
+     ]
+    },
+    {
+     "name": "P4I Risk Report #1",
+     "children": [
+      {"name": "Gender - FreqVsFreq", "value": 1302},
+      {"name": "Gender - FreqVsRef", "value": 1259},
+      {"name": "Age - FreqVsFreq", "value": 1652},
+      {"name": "Age - FreqVsRef", "value": 1636},
+      {"name": "Attribute 20 - FreqVsFreq", "value": 1703},
+      {"name": "Attribute 20 - FreqVsRef", "value": 1403},
+      {
+       "name": "Risk - FreqVsFreq",
+       "children": [
+        {"name": "Gender - FreqVsFreq", "value": 302},
+        {"name": "Age - FreqVsFreq", "value": 652},
+        {"name": "Attribute 20 - FreqVsFreq", "value": 603}
+       ]
+      },
+      {
+       "name": "Risk - FreqVsRef",
+       "children": [
+        {"name": "Gender - FreqVsRef", "value": 2493},   
+        {"name": "Age - FreqVsRef", "value": 2636},
+        {"name": "Attribute 20 - FreqVsRef", "value": 2403}
+       ]
+      }
+     ]
+    },
+    {
+     "name": "Standalone Analysis",
+     "children": [
+      {"name": "Gender - FreqVsFreq", "value": 313},
+      {"name": "Attribute 20 - FreqVsRef", "value": 880},
+      {"name": "Age - FreqVsRef", "value": 701},
+      {"name": "VisualizationEvent", "value": 117},
+      {
+       "name": "Risk - FreqVsRef",
+       "children": [
+        {"name": "Gender - FreqVsRef", "value": 529},   
+        {"name": "Age - FreqVsRef", "value": 464},
+        {"name": "Attribute 20 - FreqVsRef", "value": 530}
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Bacon Ipsum",
+   "children": [
+    {
+     "name": "Bacon Ipsum Bias Report #1",
+     "children": [
+      {"name": "Gender - FreqVsFreq", "value": 1235},
+      {"name": "Gender - FreqVsRef", "value": 7521},
+      {"name": "Age - FreqVsFreq", "value": 415},
+      {"name": "Age - FreqVsRef", "value": 1254},
+      {"name": "Attribute 20 - FreqVsFreq", "value": 8512},
+      {"name": "Attribute 20 - FreqVsRef", "value": 643}
+     ]
+    },
+    {
+     "name": "Bacon Ipsum Risk Report #1",
+     "children": [
+      {"name": "Gender - FreqVsFreq", "value": 1254},
+      {"name": "Gender - FreqVsRef", "value": 1259},
+      {"name": "Age - FreqVsFreq", "value": 1254},
+      {"name": "Age - FreqVsRef", "value": 1636},
+      {"name": "Attribute 20 - FreqVsFreq", "value": 1703},
+      {"name": "Attribute 20 - FreqVsRef", "value": 1254},
+      {
+       "name": "Risk - FreqVsFreq",
+       "children": [
+        {"name": "Gender - FreqVsFreq", "value": 302},
+        {"name": "Age - FreqVsFreq", "value": 1254},
+        {"name": "Attribute 20 - FreqVsFreq", "value": 603}
+       ]
+      },
+      {
+       "name": "Risk - FreqVsRef",
+       "children": [
+        {"name": "Gender - FreqVsRef", "value": 1254},   
+        {"name": "Age - FreqVsRef", "value": 1254},
+        {"name": "Attribute 20 - FreqVsRef", "value": 412}
+       ]
+      }
+     ]
+    },
+    {
+     "name": "Standalone Analysis",
+     "children": [
+      {"name": "Gender - FreqVsFreq", "value": 313},
+      {"name": "Attribute 20 - FreqVsRef", "value": 880},
+      {"name": "Age - FreqVsRef", "value": 701},
+      {"name": "VisualizationEvent", "value": 117},
+      {
+       "name": "Risk - FreqVsRef",
+       "children": [
+        {"name": "Gender - FreqVsRef", "value": 529},   
+        {"name": "Age - FreqVsRef", "value": 464},
+        {"name": "Attribute 20 - FreqVsRef", "value": 530}
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

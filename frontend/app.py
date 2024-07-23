@@ -8,7 +8,8 @@ from dotenv import find_dotenv, load_dotenv
 from flask import Flask, render_template, redirect, session, url_for
 from flask_cors import CORS
 
-from frontend.views import bias, opacity, risk
+from frontend.views import bias, opacity, risk, admin
+from frontend.views.admin_route import client
 
 from frontend.classes.user import User
 from frontend.classes.database import Database
@@ -24,6 +25,8 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 app.register_blueprint(bias.bp)
 app.register_blueprint(opacity.bp)
 app.register_blueprint(risk.bp)
+app.register_blueprint(admin.bp)
+app.register_blueprint(client.bp)
 
 app.secret_key = env.get("APP_SECRET_KEY")
 

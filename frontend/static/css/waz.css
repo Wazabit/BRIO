@@ -425,6 +425,9 @@ tbody>tr:last-child>th,tbody>tr:last-child>td{
   opacity: 1 !important;
 }
 /*D3 CHARTS*/
+.observablehq--inspect {
+    display: none;
+}
 /*Gauge*/
 #power-gauge{
   display: flex;
@@ -595,6 +598,14 @@ html.animated:after{
   animation-timing-function: ease-in-out;
   animation-fill-mode: both;
   animation-delay: 2s;
+}
+
+.card.card-mirai.animated .card-footer {
+  animation-name: appear;
+  animation-duration: 1s;  
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+  animation-delay: 2.5s;
 }
 
 .btn.animated{

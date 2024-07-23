@@ -1,0 +1,1110 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+<script src="{{ url_for('static', filename='css/dashboard_icicle.css') }}"></script>
+{% endblock %}
+
+{% block title %}
+MIRAI Toolbox - Admin Home
+{% endblock %}
+
+{% block header %}
+<nav class="navbar navbar-dark navbar-expand-lg navbar-mirai shadow fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand brand-mirai" href="/">
+      <img class="logo" src="{{ url_for('static', filename='img/logo.svg') }}">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item pe-2">
+          <a class="nav-link " aria-current="page" href="/">HOME</a>
+        </li>
+        <li class="nav-item pe-2 dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="brioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            BRIO
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark shadow" aria-labelledby="brioDropdown">
+            <li><a class="dropdown-item" href="/bias">BIAS</a></li>
+            <li><a class="dropdown-item" href="/risk">RISK</a></li>
+            <li><a class="dropdown-item" href="/opacity">OPACITY</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="https://github.com/DLBD-Department/BRIO_x_Alkemy" target="_blank">BRIOxALKEMY</a></li>
+            <li><a class="dropdown-item" href="https://sites.unimi.it/brio/" target="_blank">BRIO Project</a></li>
+          </ul>
+        </li>
+        <li class="nav-item pe-2 dropdown">
+          <a class="nav-link dropdown-toggle active" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            ADMIN
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark shadow" aria-labelledby="adminDropdown">
+            <li><a class="dropdown-item active" href="/admin">DASHBOARD</a></li>
+            <li><a class="dropdown-item" href="/bias">CLIENTS</a></li>
+            <li><a class="dropdown-item" href="/risk">PROJECTS</a></li>
+            <li><a class="dropdown-item" href="/opacity">ANALYSIS</a></li>
+          </ul>
+        </li>
+        <li class="nav-item pe-2">
+          {% if btn_login == True %}
+              <a class="nav-link" href="{{ url_for('logout') }}">LOGOUT</a>
+          {% else %}
+              <a class="nav-link" href="{{ url_for('login') }}">LOGIN</a>
+          {% endif %}
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="corner d-none d-lg-block">
+    <img src="{{ url_for('static', filename='img/corner.svg') }}">
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid pt-5">
+  <div class="row">
+    <div class="col">
+      <div class="container-fluid">
+        <div class="row mb-3">
+          <div class="py-3 my-2">
+            <h1 class="text-white text-start rajdhani-bold top-logo animated">ADMIN DASHBOARD</h1>
+          </div>
+          <div class="col themed-grid-col">
+            <div class="row mb-3">
+              <div class="col-lg-8">
+                <div class="row">
+                  <div class="col-lg-6">
+                    <div class="card card-mirai animated mb-3">
+                      <div class="card-header text-uppercase">
+                        CLIENTS
+                      </div>
+                      <div class="card-body d-flex flex-column justify-content-start" style="height: 300px;">
+                        <div class="row">
+                          <div class="col-4">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Name</h6>
+                          </div>
+                          <div class="col-6">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Contacts</h6>
+                          </div>
+                          <div class="col-2">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Projects</h6>
+                          </div>
+                        </div>
+
+
+                        <div id="clients" style="overflow-y: scroll;">
+                          <div class="row">
+                            <div class="col-4">
+                              <p class="text-white m-0 text-truncate">CRIF</p>
+                            </div>
+                            <div class="col-6">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu " href="mailto:contacts@crif.it">Mimmo Crif</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0 text-truncate">12</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-4">
+                              <p class="text-white m-0 text-truncate">Immanence</p>
+                            </div>
+                            <div class="col-6">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu " href="mailto:contacts@immanence.it">Gaetana Contatto Immanence</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0 text-truncate">30</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-4">
+                              <p class="text-white m-0 text-truncate">P4I</p>
+                            </div>
+                            <div class="col-6">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu " href="mailto:contacts@p4i.it">Partners for Innovation</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0 text-truncate">3</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-4">
+                              <p class="text-white m-0 text-truncate">Alkemy</p>
+                            </div>
+                            <div class="col-6">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu " href="mailto:contacts@alkemy.it">Franco Abbastanza</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0 text-truncate">300</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-4">
+                              <p class="text-white m-0 text-truncate">Bacon Ipsum</p>
+                            </div>
+                            <div class="col-6">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu " href="mailto:contacts@bacon.com">Kevin Bacon</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0 text-truncate">3</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-4">
+                              <p class="text-white m-0 text-truncate">CRIF</p>
+                            </div>
+                            <div class="col-6">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu " href="mailto:contacts@crif.it">Mimmo Crif</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0 text-truncate">12</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-4">
+                              <p class="text-white m-0 text-truncate">Immanence</p>
+                            </div>
+                            <div class="col-6">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu " href="mailto:contacts@immanence.it">Gaetana Contatto Immanence</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0 text-truncate">30</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-4">
+                              <p class="text-white m-0 text-truncate">P4I</p>
+                            </div>
+                            <div class="col-6">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu " href="mailto:contacts@p4i.it">Partners for Innovation</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0 text-truncate">3</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-4">
+                              <p class="text-white m-0 text-truncate">Alkemy</p>
+                            </div>
+                            <div class="col-6">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu " href="mailto:contacts@alkemy.it">Franco Abbastanza</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0 text-truncate">300</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-4">
+                              <p class="text-white m-0 text-truncate">Bacon Ipsum</p>
+                            </div>
+                            <div class="col-6">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu " href="mailto:contacts@bacon.com">Kevin Bacon</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0 text-truncate">3</p>
+                            </div>
+                          </div><div class="row">
+                            <div class="col-4">
+                              <p class="text-white m-0 text-truncate">CRIF</p>
+                            </div>
+                            <div class="col-6">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu " href="mailto:contacts@crif.it">Mimmo Crif</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0 text-truncate">12</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-4">
+                              <p class="text-white m-0 text-truncate">Immanence</p>
+                            </div>
+                            <div class="col-6">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu " href="mailto:contacts@immanence.it">Gaetana Contatto Immanence</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0 text-truncate">30</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-4">
+                              <p class="text-white m-0 text-truncate">P4I</p>
+                            </div>
+                            <div class="col-6">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu " href="mailto:contacts@p4i.it">Partners for Innovation</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0 text-truncate">3</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-4">
+                              <p class="text-white m-0 text-truncate">Alkemy</p>
+                            </div>
+                            <div class="col-6">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu " href="mailto:contacts@alkemy.it">Franco Abbastanza</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0 text-truncate">300</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-4">
+                              <p class="text-white m-0 text-truncate">Bacon Ipsum</p>
+                            </div>
+                            <div class="col-6">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu " href="mailto:contacts@bacon.com">Kevin Bacon</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0 text-truncate">3</p>
+                            </div>
+                          </div><div class="row">
+                            <div class="col-4">
+                              <p class="text-white m-0 text-truncate">CRIF</p>
+                            </div>
+                            <div class="col-6">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu " href="mailto:contacts@crif.it">Mimmo Crif</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0 text-truncate">12</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-4">
+                              <p class="text-white m-0 text-truncate">Immanence</p>
+                            </div>
+                            <div class="col-6">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu " href="mailto:contacts@immanence.it">Gaetana Contatto Immanence</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0 text-truncate">30</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-4">
+                              <p class="text-white m-0 text-truncate">P4I</p>
+                            </div>
+                            <div class="col-6">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu " href="mailto:contacts@p4i.it">Partners for Innovation</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0 text-truncate">3</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-4">
+                              <p class="text-white m-0 text-truncate">Alkemy</p>
+                            </div>
+                            <div class="col-6">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu " href="mailto:contacts@alkemy.it">Franco Abbastanza</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0 text-truncate">300</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-4">
+                              <p class="text-white m-0 text-truncate">Bacon Ipsum</p>
+                            </div>
+                            <div class="col-6">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu " href="mailto:contacts@bacon.com">Kevin Bacon</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="text-white m-0 text-truncate">3</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-footer">
+                        <div class="row">
+                          <div class="col-6">
+                            <a href="/admin/client" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">All Clients</a>
+                          </div>
+                          <div class="col-6">
+                            <a href="#" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">New Client</a>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="card-arrow">
+                        <div class="card-arrow-top-left"></div>
+                        <div class="card-arrow-top-right"></div>
+                        <div class="card-arrow-bottom-left"></div>
+                        <div class="card-arrow-bottom-right"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="card card-mirai animated mb-3">
+                      <div class="card-header text-uppercase">
+                        PROJECTS
+                      </div>
+                      <div class="card-body d-flex flex-column justify-content-start" style="height: 300px;">
+                        <div class="row">
+                          <div class="col-4">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Name</h6>
+                          </div>
+                          <div class="col-3">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Client</h6>
+                          </div>
+                          <div class="col-2">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Analysis</h6>
+                          </div>
+                          <div class="col-3">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Creation Date</h6>
+                          </div>
+                        </div>
+                        <div id="projects" style="overflow-y: scroll;">
+                          <div class="row text-white">
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">CRIF Risk Report #1</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">CRIF</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">8</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Immanence Risk Report #1</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Immanence</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">4</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Mon 22 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Alkemy Risk Report #1</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Alkemy</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">18</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">P4I Risk Report #1</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">P4I</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">8</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Bacon Ipsum Risk Report #1</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Bacon Ipsum</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">80</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">CRIF Risk Report #1</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">CRIF</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">8</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Immanence Risk Report #1</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Immanence</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">4</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Mon 22 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Alkemy Risk Report #1</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Alkemy</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">18</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">P4I Risk Report #1</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">P4I</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">8</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Bacon Ipsum Risk Report #1</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Bacon Ipsum</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">80</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">CRIF Risk Report #1</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">CRIF</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">8</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Immanence Risk Report #1</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Immanence</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">4</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Mon 22 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Alkemy Risk Report #1</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Alkemy</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">18</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">P4I Risk Report #1</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">P4I</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">8</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Bacon Ipsum Risk Report #1</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Bacon Ipsum</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">80</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">CRIF Risk Report #1</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">CRIF</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">8</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Immanence Risk Report #1</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Immanence</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">4</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Mon 22 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Alkemy Risk Report #1</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Alkemy</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">18</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">P4I Risk Report #1</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">P4I</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">8</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Bacon Ipsum Risk Report #1</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Bacon Ipsum</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">80</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-footer">
+                        <div class="row">
+                          <div class="col-6">
+                            <a href="#" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">All Projects</a>
+                          </div>
+                          <div class="col-6">
+                            <a href="#" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">New Projects</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-arrow">
+                        <div class="card-arrow-top-left"></div>
+                        <div class="card-arrow-top-right"></div>
+                        <div class="card-arrow-bottom-left"></div>
+                        <div class="card-arrow-bottom-right"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="card card-mirai animated">
+                      <div class="card-header text-uppercase">
+                        ANALYSIS
+                      </div>
+                      <div class="card-body d-flex flex-column justify-content-start" style="height: 300px;">
+                        <div class="row">
+                          <div class="col-2">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Client</h6>
+                          </div>
+                          <div class="col-2">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Project</h6>
+                          </div>
+                          <div class="col-2">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Analysis Type</h6>
+                          </div>
+                          <div class="col-2">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Hazard/Risk</h6>
+                          </div>
+                          <div class="col-2">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Sensitive Feature</h6>
+                          </div>
+                          <div class="col-2">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Creation Date</h6>
+                          </div>
+                        </div>
+                        <div id="projects" style="overflow-y: scroll;">
+                          <div class="row text-white">
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">CRIF</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">CRIF Risk Report #1</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Risk</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">21%</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">N/A</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">CRIF</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">CRIF Risk Report #1</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Bias FreqVsFreq</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">31%</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">CRIF</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">CRIF Risk Report #1</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Bias FreqVsFreq</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">21%</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">age</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">CRIF</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">CRIF Risk Report #1</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Bias FreqVsFreq</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">21%</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Attribute 20</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">CRIF</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">CRIF Risk Report #1</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Bias FreqVsRef</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">31%</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">CRIF</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">CRIF Risk Report #1</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Bias FreqVsRef</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">21%</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">age</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">CRIF</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">CRIF Risk Report #1</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Bias FreqVsRef</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">21%</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Attribute 20</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+
+                          <div class="row text-white">
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Immanence</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Immanence Risk Report #1</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Risk</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">21%</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">N/A</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Immanence</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Immanence Risk Report #1</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Bias FreqVsFreq</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">31%</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Immanence</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Immanence Risk Report #1</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Bias FreqVsFreq</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">21%</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">age</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Immanence</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Immanence Risk Report #1</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Bias FreqVsFreq</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">21%</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Attribute 20</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Immanence</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Immanence Risk Report #1</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Bias FreqVsRef</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">31%</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Immanence</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Immanence Risk Report #1</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Bias FreqVsRef</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">21%</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">age</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row text-white">
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Immanence</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Immanence Risk Report #1</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Bias FreqVsRef</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">21%</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Attribute 20</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+                      <div class="card-footer">
+                        <div class="row">
+                          <div class="col-6">
+                            <a href="#" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">All Analysis</a>
+                          </div>
+                          <div class="col-6">
+                            <a href="#" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">New Analysis</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-arrow">
+                        <div class="card-arrow-top-left"></div>
+                        <div class="card-arrow-top-right"></div>
+                        <div class="card-arrow-bottom-left"></div>
+                        <div class="card-arrow-bottom-right"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="card card-mirai animated h-100">
+                  <div class="card-header text-uppercase">
+                    Violations
+                  </div>
+                  <div class="card-body d-flex">
+                    <div id="icicle_chart" class="d-flex align-items-center w-100 justify-content-center">
+                      
+                    </div>
+                  </div>
+                  <div class="card-arrow">
+                    <div class="card-arrow-top-left"></div>
+                    <div class="card-arrow-top-right"></div>
+                    <div class="card-arrow-bottom-left"></div>
+                    <div class="card-arrow-bottom-right"></div>
+                  </div>
+                </div>
+              </div>
+            </div> 
+            <div class="row mb-3">
+              <div class="col">
+                <div class="row">
+                  <div class="col-lg-6">
+                    <div class="card card-mirai animated mb-3">
+                      <div class="card-header text-uppercase">
+                        CLIENTS over time
+                      </div>
+                      <div class="card-body d-flex">
+                          <div id="stackedbars_chart" class="d-flex align-items-center w-100 justify-content-center">
+                            
+                          </div>
+                      </div>
+
+                      <div class="card-arrow">
+                        <div class="card-arrow-top-left"></div>
+                        <div class="card-arrow-top-right"></div>
+                        <div class="card-arrow-bottom-left"></div>
+                        <div class="card-arrow-bottom-right"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-3">
+                    <div class="card card-mirai animated mb-3">
+                      <div class="card-header text-uppercase">
+                        Projects per Client
+                      </div>
+                      <div class="card-body d-flex flex-column justify-content-start" style="height: 300px;">
+                        <div class="row">
+                          <div id="project_pie_chart" class="d-flex align-items-center w-100 justify-content-center">
+                            
+                          </div>
+
+                        </div>
+                      </div>
+
+                      <div class="card-arrow">
+                        <div class="card-arrow-top-left"></div>
+                        <div class="card-arrow-top-right"></div>
+                        <div class="card-arrow-bottom-left"></div>
+                        <div class="card-arrow-bottom-right"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-3">
+                    <div class="card card-mirai animated mb-3">
+                      <div class="card-header text-uppercase">
+                        Analysis Per Client
+                      </div>
+                      <div class="card-body d-flex flex-column justify-content-start" style="height: 300px;">
+                        <div class="row">
+                          <div id="analysis_pie_chart" class="d-flex align-items-center w-100 justify-content-center">
+                            
+                          </div>
+
+                        </div>
+                      </div>
+
+                      <div class="card-arrow">
+                        <div class="card-arrow-top-left"></div>
+                        <div class="card-arrow-top-right"></div>
+                        <div class="card-arrow-bottom-left"></div>
+                        <div class="card-arrow-bottom-right"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script type="module">
+
+import define from "{{ url_for('static', filename='js/clients_dashboard_icicle/index_dashboard.js') }}";
+import definition from "{{ url_for('static', filename='js/plot-stacked-bar-chart/index.js') }}";
+import {Runtime, Library, Inspector} from "{{ url_for('static', filename='js/clients_dashboard_icicle/runtime.js') }}";
+
+const runtime = new Runtime();
+const main = runtime.module(define, Inspector.into(document.getElementById("icicle_chart")));
+const main_bars = runtime.module(definition, Inspector.into(document.getElementById("stackedbars_chart")));
+
+
+</script>
+
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
+

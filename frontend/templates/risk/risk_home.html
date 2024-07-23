@@ -32,10 +32,11 @@ BRIO - Risk
         <div class="row">
           <div class="col themed-grid-col mt-xl-0 mt-4 d-flex flex-column justify-content-between">
             <div class="card card-mirai {{ animated }} mb-4">
-              <div class="card-header text-uppercase">
-                filename: <span name="filename-header">{{ result['filename'] }}</span>
+              <div class="card-header text-uppercase d-flex justify-content-between" role="button" onClick="openAccordion(this)">
+                <span>filename: <span name="filename-header">{{ result['filename'] }}</span></span>
+                <span class="chevron" name="chevron">▼</span>
               </div>
-              <div class="card-body d-flex flex-column justify-content-between">
+              <div class="card-body d-none flex-column justify-content-between" style="animation-delay: 0s" name="card-body">
                 <div class="row">
                   <div class="col-1">
                     <label class="checkbox-container checkbox-all-container d-block">
@@ -44,19 +45,22 @@ BRIO - Risk
                     </label>
                   </div>
                   <div class="col-2">
-                    <h5 class="card-title text-mirai rajdhani-bold">Test Risk (%)</h5>
+                    <h5 class="card-title text-mirai rajdhani-bold text-truncate">Hazard (Test Risk)</h5>
                   </div>
                   <div class="col-2">
-                    <h5 class="card-title text-mirai rajdhani-bold">Analysis Type</h5>
+                    <h5 class="card-title text-mirai rajdhani-bold text-truncate">Analysis Type</h5>
+                  </div>
+                  <div class="col-1">
+                    <h5 class="card-title text-mirai rajdhani-bold text-truncate">Threshold</h5>
                   </div>
                   <div class="col-2">
-                    <h5 class="card-title text-mirai rajdhani-bold">Sensitive Feature</h5>
+                    <h5 class="card-title text-mirai rajdhani-bold text-truncate">Sensitive Feature</h5>
                   </div>
                   <div class="col-2">
-                    <h5 class="card-title text-mirai rajdhani-bold">Predictions</h5>
+                    <h5 class="card-title text-mirai rajdhani-bold text-truncate">Predictions</h5>
                   </div>
-                  <div class="col-3">
-                    <h5 class="card-title text-mirai rajdhani-bold">Conditioning Features</h5>
+                  <div class="col-2">
+                    <h5 class="card-title text-mirai rajdhani-bold text-truncate">Conditioning Features</h5>
                   </div>
                 </div>
                 <!--form method="POST" action="{{ url_for('risk.risk_home') }}" enctype="multipart/form-data"-->
@@ -69,10 +73,17 @@ BRIO - Risk
                               <span class="checkmark"></span>
                             </div>
                             <div class="col-2">
-                              <p class="text-white m-0" name="testrisk" >{{ '%0.2f'| format(data['hazard'][0] / data['hazard'][data['hazard']|length - 1] * 100) }}</p>
+                              <p class="text-white m-0" name="testrisk" value="{{ data['hazard'][0] }}">{{ '%0.8f'| format(data['hazard'][0]) }} (≈ {{ '%0.2f'| format(data['hazard'][0] / data['hazard'][data['hazard']|length - 1] * 100) }}%)</p>
                             </div>
                             <div class="col-2">
                               <p class="text-white m-0" name="analysis_type">{{ data['analysis_type'] }}</p>
+                            </div>
+                            <div class="col-1">
+                              {% if data['selected_params']['thr'] == None %}
+                                <p class="text-white m-0" name="threshold">{{ data['selected_params']['a1_param'] }}</p>
+                              {% else %}
+                                <p class="text-white m-0" name="threshold">{{ data['selected_params']['thr'] }}</p>
+                              {% endif %}
                             </div>
                             <div class="col-2">
                               <p class="text-white m-0" name="root_var">{{ data['selected_params']['root_var'] }}</p>
@@ -80,7 +91,7 @@ BRIO - Risk
                             <div class="col-2">
                               <p class="text-white m-0" name="predictions">{{ data['selected_params']['predictions'] }}</p>
                             </div>
-                            <div class="col-3">
+                            <div class="col-2">
                               <p class="text-white m-0" name="cond_vars">{{ data['selected_params']['cond_vars'] }}</p>
                             </div>
                           </label>
@@ -124,12 +135,15 @@ BRIO - Risk
                   </div>
                 </div>
 
-                <div class="row row-cols-5">
+                <div class="row row-cols-6">
                   <div class="col">
                     <h5 class="card-title text-mirai rajdhani-bold">Test Risk (%)</h5>
                   </div>
                   <div class="col">
                     <h5 class="card-title text-mirai rajdhani-bold">Analysis Type</h5>
+                  </div>
+                  <div class="col">
+                    <h5 class="card-title text-mirai rajdhani-bold">Threshold</h5>
                   </div>
                   <div class="col">
                     <h5 class="card-title text-mirai rajdhani-bold">Sensitive Feature</h5>
@@ -175,6 +189,21 @@ BRIO - Risk
 
 <script src="{{ url_for('static', filename='js/new_gauge.js') }}"></script>
 <script type="text/javascript">
+
+function openAccordion(source){
+  card = source.parentElement.parentElement;
+  cardbody = card.querySelector('[name=card-body]');
+  chevron = card.querySelector('[name=chevron]');
+  if (cardbody.classList.contains("d-none")) {
+    cardbody.classList.add("d-flex");
+    cardbody.classList.remove("d-none");
+    chevron.innerHTML = "▲";
+  } else {
+    cardbody.classList.add("d-none");
+    cardbody.classList.remove("d-flex");
+    chevron.innerHTML = "▼";
+  }
+}
 function toggle(source) {
   card = source.parentElement.parentElement.parentElement.parentElement;
   checkboxes = card.querySelectorAll('[name=select]');
@@ -197,6 +226,7 @@ function computeRisk(source) {
   hazards = container.querySelectorAll('[name=select]');
   testrisk = container.querySelectorAll('[name=testrisk]');
   analysis_type = container.querySelectorAll('[name=analysis_type]');
+  threshold = container.querySelectorAll('[name=threshold]');
   root_vars = container.querySelectorAll('[name=root_var]');
   predictions = container.querySelectorAll('[name=predictions]');
   cond_vars = container.querySelectorAll('[name=cond_vars]');
@@ -208,6 +238,7 @@ function computeRisk(source) {
   card = source.parentElement.parentElement.parentElement;
   header = card.querySelector('[name=filename-header]');
   sum = 0;
+  sum_abs_val = 0;
   denum = 0;
   analysis = {};
   for(var i=0, n=hazards.length;i<n;i++) {
@@ -215,28 +246,31 @@ function computeRisk(source) {
       test = {};
       test["testrisk"] = testrisk[i].innerHTML;
       test["analysis_type"] = analysis_type[i].innerHTML;
+      test["threshold"] = threshold[i].innerHTML;
       test["root_vars"] = root_vars[i].innerHTML;
       test["predictions"] = predictions[i].innerHTML;
       test["cond_vars"] = cond_vars[i].innerHTML;
       analysis[denum] = test;
       denum ++;
       sum = sum + Number(hazards[i].value);
+      sum_abs_val = sum_abs_val + Number(testrisk[i].getAttribute("value"));
+      console.log("abs_risk = " + testrisk[i].getAttribute("value"));
+      console.log("sum_abs_val = " + sum_abs_val);
     }
   }
   if (denum>1) {
     risk = sum/denum;
+    abs_risk = sum_abs_val/denum;
     powergauge.setAttribute("val", risk);
-    riskvalue.innerHTML = risk+"%";
+    riskvalue.innerHTML = abs_risk + " (≈ "+risk+"%)";
     result_container.innerHTML = "";
-    /*console.log("sum = " + sum);
-    console.log("denum = " + denum);
     console.log("risk = " + sum/denum);
-    console.log("analysis = " + JSON.stringify(analysis));*/
+
     for(var j=0, m=Object.keys(analysis).length;j<m;j++) {
 
       const row = document.createElement("div");
       row.classList.add("row");
-      row.classList.add("row-cols-5");
+      row.classList.add("row-cols-6");
 
       const risk_col = document.createElement("div");
       risk_col.classList.add("col");
@@ -253,6 +287,14 @@ function computeRisk(source) {
       type_p.innerHTML = analysis[j]["analysis_type"];
       type_col.appendChild(type_p);
       row.appendChild(type_col);
+
+      const thr_col = document.createElement("div");
+      thr_col.classList.add("col");
+      const thr_p = document.createElement("p");
+      thr_p.classList.add("text-white");
+      thr_p.innerHTML = analysis[j]["threshold"];
+      thr_col.appendChild(thr_p);
+      row.appendChild(thr_col);
 
       const root_col = document.createElement("div");
       root_col.classList.add("col");

@@ -1,0 +1,1195 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+{% endblock %}
+
+{% block title %}
+MIRAI Toolbox - Client: CRIF
+{% endblock %}
+
+
+{% block header %}
+<nav class="navbar navbar-dark navbar-expand-lg navbar-mirai shadow fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand brand-mirai" href="/">
+      <img class="logo" src="{{ url_for('static', filename='img/logo.svg') }}">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item pe-2">
+          <a class="nav-link " aria-current="page" href="/">HOME</a>
+        </li>
+        <li class="nav-item pe-2 dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="brioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            BRIO
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark shadow" aria-labelledby="brioDropdown">
+            <li><a class="dropdown-item" href="/bias">BIAS</a></li>
+            <li><a class="dropdown-item" href="/risk">RISK</a></li>
+            <li><a class="dropdown-item" href="/opacity">OPACITY</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="https://github.com/DLBD-Department/BRIO_x_Alkemy" target="_blank">BRIOxALKEMY</a></li>
+            <li><a class="dropdown-item" href="https://sites.unimi.it/brio/" target="_blank">BRIO Project</a></li>
+          </ul>
+        </li>
+        <li class="nav-item pe-2 dropdown">
+          <a class="nav-link dropdown-toggle active" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            ADMIN
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark shadow" aria-labelledby="adminDropdown">
+            <li><a class="dropdown-item" href="/admin">DASHBOARD</a></li>
+            <li><a class="dropdown-item active" href="/bias">CLIENTS</a></li>
+            <li><a class="dropdown-item" href="/risk">PROJECTS</a></li>
+            <li><a class="dropdown-item" href="/opacity">ANALYSIS</a></li>
+          </ul>
+        </li>
+        <li class="nav-item pe-2">
+          {% if btn_login == True %}
+              <a class="nav-link" href="{{ url_for('logout') }}">LOGOUT</a>
+          {% else %}
+              <a class="nav-link" href="{{ url_for('login') }}">LOGIN</a>
+          {% endif %}
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="corner d-none d-lg-block">
+    <img src="{{ url_for('static', filename='img/corner.svg') }}">
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid pt-5">
+  <div class="row">
+    <div class="col">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="py-3 my-2">
+            <h1 class="text-white text-start rajdhani-bold top-logo animated">CRIF</h1>
+          </div>
+          <div class="col themed-grid-col">
+            <div class="row">
+              <div class="col-lg-2">
+                <div class="row">
+                  <div class="col">
+                    <div class="card card-mirai animated mb-3">
+                      <div class="card-header text-uppercase">
+                        Details
+                      </div>
+                      <div class="card-body d-flex flex-column justify-content-start">
+                        <div class="row mb-2">
+                          <img class="logo" src="{{ url_for('static', filename='img/clients_logos/CRIF.png') }}">
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <h6 class="card-title text-mirai rajdhani-bold text-truncate">Contact Person</h6>
+                          <p>Nomelungo Cognomelunghissimo</p>
+                          <h6 class="card-title text-mirai rajdhani-bold text-truncate">Email</h6>
+                          <p class="text-truncate"><a class="text-miraiblu " href="mailto:nomelungo.cognomelunghissimo@crif.it">nome.cognome@crif.it</a></p>
+                          <h6 class="card-title text-mirai rajdhani-bold text-truncate">Client Admin</h6>
+                          <p>research@MIRAI</p>
+                          <h6 class="card-title text-mirai rajdhani-bold text-truncate">Client Editors</h6>
+                          <p class="m-0">research@MIRAI</p>
+                          <p class="m-0">admin@MIRAI</p>
+                          <p class="m-0">Davide Posillipo</p>
+                        </div>
+                      </div>
+                      <div class="card-footer">
+                        <div class="row">
+                          <div class="col">
+                            <a href="#" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">Edit Details</a>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="card-arrow">
+                        <div class="card-arrow-top-left"></div>
+                        <div class="card-arrow-top-right"></div>
+                        <div class="card-arrow-bottom-left"></div>
+                        <div class="card-arrow-bottom-right"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-8">
+                <div class="row mb-3" style="height: 40vh;">
+                  <div class="col-lg-5 h-100">
+                    <div class="card card-mirai animated h-100">
+                      <div class="card-header text-uppercase">
+                        Projects
+                      </div>
+                      <div class="card-body d-flex flex-column pb-0" style="max-height: calc(100% - 96px);">
+                        <div class="row">
+                          <div class="col-5">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Name</h6>
+                          </div>
+                          <div class="col-3">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Analysis</h6>
+                          </div>
+                          <div class="col-4">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Creation Date</h6>
+                          </div>
+                        </div>
+                        
+                        <div id="projects" style="overflow-y: scroll; overflow-x: hidden;">
+                          <div class="row">
+                            <div class="col-5">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #1</p></a>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate text-white">8</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-5">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #2</p></a>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate text-white">18</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-5">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #3</p></a>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate text-white">8</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div><div class="row">
+                            <div class="col-5">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #4</p></a>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate text-white">8</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-5">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #5</p></a>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate text-white">18</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-5">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #6</p></a>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate text-white">8</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div><div class="row">
+                            <div class="col-5">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #7</p></a>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate text-white">8</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-5">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #8</p></a>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate text-white">18</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-5">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #9</p></a>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate text-white">8</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-5">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Bias Report #1</p></a>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate text-white">20</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-5">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Bias Report #2</p></a>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate text-white">5</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-5">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Bias Report #3</p></a>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate text-white">5</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-5">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Bias Report #4</p></a>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate text-white">20</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-5">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Bias Report #5</p></a>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate text-white">5</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-5">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Bias Report #6</p></a>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate text-white">5</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-footer">
+                        <div class="row">
+                          <div class="col">
+                            <a href="#" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">New Project</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-arrow">
+                        <div class="card-arrow-top-left"></div>
+                        <div class="card-arrow-top-right"></div>
+                        <div class="card-arrow-bottom-left"></div>
+                        <div class="card-arrow-bottom-right"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-7 h-100">
+
+                    <div class="card card-mirai animated h-100">
+                      <div class="card-header text-uppercase">
+                        Risk Analysis
+                      </div>
+                      <div class="card-body d-flex flex-column pb-0" style="max-height: calc(100% - 96px);">
+                        <div class="row">
+                          <div class="col-3">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">ID</h6>
+                          </div>
+                          <div class="col-4">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Project</h6>
+                          </div>
+                          <div class="col-2">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Risk</h6>
+                          </div>
+                          <div class="col-3">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Creation Date</h6>
+                          </div>
+                        </div>
+                        
+                        <div id="risk" style="overflow-y: scroll; overflow-x: hidden;">
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Gender</a></p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #1</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">23%</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Age</a></p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #1</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">45%</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Profession</a></p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #1</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">82%</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Zip Code</a></p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #1</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">66%</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Gender</a></p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #1</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">23%</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Age</a></p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #1</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">45%</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Profession</a></p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #1</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">82%</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Zip Code</a></p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #1</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">66%</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Gender</a></p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #1</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">23%</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Age</a></p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #1</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">45%</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Profession</a></p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #1</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">82%</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Zip Code</a></p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #1</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">66%</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Gender</a></p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #1</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">23%</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Age</a></p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #1</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">45%</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Profession</a></p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #1</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">82%</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Zip Code</a></p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">CRIF Risk Report #1</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">66%</p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-footer">
+                        <div class="row">
+                          <div class="col">
+                            <a href="#" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">New Risk Analysis</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-arrow">
+                        <div class="card-arrow-top-left"></div>
+                        <div class="card-arrow-top-right"></div>
+                        <div class="card-arrow-bottom-left"></div>
+                        <div class="card-arrow-bottom-right"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-3" style="height: calc(60vh - 185px);">
+                  <div class="col h-100">
+                    <div class="card card-mirai animated h-100">
+                      <div class="card-header text-uppercase">
+                        Bias Analysis
+                      </div>
+                      <div class="card-body d-flex flex-column pb-0" style="max-height: calc(100% - 96px);">
+                        <div class="row">
+                          <div class="col-lg-2">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">ID</h6>
+                          </div>
+                          <div class="col-lg-2">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Test Risk</h6>
+                          </div>
+                          <div class="col-lg-1">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Type</h6>
+                          </div>
+                          <div class="col-lg-1">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Threshold</h6>
+                          </div>
+                          <div class="col-lg-2">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Sensitive Feature</h6>
+                          </div>
+                          <div class="col-lg-2">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Predictions</h6>
+                          </div>
+                          <div class="col-lg-2">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Conditioning Features</h6>
+                          </div>
+                        </div>
+                        
+                        <div id="bias" style="overflow-y: scroll; overflow-x: hidden;">
+                          <div class="row">
+                            <div class="col-lg-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-lg-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-lg-2">
+                              <p class="m-0 text-truncate">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-footer">
+                        <div class="row">
+                          <div class="col">
+                            <a href="#" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">New Bias Analysis</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-arrow">
+                        <div class="card-arrow-top-left"></div>
+                        <div class="card-arrow-top-right"></div>
+                        <div class="card-arrow-bottom-left"></div>
+                        <div class="card-arrow-bottom-right"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-2">
+                <div class="row">
+                  <div class="col">
+                    <div class="card card-mirai animated" style="height: calc(100vh - 170px);">
+                      <div class="card-header text-uppercase">
+                        Uploads
+                      </div>
+                      <div class="card-body d-flex flex-column h-100">
+                        <div class="row" style="height: 40%; max-height: 40%; overflow-y: hidden;">
+                          <div class="col h-100">
+                              <div class="row">
+                                <h6 class="card-title text-mirai rajdhani-bold text-truncate">Dataframes</h6>
+                              </div>
+                              <div class="row" id="dataframes" style="overflow-y: scroll;max-height: calc(100% - 27px);">
+                                 <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">uci-german-credit-input-brio.csv</a></p>
+                                 <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">data-for-demo-with-predictions.csv</a></p>
+                                 <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">data-for-demo.csv</a></p>
+                                 <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">risk-report-test.csv</a></p>
+                                 <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">uci-german-credit-input-brio.csv</a></p>
+                                 <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">data-for-demo-with-predictions.csv</a></p>
+                                 <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">data-for-demo.csv</a></p>
+                                 <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">risk-report-test.csv</a></p>
+                                 <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">uci-german-credit-input-brio.csv</a></p>
+                                 <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">data-for-demo-with-predictions.csv</a></p>
+                                 <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">data-for-demo.csv</a></p>
+                                 <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">risk-report-test.csv</a></p>
+                              </div>
+                          </div>  
+                        </div>
+                        <hr>
+                        <div class="row" style="height: 20%;">
+                          <div class="col">
+                              <div class="row">
+                                <h6 class="card-title text-mirai rajdhani-bold text-truncate">Datasets</h6>
+                              </div>
+                              <div class="row" id="datasets">
+                                <p class="text-truncate">No dataset uploaded</p>
+                              </div>
+                          </div>  
+                        </div>
+                        <div class="row" style="height: 20%;">
+                          <div class="col">
+                              <div class="row">
+                                <h6 class="card-title text-mirai rajdhani-bold text-truncate">Notebooks</h6>
+                              </div>
+                              <div class="row" id="notebooks">
+                                <p class="text-truncate">No notebook uploaded</p>
+                              </div>
+                          </div>  
+                        </div>
+                        <div class="row" style="height: 20%;">
+                          <div class="col">
+                              <div class="row">
+                                <h6 class="card-title text-mirai rajdhani-bold text-truncate">Artifacts</h6>
+                              </div>
+                              <div class="row" id="artifacts">
+                                <p class="text-truncate">No artifact uploaded</p>
+                              </div>
+                          </div>  
+                        </div>
+                      </div>
+
+                      <div class="card-footer">
+                        <div class="row">
+                          <div class="col">
+                            <a href="#" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">Manage Uploads</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-arrow">
+                        <div class="card-arrow-top-left"></div>
+                        <div class="card-arrow-top-right"></div>
+                        <div class="card-arrow-bottom-left"></div>
+                        <div class="card-arrow-bottom-right"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
+
