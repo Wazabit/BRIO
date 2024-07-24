@@ -51,6 +51,7 @@ def risk_home():
                            session=session.get("user"),
                            btn_login=btn_login,
                            user=user.toJSON(),
+                           role=user.role,
                            analysis=analysis,
                            pretty=json.dumps(session.get("user"), indent=4),
                            status=success_status,
