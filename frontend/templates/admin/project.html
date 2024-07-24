@@ -1,0 +1,950 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+{% endblock %}
+
+{% block title %}
+MIRAI Toolbox - Project: CRIF Risk Report #1
+{% endblock %}
+
+
+{% block header %}
+<nav class="navbar navbar-dark navbar-expand-lg navbar-mirai shadow fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand brand-mirai" href="/">
+      <img class="logo" src="{{ url_for('static', filename='img/logo.svg') }}">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item pe-2">
+          <a class="nav-link " aria-current="page" href="/">HOME</a>
+        </li>
+        <li class="nav-item pe-2 dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="brioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            BRIO
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark shadow" aria-labelledby="brioDropdown">
+            <li><a class="dropdown-item" href="/bias">BIAS</a></li>
+            <li><a class="dropdown-item" href="/risk">RISK</a></li>
+            <li><a class="dropdown-item" href="/opacity">OPACITY</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="https://github.com/DLBD-Department/BRIO_x_Alkemy" target="_blank">BRIOxALKEMY</a></li>
+            <li><a class="dropdown-item" href="https://sites.unimi.it/brio/" target="_blank">BRIO Project</a></li>
+          </ul>
+        </li>
+        <li class="nav-item pe-2 dropdown">
+          <a class="nav-link dropdown-toggle active" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            ADMIN
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark shadow" aria-labelledby="adminDropdown">
+            <li><a class="dropdown-item" href="/admin">DASHBOARD</a></li>
+            <li><a class="dropdown-item" href="/bias">CLIENTS</a></li>
+            <li><a class="dropdown-item active" href="/risk">PROJECTS</a></li>
+            <li><a class="dropdown-item" href="/opacity">ANALYSIS</a></li>
+          </ul>
+        </li>
+        <li class="nav-item pe-2">
+          {% if btn_login == True %}
+              <a class="nav-link" href="{{ url_for('logout') }}">LOGOUT</a>
+          {% else %}
+              <a class="nav-link" href="{{ url_for('login') }}">LOGIN</a>
+          {% endif %}
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="corner d-none d-lg-block">
+    <img src="{{ url_for('static', filename='img/corner.svg') }}">
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid pt-5">
+  <div class="row">
+    <div class="col">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="py-3 my-2">
+            <h1 class="text-white text-start rajdhani-bold top-logo animated">CRIF Risk Report #1</h1>
+          </div>
+          <div class="col themed-grid-col">
+            <div class="row">              
+              <div class="col-lg-2">
+                <div class="row">
+                  <div class="col">
+                    <div class="card card-mirai animated mb-3">
+                      <div class="card-header text-uppercase">
+                        Client
+                      </div>
+                      <div class="card-body d-flex flex-column justify-content-start">
+                        <div class="row mb-2">
+                          <img class="logo" src="{{ url_for('static', filename='img/clients_logos/CRIF.png') }}">
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <h6 class="card-title text-mirai rajdhani-bold text-truncate">Contact Person</h6>
+                          <p>Nomelungo Cognomelunghissimo</p>
+                          <h6 class="card-title text-mirai rajdhani-bold text-truncate">Email</h6>
+                          <p class="text-truncate"><a class="text-miraiblu " href="mailto:nomelungo.cognomelunghissimo@crif.it">nome.cognome@crif.it</a></p>
+                          <h6 class="card-title text-mirai rajdhani-bold text-truncate">Client Admin</h6>
+                          <p>research@MIRAI</p>
+                          <h6 class="card-title text-mirai rajdhani-bold text-truncate">Client Editors</h6>
+                          <p class="m-0">research@MIRAI</p>
+                          <p class="m-0">admin@MIRAI</p>
+                          <p class="m-0">Davide Posillipo</p>
+                        </div>
+                      </div>
+                      
+                      <div class="card-arrow">
+                        <div class="card-arrow-top-left"></div>
+                        <div class="card-arrow-top-right"></div>
+                        <div class="card-arrow-bottom-left"></div>
+                        <div class="card-arrow-bottom-right"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-10">
+                <div class="row">
+                  <div class="col-lg-4 d-flex flex-column justify-content-between">
+                    <div class="row mb-3">
+                      <div class="col d-flex align-items-center justify-content-between">
+                        <h3 class="card-title rajdhani-bold text-truncate text-white">Creation Date</h3>
+                        <p class="text-truncate text-white m-0">Sun 21 Jul 2024</p>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="d-flex flex-column h-100 p-2 rounded-3" style="background-color: #da0c91;">
+                          <h4 class="card-title text-miraiblu rajdhani-bold text-truncate">Risk Analysis</h4>
+                          <h2 class="text-truncate m-0 text-end text-white">8</h2>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="d-flex flex-column h-100 p-2 rounded-3" style="background-color: #19dcf2;">
+                          <h4 class="card-title text-mirai rajdhani-bold text-truncate">Bias Analysis</h4>
+                          <h2 class="text-truncate m-0 text-end text-miraidark">20</h2>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col">
+                        <div class="card card-mirai animated" style="height: 20vh;">
+                          <div class="card-header text-uppercase">
+                            Datasets
+                          </div>
+                          <div class="card-body d-flex flex-column pb-0" style="max-height: calc(100% - 50px);">
+                            <div class="row" style="overflow-y: scroll; overflow-x: hidden;">
+                              <p class="m-0 text-truncate"><a class="text-miraiblu text-decoration-none" href="#">uci-german-credit-input-brio.csv</a></p>
+                              <p class="m-0 text-truncate"><a class="text-miraiblu text-decoration-none" href="#">data-for-demo-with-predictions.csv</a></p>
+                              <p class="m-0 text-truncate"><a class="text-miraiblu text-decoration-none" href="#">data-for-demo.csv</a></p>
+                              <p class="m-0 text-truncate"><a class="text-miraiblu text-decoration-none" href="#">uci-german-credit-input-brio.csv</a></p>
+                              <p class="m-0 text-truncate"><a class="text-miraiblu text-decoration-none" href="#">data-for-demo-with-predictions.csv</a></p>
+                              <p class="m-0 text-truncate"><a class="text-miraiblu text-decoration-none" href="#">data-for-demo.csv</a></p>
+                              <p class="m-0 text-truncate"><a class="text-miraiblu text-decoration-none" href="#">uci-german-credit-input-brio.csv</a></p>
+                              <p class="m-0 text-truncate"><a class="text-miraiblu text-decoration-none" href="#">data-for-demo-with-predictions.csv</a></p>
+                              <p class="m-0 text-truncate"><a class="text-miraiblu text-decoration-none" href="#">data-for-demo.csv</a></p>
+                            </div>
+                          </div>
+
+                          <div class="card-arrow">
+                            <div class="card-arrow-top-left"></div>
+                            <div class="card-arrow-top-right"></div>
+                            <div class="card-arrow-bottom-left"></div>
+                            <div class="card-arrow-bottom-right"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-8 mb-3">
+                    <div class="card card-mirai animated" style="height: 40vh;">
+                      <div class="card-header text-uppercase">
+                        Risk Analysis
+                      </div>
+                      <div class="card-body d-flex flex-column pb-0" style="max-height: calc(100% - 96px);">
+                        <div class="row">
+                          <div class="col-3">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">ID</h6>
+                          </div>
+                          <div class="col-2">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Risk</h6>
+                          </div>
+                          <div class="col-4">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Bias Analysis - Test Risk</h6>
+                          </div>
+                          <div class="col-3">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Creation Date</h6>
+                          </div>
+                        </div>
+                        
+                        <div id="risk" style="overflow-y: scroll; overflow-x: hidden;">
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Gender</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">23%</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0">
+                                <a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a> - 0.00164963 (≈ 25.82%)
+                              </p>
+                              <p class="text-truncate m-0">
+                                <a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsRef</a> - 0.00144963 (≈ 21.82%)
+                              </p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Age</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">45%</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0">
+                                <a class="text-miraiblu text-decoration-none" href="#">Bias Age FreqVsFreq</a> - 0.00164963 (≈ 25.82%)
+                              </p>
+                              <p class="text-truncate m-0">
+                                <a class="text-miraiblu text-decoration-none" href="#">Bias Age FreqVsRef</a> - 0.00144963 (≈ 21.82%)
+                              </p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Profession</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">82%</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0">
+                                <a class="text-miraiblu text-decoration-none" href="#">Bias Profession FreqVsFreq</a> - 0.00164963 (≈ 25.82%)
+                              </p>
+                              <p class="text-truncate m-0">
+                                <a class="text-miraiblu text-decoration-none" href="#">Bias Profession FreqVsRef</a> - 0.00144963 (≈ 21.82%)
+                              </p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Zip Code</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">66%</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0">
+                                <a class="text-miraiblu text-decoration-none" href="#">Bias Zip Code FreqVsFreq</a> - 0.00164963 (≈ 25.82%)
+                              </p>
+                              <p class="text-truncate m-0">
+                                <a class="text-miraiblu text-decoration-none" href="#">Bias Zip Code FreqVsRef</a> - 0.00144963 (≈ 21.82%)
+                              </p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Gender</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">23%</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0">
+                                <a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a> - 0.00164963 (≈ 25.82%)
+                              </p>
+                              <p class="text-truncate m-0">
+                                <a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsRef</a> - 0.00144963 (≈ 21.82%)
+                              </p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Age</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">45%</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0">
+                                <a class="text-miraiblu text-decoration-none" href="#">Bias Age FreqVsFreq</a> - 0.00164963 (≈ 25.82%)
+                              </p>
+                              <p class="text-truncate m-0">
+                                <a class="text-miraiblu text-decoration-none" href="#">Bias Age FreqVsRef</a> - 0.00144963 (≈ 21.82%)
+                              </p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Profession</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">82%</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0">
+                                <a class="text-miraiblu text-decoration-none" href="#">Bias Profession FreqVsFreq</a> - 0.00164963 (≈ 25.82%)
+                              </p>
+                              <p class="text-truncate m-0">
+                                <a class="text-miraiblu text-decoration-none" href="#">Bias Profession FreqVsRef</a> - 0.00144963 (≈ 21.82%)
+                              </p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Risk for Zip Code</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate text-white">66%</p>
+                            </div>
+                            <div class="col-4">
+                              <p class="text-truncate m-0">
+                                <a class="text-miraiblu text-decoration-none" href="#">Bias Zip Code FreqVsFreq</a> - 0.00164963 (≈ 25.82%)
+                              </p>
+                              <p class="text-truncate m-0">
+                                <a class="text-miraiblu text-decoration-none" href="#">Bias Zip Code FreqVsRef</a> - 0.00144963 (≈ 21.82%)
+                              </p>
+                            </div>
+                            <div class="col-3">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-footer">
+                        <div class="row">
+                          <div class="col">
+                            <a href="#" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">New Risk Analysis</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-arrow">
+                        <div class="card-arrow-top-left"></div>
+                        <div class="card-arrow-top-right"></div>
+                        <div class="card-arrow-bottom-left"></div>
+                        <div class="card-arrow-bottom-right"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-3" style="height: calc(60vh - 185px);">
+                  <div class="col h-100">
+                    <div class="card card-mirai animated h-100">
+                      <div class="card-header text-uppercase">
+                        Bias Analysis
+                      </div>
+                      <div class="card-body d-flex flex-column pb-0" style="max-height: calc(100% - 96px);">
+                        <div class="row">
+                          <div class="col-2">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">ID</h6>
+                          </div>
+                          <div class="col-2">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Test Risk</h6>
+                          </div>
+                          <div class="col-1">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Type</h6>
+                          </div>
+                          <div class="col-1">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Threshold</h6>
+                          </div>
+                          <div class="col-1">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Sensitive Feature</h6>
+                          </div>
+                          <div class="col-1">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Predictions</h6>
+                          </div>
+                          <div class="col-2">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Conditioning Features</h6>
+                          </div>
+                          <div class="col-2">
+                            <h6 class="card-title text-mirai rajdhani-bold text-truncate">Creation Date</h6>
+                          </div>
+                        </div>
+                        
+                        <div id="bias" style="overflow-y: scroll; overflow-x: hidden;">
+                          <div class="row">
+                            <div class="col-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-2">
+                              <p class="text-truncate m-0"><a class="text-miraiblu text-decoration-none" href="#">Bias Gender FreqVsFreq</a></p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">0.00164963 (≈ 25.82%)</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">FreqvsFreq</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">high</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">gender</p>
+                            </div>
+                            <div class="col-1">
+                              <p class="m-0 text-truncate">performance</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0">['Attribute1', 'Attribute3', 'Attribute6', 'Attribute10', 'Attribute12', 'Attribute14']</p>
+                            </div>
+                            <div class="col-2">
+                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-footer">
+                        <div class="row">
+                          <div class="col">
+                            <a href="#" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">New Bias Analysis</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-arrow">
+                        <div class="card-arrow-top-left"></div>
+                        <div class="card-arrow-top-right"></div>
+                        <div class="card-arrow-bottom-left"></div>
+                        <div class="card-arrow-bottom-right"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div> 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
+

@@ -80,7 +80,9 @@ hr{
 .text-miraiblu, .text-success{
   color: #13DCF2!important;
 }
-
+.text-miraidark{
+  color: #0A3B5A!important;
+}
 .navbar.navbar-mirai {
   margin-bottom: 0;
   border-radius: 0;
@@ -382,6 +384,11 @@ footer {
   color: #13DCF2;
   text-align: center;
   height: 30px;
+}
+.chevron {
+  font-size: 10px;
+  display: flex;
+  align-items: center;
 }
 .popup-container{
   position: absolute;
