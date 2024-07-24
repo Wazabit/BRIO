@@ -1,0 +1,14 @@
+{
+  "name": "@d3/pie-chart/2",
+  "main": "f498226e89e1ae2c@473.js",
+  "version": "473.0.0",
+  "homepage": "https://observablehq.com/@d3/pie-chart/2",
+  "author": {
+    "name": "D3",
+    "url": "https://observablehq.com/@d3"
+  },
+  "type": "module",
+  "peerDependencies": {
+    "@observablehq/runtime": "4 - 5"
+  }
+}
