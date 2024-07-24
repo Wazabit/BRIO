@@ -9,9 +9,8 @@ import numpy as np
 from frontend.classes.analysisType import AnalysisType
 
 
-def get_md5(file_md5_hash: str, owner_id: str, analysis_type: str, list_var: str, selected_params: dict,
-            created_at: str) -> str:
-    str2hash = (file_md5_hash + owner_id + analysis_type + list_var + json.dumps(selected_params) + created_at)
+def get_md5(file_md5_hash: str, owner_id: str, analysis_type: str, list_var: str, selected_params: dict) -> str:
+    str2hash = (file_md5_hash + owner_id + analysis_type + list_var + json.dumps(selected_params))
     return hashlib.md5(str2hash.encode()).hexdigest()
 
 class CustomJSONizer(json.JSONEncoder):
@@ -45,7 +44,7 @@ class Analysis:
         self.hazard = ''
         self.created_at = datetime.now()
         self.md5_hash = get_md5(self.file_md5_hash, self.owner_id, self.analysis_type, self.list_var,
-                                self.selected_params, self.created_at.strftime("%Y-%m-%d %H:%M:%S"))
+                                self.selected_params)
 
     @staticmethod
     def dbInsert(analysis, db):

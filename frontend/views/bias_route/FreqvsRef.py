@@ -146,6 +146,7 @@ def freqvsref():
             'freqvsref.html',
             btn_login=btn_login,
             user=user.toJSON(),
+            role=user.role,
             var_list=list_var,
             local_ip=localhost_ip,
             animated=animation_status,
@@ -251,6 +252,7 @@ def results_fvr():
         'results_freqvsref.html',
         btn_login=btn_login,
         user=user.toJSON(),
+        role=user.role,
         results1=results1,
         results2=results2,
         individual_risk=individual_risk,
@@ -293,5 +295,6 @@ def details_fvr(violation):
         'violation_specific_fvr.html',
         btn_login=btn_login,
         user=user.toJSON(),
+        role=user.role,
         viol=violation,
         res2=results_viol2.to_frame().to_html(classes=['table border-0 table-mirai table-hover w-100 rajdhani-bold text-white m-0']))

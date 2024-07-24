@@ -60,12 +60,14 @@ def home():
         user.register_update(user, app.db)
         btn_login = True
 
-    return render_template(
-        "homepage.html",
-        btn_login=btn_login,
-        session=session.get("user"),
-        pretty=json.dumps(session.get("user"), indent=4),
-    )
+        return render_template(
+            "homepage.html",
+            btn_login=btn_login,
+            user=user.toJSON(),
+            role=user.role,
+            session=session.get("user"),
+            pretty=json.dumps(session.get("user"), indent=4),
+        )
 
 
 @app.route("/callback", methods=["GET", "POST"])

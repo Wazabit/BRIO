@@ -1,7 +1,9 @@
 import json
 from dataclasses import dataclass
 
+from frontend.classes.client import Client
 from frontend.classes.fileStatus import FileStatus
+from frontend.classes.project import Project
 
 
 @dataclass
@@ -13,6 +15,7 @@ class User:
     sub: str
     max_result_views: int
     share_results: bool
+    role: str
 
     def __init__(self, data):
         self.name = data["name"]
@@ -27,11 +30,19 @@ class User:
             self.share_results = data["user_metadata"]["share_results"]
         else:
             self.share_results = False
+        if "role" in data["user_metadata"]:
+            self.role = data["user_metadata"]["role"]
+        else:
+            self.role = "User"
 
     @staticmethod
     def register_update(user, db):
         if len(db.find("users", {"sub": user.sub})) == 0:
             db.insert("users", user)
+            client = Client('Personal Client', user.name, user.email, '', user.sub, [], [])
+            client.register_update(client,db)
+            project = Project("Personal Project", user.sub, client.uuid)
+            project.register_update(project,db)
         else:
             db.update_one("users", {"sub": user.sub}, user)
 

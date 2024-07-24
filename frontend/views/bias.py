@@ -147,6 +147,7 @@ def home_bias():
                                session=session.get("user"),
                                btn_login=btn_login,
                                user=user.toJSON(),
+                               role=user.role,
                                pretty=json.dumps(session.get("user"), indent=4),
                                df_used=filename,
                                status=success_status,

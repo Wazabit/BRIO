@@ -23,6 +23,8 @@ def get_md5_hash(path: str, filename: str) -> str:
 class File:
     name: str
     owner_id: str
+    client_id: str
+    projects: [str]
     type: FileType
     md5_hash: str
     status: FileStatus
@@ -35,6 +37,8 @@ class File:
         self.md5_hash = get_md5_hash(path, filename)
         self.status = filestatus.value
         self.created_at = datetime.now()
+        self.client_id = ''
+        self.projects = []
 
     def dbInsert(self, file, db):
         if len(db.find("files", {"md5_hash": file.md5_hash})) == 0:

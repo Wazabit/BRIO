@@ -135,6 +135,7 @@ def freqvsfreq():
             'freqvsfreq.html',
             session=session.get("user"),
             user=user.toJSON(),
+            role=user.role,
             pretty=json.dumps(session.get("user"), indent=4),
             btn_login=btn_login,
             var_list=list_var,
@@ -251,6 +252,7 @@ def results_fvf():
         'results_freqvsfreq.html',
         btn_login=btn_login,
         user=user.toJSON(),
+        role=user.role,
         results1=results1,
         results2=results2,
         individual_risk=individual_risk,
@@ -303,6 +305,7 @@ def details_fvf(violation):
         'violation_specific_fvf.html',
         btn_login=btn_login,
         user=user.toJSON(),
+        role=user.role,
         viol=violation,
         res2=results_viol2.to_frame().to_html(
             classes=['table border-0 table-mirai table-hover w-100 rajdhani-bold text-white m-0']))

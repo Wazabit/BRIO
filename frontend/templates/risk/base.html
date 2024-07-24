@@ -63,6 +63,19 @@
               <li><a class="dropdown-item" href="https://sites.unimi.it/brio/" target="_blank">BRIO Project</a></li>
             </ul>
           </li>
+        {% if role == "Admin" %}
+            <li class="nav-item pe-2 dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                ADMIN
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark shadow" aria-labelledby="adminDropdown">
+                <li><a class="dropdown-item" href="/admin">DASHBOARD</a></li>
+                <li><a class="dropdown-item" href="#">CLIENTS</a></li>
+                <li><a class="dropdown-item" href="#">PROJECTS</a></li>
+                <li><a class="dropdown-item" href="#">ANALYSIS</a></li>
+              </ul>
+            </li>
+        {% endif %}
           <li class="nav-item pe-2">
               {% if btn_login == True %}
                   <a class="nav-link" href="{{ url_for('logout') }}">LOGOUT</a>
