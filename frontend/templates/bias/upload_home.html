@@ -7,9 +7,30 @@
       </div>
       <div class="card-body d-flex flex-column justify-content-between">
         <div>
-          <p class="card-text">Upload the Dataframe to analyze.</p>
           <form method="POST" action="{{ url_for('bias.home_bias') }}" enctype="multipart/form-data">
+            <p class="card-text">Upload the Dataframe to analyze.</p>
               <div class="form-group row mb-2 mx-auto">
+                <label for="client" class="col-form-label col-form-label-sm rajdhani-bold ps-0 text-miraiblu">Client:</label>
+                <select class="selectpicker w-100 px-0 mb-2" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="client" id="client" required>
+                  <option value="dev">dev@MIRAI</option>
+                  <option value="CRIF">CRIF</option>
+                  <option value="Immanence">Immanence</option>
+                  <option value="Alkemy">Alkemy</option>
+                  <option value="P4I">P4I</option>
+                  <option value="Bacon Ipsum">Bacon Ipsum</option>
+                </select>
+                <label for="project" class="col-form-label col-form-label-sm rajdhani-bold ps-0 text-miraiblu">Project:</label>
+                <select class="selectpicker w-100 px-0 mb-2" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="project" id="project" required>
+                  <option value="crif_risk_1">Standalone Analysis</option>
+                  <option value="crif_risk_1">CRIF Risk Report #1</option>
+                  <option value="crif_risk_2">CRIF Risk Report #2</option>
+                  <option value="crif_risk_3">CRIF Risk Report #3</option>
+                  <option value="crif_risk_4">CRIF Risk Report #4</option>
+                  <option value="crif_risk_5">CRIF Risk Report #5</option>
+                  <option value="crif_risk_6">CRIF Risk Report #6</option>
+                  <option value="crif_risk_7">CRIF Risk Report #7</option>
+                  <option value="crif_risk_8">CRIF Risk Report #8</option>
+                </select>
                 <label for="dataset" class="col-form-label col-form-label-sm rajdhani-bold ps-0 text-miraiblu">Dataframe:</label>
                 <input type="file" class="form-control form-control-sm mb-3 rajdhani-bold" name="dataset" id="dataset">
               </div>
