@@ -5,6 +5,8 @@ MONGO_VERSION="7.0-ubi8"
 MONGO_USER="brio"
 MONGO_PWD="q+Y!h2s+JH*10La"
 CURRENT_TIME := $(shell date +"%Y%m%d_%H%M%S")
+SHARED_VOLUME="brio_storage"
+BRIO_UPLOAD_PATH="/app/frontend/uploads"
 
 UNAME := $(shell uname -o)
 ifeq ($(UNAME), GNU/Linux)
@@ -26,7 +28,7 @@ help:
 .DEFAULT_GOAL := help
 
 .PHONY: network
-network:
+network: shared_volume
 	@docker network create -d bridge ${MONGO_CONTAINER_NAME}
 
 .PHONY: build
@@ -39,6 +41,7 @@ build:
 .PHONY: frontend
 frontend: build
 	@docker run -dp 80:80 \
+		-v ${SHARED_VOLUME}:${BRIO_UPLOAD_PATH} \
 		--name ${CONTAINER_NAME} \
 		--network ${MONGO_CONTAINER_NAME} \
 		--env HOST_IP=$(HOST_IP) \
@@ -56,7 +59,7 @@ mongodb: network
 		data/brio/
 	@docker cp  datasources/services/* ${MONGO_CONTAINER_NAME}:home
 
-mongodb_stop:
+mongodb_stop: destroy_shared_volume
 	@docker exec -i ${MONGO_CONTAINER_NAME} mkdir -p tmp/brio_${CURRENT_TIME}
 	@docker exec -i ${MONGO_CONTAINER_NAME} /usr/bin/mongodump \
 		-d brio \
@@ -65,6 +68,12 @@ mongodb_stop:
 	@docker stop ${MONGO_CONTAINER_NAME} && docker rm ${MONGO_CONTAINER_NAME}
 	@docker network rm ${MONGO_CONTAINER_NAME}
 	@docker image rm mongodb/mongodb-community-server
+
+shared_volume:
+	@docker volume create ${SHARED_VOLUME}
+
+destroy_shared_volume:
+	@docker volume rm ${SHARED_VOLUME}
 
 mongodb_reset_files_status:
 	@docker exec -i ${MONGO_CONTAINER_NAME} mongosh  -f home/files_reset_status.js
