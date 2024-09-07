@@ -215,6 +215,14 @@ def results_fvr():
             min_obs_per_group=30
         )
 
+    usage = {
+        'unconditioned': results1['usage'],
+        'conditioned': results2['usage']
+    }
+
+    del results1['usage']
+    del results2['usage']
+
     results3 = hc.compute_hazard_from_freqvsfreq_or_freqvsref(
         results1,
         results2,
@@ -223,7 +231,10 @@ def results_fvr():
         weight_logic="group"
     )
 
-    Analysis.analysisUpdate(dict_vars['analysis'], results1, results2, results3, app.db)
+    usage['hazard'] = results3['usage']
+    results3 = results3['hazards']
+
+    Analysis.analysisUpdate(dict_vars['analysis'], results1, results2, results3, usage, app.db)
 
     individual_risk = results3.pop(0) / results3.pop(len(results3) - 1)
     unconditioned_hazard = results3.pop(0)

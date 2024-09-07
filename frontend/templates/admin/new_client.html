@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'admin/base.html' %}
 
 
 {% block head %}
@@ -6,61 +6,6 @@
 
 {% block title %}
 MIRAI Toolbox - Create New Client
-{% endblock %}
-
-
-{% block header %}
-<nav class="navbar navbar-dark navbar-expand-lg navbar-mirai shadow fixed-top">
-  <div class="container-fluid">
-    <a class="navbar-brand brand-mirai" href="/">
-      <img class="logo" src="{{ url_for('static', filename='img/logo.svg') }}">
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item pe-2">
-          <a class="nav-link " aria-current="page" href="/">HOME</a>
-        </li>
-        <li class="nav-item pe-2 dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="brioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            BRIO
-          </a>
-          <ul class="dropdown-menu dropdown-menu-dark shadow" aria-labelledby="brioDropdown">
-            <li><a class="dropdown-item" href="/bias">BIAS</a></li>
-            <li><a class="dropdown-item" href="/risk">RISK</a></li>
-            <li><a class="dropdown-item" href="/opacity">OPACITY</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="https://github.com/DLBD-Department/BRIO_x_Alkemy" target="_blank">BRIOxALKEMY</a></li>
-            <li><a class="dropdown-item" href="https://sites.unimi.it/brio/" target="_blank">BRIO Project</a></li>
-          </ul>
-        </li>
-        <li class="nav-item pe-2 dropdown">
-          <a class="nav-link dropdown-toggle active" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            ADMIN
-          </a>
-          <ul class="dropdown-menu dropdown-menu-dark shadow" aria-labelledby="adminDropdown">
-            <li><a class="dropdown-item" href="/admin">DASHBOARD</a></li>
-            <li><a class="dropdown-item" href="/bias">CLIENTS</a></li>
-            <li><a class="dropdown-item" href="/risk">PROJECTS</a></li>
-            <li><a class="dropdown-item" href="/opacity">ANALYSIS</a></li>
-          </ul>
-        </li>
-        <li class="nav-item pe-2">
-          {% if btn_login == True %}
-              <a class="nav-link" href="{{ url_for('logout') }}">LOGOUT</a>
-          {% else %}
-              <a class="nav-link" href="{{ url_for('login') }}">LOGIN</a>
-          {% endif %}
-        </li>
-      </ul>
-    </div>
-  </div>
-  <div class="corner d-none d-lg-block">
-    <img src="{{ url_for('static', filename='img/corner.svg') }}">
-  </div>
-</nav>
 {% endblock %}
 
 {% block content %}
@@ -76,13 +21,21 @@ MIRAI Toolbox - Create New Client
       </div>
       <div class="row">
         <div class="col">
-          <form method="POST" action="{{ url_for('new_client.new_client') }}" enctype="multipart/form-data">
+          <form id="form" method="POST" action="{{ url_for('new_client.new_client') }}" enctype="multipart/form-data">
             <div class="card card-mirai animated mb-3">
               <div class="card-header text-uppercase">
                 Client Details
               </div>
-              <div class="card-body d-flex flex-column justify-content-start" style="z-index: 1000;"> 
-                <a href="#" class="text-uppercase img-upload mb-3">Add Client Logo</a>
+              <div class="card-body d-flex flex-column justify-content-start" style="z-index: 1000; ">
+                  <img id="previewHolder" alt="Uploaded Image Preview Holder" width="250px" height="auto"
+                       class="text-uppercase img-upload mb-3" style="margin-left: auto;margin-right: auto; display: none"/>
+
+                  <div class="row">
+                      <div class="col mb-3">
+                          <label for="logo">Add Client Logo</label>
+                          <input id="logo" name="logo" type="file" accept=".jpg, .png, .jpeg, .gif" class="w-100 p-1 px-2" style="color-scheme: dark;" required/>
+                      </div>
+                </div>
                 <div class="row">
                   <div class="col mb-3">
                     <label for="name">Name:</label>
@@ -98,30 +51,28 @@ MIRAI Toolbox - Create New Client
                 <div class="row">
                   <div class="col mb-3">
                     <label for="email">Email:</label>
-                    <input type="text" id="email" name="email" class="w-100 p-1 px-2" style="color-scheme: dark;" required minlength="5"/>
+                    <input type="email" id="email" name="email" class="w-100 p-1 px-2" style="color-scheme: dark;" required />
                   </div>
                 </div>
                 <div class="row">
                   <div class="col mb-3">
                     <label class="align-self-center" for="admin">Client Admin:</label>
-                    <select class="selectpicker w-100" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="admin" id="admin" required>
-                      <option value="research">research@MIRAI</option>
-                      <option value="admin">admin@MIRAI</option>
-                      <option value="dev">dev@MIRAI</option>
-                      <option value="dp">Davide Posillipo</option>
-                      <option value="gp">Giuseppe Primiero</option>
+                    <input id="admins" name="admins" type="hidden" value="">
+                    <select class="selectpicker w-100" data-style="btn-outline-primary btn-mirai rajdhani-bold" id="admin" multiple required>
+                        {% for admin in admins %}
+                            <option value="{{ admin['sub'] }}" {% if admin['sub'] == user.sub %} selected disabled {% endif %}>{{ admin['name'] }}</option>
+                        {% endfor %}
                     </select>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col mb-3">
                     <label class="align-self-center" for="editor">Client Editors:</label>
-                    <select class="selectpicker w-100" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="editor" id="editor" multiple required>
-                      <option value="research">research@MIRAI</option>
-                      <option value="admin">admin@MIRAI</option>
-                      <option value="dev">dev@MIRAI</option>
-                      <option value="dp">Davide Posillipo</option>
-                      <option value="gp">Giuseppe Primiero</option>
+                    <input id="editors" name="editors" type="hidden" value="">
+                    <select class="selectpicker w-100" data-style="btn-outline-primary btn-mirai rajdhani-bold" id="editor" multiple>
+                      {% for editor in editors %}
+                            <option value="{{ editor['sub'] }}">{{ editor['name'] }}</option>
+                        {% endfor %}
                     </select>
                   </div>
                 </div>
@@ -151,7 +102,44 @@ MIRAI Toolbox - Create New Client
 {% endblock %}
 
 {% block scripts %}
+<script>
 
+function displayFile(input) {
+    console.log(input)
+    if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      $('#previewHolder').attr('src', e.target.result).css('display', 'block');
+    }
+    reader.readAsDataURL(input.files[0]);
+  } else {
+    $('#previewHolder').attr('src', '').css('display', 'none');
+  }
+}
+
+$(document).ready(function() {
+    $("#logo").change(function() {
+      displayFile(this);
+    });
+
+    $('#admin').on('change', function() {
+        var selected=[];
+         $('#admin :selected').each(function(){
+             selected.push($(this).val());
+            });
+        $('#admins').val(selected);
+    });
+
+    $('#editor').on('change', function() {
+        var selected=[];
+         $('#editor :selected').each(function(){
+             selected.push($(this).val());
+            });
+        $('#editors').val(selected);
+    });
+});
+
+</script>
 {% endblock %}
 
 {% block footer %}

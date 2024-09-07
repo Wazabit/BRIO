@@ -26,10 +26,13 @@ def admin_home():
         app.config['UPLOAD_FOLDER'] = upload_folder(UPLOAD_FOLDER, user.sub)
         btn_login = True
 
-    return render_template('admin/admin_home.html',
-                               session=session.get("user"),
-                               btn_login=btn_login,
-                               user=user.toJSON(),
-                               role=user.role,
-                               pretty=json.dumps(session.get("user"), indent=4)
-                           )
+        clients = user.get_my_clients(app.db)
+
+        return render_template('admin/admin_home.html',
+                                   session=session.get("user"),
+                                   btn_login=btn_login,
+                                   user=user,
+                                   clients=clients,
+                                   role=user.role,
+                                   pretty=json.dumps(session.get("user"), indent=4)
+                               )

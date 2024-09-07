@@ -31,6 +31,7 @@ class Analysis:
     conditioned: str
     hazard: str
     created_at: datetime
+    usage: {}
 
     def __init__(self, md5_hash: str, owner_id: str, analysis_type: AnalysisType, list_var: array,
                  selected_params: dict):
@@ -42,6 +43,7 @@ class Analysis:
         self.unconditioned = ''
         self.conditioned = ''
         self.hazard = ''
+        self.usage = {}
         self.created_at = datetime.now()
         self.md5_hash = get_md5(self.file_md5_hash, self.owner_id, self.analysis_type, self.list_var,
                                 self.selected_params)
@@ -51,11 +53,16 @@ class Analysis:
         db.insert("analysis", analysis)
 
     @staticmethod
-    def analysisUpdate(md5_hash, results1, results2, results3, db):
+    def analysisUpdate(md5_hash, results1, results2, results3, usage, db):
         data = {
             'unconditioned': json.dumps(results1, cls=CustomJSONizer),
             'conditioned': json.dumps(results2, cls=CustomJSONizer),
-            'hazard': json.dumps(results3, cls=CustomJSONizer)
+            'hazard': json.dumps(results3, cls=CustomJSONizer),
+            'usage': {
+                'unconditioned': usage['unconditioned'],
+                'conditioned': usage['conditioned'],
+                'hazard': usage['hazard']
+            }
         }
         db.update_one("analysis", {"md5_hash": md5_hash}, data)
 

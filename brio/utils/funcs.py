@@ -9,6 +9,13 @@ def allowed_file(filename: str) -> str:
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def allowed_file_logo(filename: str) -> str:
+    ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def get_file_extension(filename: str) -> str:
+    return filename.rsplit('.', 1)[1].lower()
 
 def handle_multiupload(req: request, label: str, path: str) -> None:
     files_list = req.files.getlist(label)

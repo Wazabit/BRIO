@@ -40,9 +40,9 @@ class User:
         if len(db.find("users", {"sub": user.sub})) == 0:
             db.insert("users", user)
             client = Client('Personal Client', user.name, user.email, '', user.sub, [], [])
-            client.register_update(client,db)
+            client.register_update(client, db)
             project = Project("Personal Project", user.sub, client.uuid)
-            project.register_update(project,db)
+            project.register_update(project, db)
         else:
             db.update_one("users", {"sub": user.sub}, user)
 
@@ -58,3 +58,21 @@ class User:
 
     def update_all_status_files(self, db, status: FileStatus):
         db.update_many("files", {"owner_id": self.sub}, {"status": status.value})
+
+    def get_users_by_role(self, db, role):
+        return db.find("users", {"role": role})
+
+    def get_my_clients(self, db):
+        clients = []
+        pipeline = [
+            {'$match': {'$or': [{'admins': {"$in": [self.sub]}}, {'editors': {"$in": [self.sub]}}]}},
+            {'$project': {'_id': 0}}
+        ]
+
+        response = db.aggregate("clients", pipeline)
+        for results in response:
+            if 'projects' in results:
+                results['tot_projects'] = len(results['projects'])
+            clients.append(results)
+
+        return clients

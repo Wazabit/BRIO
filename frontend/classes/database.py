@@ -45,8 +45,13 @@ class Database(object):
         else:
             return result
 
-    def find(self, collection, filter):
-        return list(self.db[collection].find(filter))
+    def find(self, collection, filter, projection=None, sort=None):
+        if projection and sort:
+            return list(self.db[collection].find(filter, projection=[projection], sort=[sort]))
+        elif sort:
+            return list(self.db[collection].find(filter, sort=[sort]))
+        else:
+            return list(self.db[collection].find(filter))
 
     def aggregate(self, collection, pipeline):
         return list(self.db[collection].aggregate(pipeline))

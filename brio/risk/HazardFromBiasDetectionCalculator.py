@@ -1,6 +1,10 @@
 import numpy as np
 import logging
 
+from datetime import datetime
+import os
+import psutil
+
 
 class HazardFromBiasDetectionCalculator:
     '''
@@ -33,6 +37,17 @@ class HazardFromBiasDetectionCalculator:
             weight_logic: str, it can be either "group" or "individual", it determines how much each single test will weight on the hazard result
         '''
 
+        usage = {}
+        total_memory, used_memory, free_memory = map(
+            int, os.popen('free -t -m').readlines()[-1].split()[1:])
+
+        usage['start'] = {}
+        start_dateTime = datetime.now()
+        usage['start']['dateTime'] = start_dateTime.strftime("%Y-%m-%d %H:%M:%S")
+        usage['start']['total_memory'] = str(total_memory)
+        usage['start']['used_memory'] = str(round((used_memory / total_memory) * 100, 2))
+        usage['start']['cpu_percent'] = str(psutil.cpu_percent(4))
+
         #tot number features=conditioning + root (+1)
         n_features_total = len(conditioning_variables) + 1
 
@@ -50,7 +65,7 @@ class HazardFromBiasDetectionCalculator:
                 self.as_list(overall_result['distance'])[k],
                 overall_result['computed_threshold'],
                 tot_observations,
-                self.as_list(overall_result['threshold'])[k],
+                self.as_list(overall_result['df_vs_thr'])[k],
                 1  #for the overall test, only 1 feature used, the root variable
             ))
 
@@ -91,7 +106,7 @@ class HazardFromBiasDetectionCalculator:
                 q = line[2] / tot_observations
                 e = line[0] - line[1]
                 hazard_cumulative = weight * q * abs(e) ** (1. / 3.) * line[1] ** (1. / 3.)
-                delta = 0 #when line[3] == True or 'Not enough observations'
+                delta = 0  #when line[3] == True or 'Not enough observations'
                 if line[3] == False:
                     delta = 1
                 hazard = delta * hazard_cumulative
@@ -103,4 +118,19 @@ class HazardFromBiasDetectionCalculator:
         hazards.insert(0, hazard_overall)
         hazards.insert(len(hazards) + 1, hazard_overall_max)
 
-        return hazards  # hazards = [individual risk, unconditioned hazard, conditioned hazards, ..., hazard_overall_max]
+        usage['end'] = {}
+        end_dateTime = datetime.now()
+        usage['end']['dateTime'] = end_dateTime.strftime("%Y-%m-%d %H:%M:%S")
+        total_memory, used_memory, free_memory = map(
+            int, os.popen('free -t -m').readlines()[-1].split()[1:])
+        usage['end']['total_memory'] = str(total_memory)
+        usage['end']['used_memory'] = str(round((used_memory / total_memory) * 100, 2))
+        usage['end']['cpu_percent'] = str(psutil.cpu_percent(4))
+        usage['timing'] = str((end_dateTime - start_dateTime).total_seconds() / 60)
+
+        response = {
+            'hazards': hazards,
+            'usage': usage
+        }
+        #return hazards  # hazards = [individual risk, unconditioned hazard, conditioned hazards, ..., hazard_overall_max]
+        return response
