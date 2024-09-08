@@ -10,31 +10,21 @@
           <form method="POST" action="{{ url_for('bias.home_bias') }}" enctype="multipart/form-data">
             <p class="card-text">Upload the Dataframe to analyze.</p>
               <div class="form-group row mb-2 mx-auto">
-                <label for="client" class="col-form-label col-form-label-sm rajdhani-bold ps-0 text-miraiblu">Client:</label>
-                <select class="selectpicker w-100 px-0 mb-2" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="client" id="client" required>
-                  <option value="dev">dev@MIRAI</option>
-                  <option value="CRIF">CRIF</option>
-                  <option value="Immanence">Immanence</option>
-                  <option value="Alkemy">Alkemy</option>
-                  <option value="P4I">P4I</option>
-                  <option value="Bacon Ipsum">Bacon Ipsum</option>
+                <label for="client_id" class="col-form-label col-form-label-sm rajdhani-bold ps-0 text-miraiblu">Client:</label>
+                <select class="selectpicker w-100 px-0 mb-2" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="client_id" id="client_id" required>
+                    <option value="" selected disabled>Select a Client</option>
+                    {% for client in clients %}
+                        <option value="{{ client['uuid'] }}">{{ client['name'] }}</option>
+                    {% endfor %}
                 </select>
-                <label for="project" class="col-form-label col-form-label-sm rajdhani-bold ps-0 text-miraiblu">Project:</label>
-                <select class="selectpicker w-100 px-0 mb-2" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="project" id="project" required>
-                  <option value="crif_risk_1">Standalone Analysis</option>
-                  <option value="crif_risk_1">CRIF Risk Report #1</option>
-                  <option value="crif_risk_2">CRIF Risk Report #2</option>
-                  <option value="crif_risk_3">CRIF Risk Report #3</option>
-                  <option value="crif_risk_4">CRIF Risk Report #4</option>
-                  <option value="crif_risk_5">CRIF Risk Report #5</option>
-                  <option value="crif_risk_6">CRIF Risk Report #6</option>
-                  <option value="crif_risk_7">CRIF Risk Report #7</option>
-                  <option value="crif_risk_8">CRIF Risk Report #8</option>
+                <label for="project_id" class="col-form-label col-form-label-sm rajdhani-bold ps-0 text-miraiblu">Project:</label>
+                <select class="selectpicker w-100 px-0 mb-2" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="project_id" id="project_id" required>
+
                 </select>
                 <label for="dataset" class="col-form-label col-form-label-sm rajdhani-bold ps-0 text-miraiblu">Dataframe:</label>
                 <input type="file" class="form-control form-control-sm mb-3 rajdhani-bold" name="dataset" id="dataset">
               </div>
-              <button type="submit" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100">Upload</button>
+              <button id="file_upload" type="submit" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100  btn-disabled">Upload</button>
           </form>
         </div>
       </div>
@@ -90,7 +80,7 @@
                 <input type="file" class="form-control form-control-sm mb-3 rajdhani-bold" name="artifacts" id="artifacts" multiple>
 
               </div>
-              <button type="submit" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" id="upload_preprocess">Upload</button>
+              <button type="submit" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100 btn-disabled" id="upload_preprocess">Upload</button>
             </form>
           </div>
         </div>
@@ -104,5 +94,37 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+var projects = {};
+{% for client in clients %}
+    projects['{{ client['uuid'] }}'] = {};
+    {% for project_id in client['projects'] %}
+        projects['{{ client['uuid'] }}']['{{ project_id }}'] = '{{ client['projects'][project_id]['name']}}';
+    {% endfor %}
+{% endfor %}
+
+$(document).ready(function() {
+    $('#client_id').change(function() {
+        $('#file_upload').addClass('btn-disabled');
+        $('#upload_preprocess').addClass('btn-disabled');
+        var client_id = $(this).val();
+
+        var options = '<option value="" selected disabled>Select a Project</option>';
+        for (var project_id in projects[client_id]) {
+            options += '<option value="' + project_id + '">' + projects[client_id][project_id] + '</option>';
+        }
+
+        $('#project_id').empty().append(options).selectpicker("refresh");
+    });
+
+    $('#project_id').change(function() {
+        $('#file_upload').removeClass('btn-disabled');
+        $('#upload_preprocess').removeClass('btn-disabled');
+    });
+});
+</script>
 {% endblock %}
 

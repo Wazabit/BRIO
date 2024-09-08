@@ -81,6 +81,18 @@ class User:
                 if project_data is not None:
                     project_data['tot_analysis'] = len(project_data['analysis'])
                     project_data['created_at'] = project_data['created_at'].strftime("%a %d %b %Y")
+
+                    analysis = project_data['analysis']
+                    project_data['analysis'] = dict()
+                    for analysis_id in analysis:
+                        analysis_data = db.find("analysis", {"md5_hash": analysis_id})[0]
+                        if analysis_data is not None:
+                            analysis_data['created_at'] = analysis_data['created_at'].strftime("%a %d %b %Y")
+                            hazard = analysis_data['hazard'].replace("[", "").replace("]", "").replace("'", "").split(", ")
+                            analysis_data['individual_risk'] = (float(hazard[0]) / float(hazard[len(hazard) - 1])) * 100
+                            project_data['analysis'][analysis_id] = analysis_data
+
+
                     results['projects'][project] = project_data
 
             clients.append(results)

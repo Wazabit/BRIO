@@ -5,10 +5,6 @@ from itertools import combinations, compress
 from scipy.spatial.distance import jensenshannon
 import numpy as np
 
-from datetime import datetime
-import os
-import psutil
-
 class FreqVsFreqBiasDetector(BiasDetector):
 
     def __init__(self, distance: str, aggregating_function=max, A1="high", target_variable_type='class'):
@@ -23,8 +19,9 @@ class FreqVsFreqBiasDetector(BiasDetector):
         self.A1 = A1
         self.target_variable_type = target_variable_type
 
+
     def compute_distance_between_frequencies(self,
-                                             observed_distribution):
+            observed_distribution):
         '''
         observed_distribution: list of numpy arrays,
             each of them containing the distribution target_variable | root_variable.
@@ -42,12 +39,12 @@ class FreqVsFreqBiasDetector(BiasDetector):
         if self.dis == "TVD":
             for pair in combinations(observed_distribution, 2):
                 # TVD
-                distance = max(abs(pair[0] - pair[1]))
+                distance = max( abs( pair[0]-pair[1] ) )
                 distances.append(distance)
         elif self.dis == "JS":
             for pair in combinations(observed_distribution, 2):
                 # Squaring JS given that the scipy implementation has square root
-                distance = jensenshannon(p=pair[0], q=pair[1], base=2) ** 2
+                distance = jensenshannon(p=pair[0], q=pair[1], base=2)**2
                 # If no observation are present for one class, the JS distance will be a nan.
                 # Changing into None to keep the functionalities of Risk Measurement.
                 if np.isnan(distance):
@@ -91,16 +88,6 @@ class FreqVsFreqBiasDetector(BiasDetector):
         Returns:
             A tuple (distance, distance<=computed_threshold, computed_threshold, standard_deviation).
         '''
-        total_memory, used_memory, free_memory = map(
-            int, os.popen('free -t -m').readlines()[-1].split()[1:])
-        f = open("../logs/compare_root_variable_groups.log", "a")
-        start_dateTime = datetime.now()
-        f.write("START " + start_dateTime.strftime("%Y-%m-%d %H:%M:%S") + "\n\r")
-        f.write("RAM total: " + str(total_memory) + "% \n\r")
-        f.write("RAM memory used: " + str(round((used_memory/total_memory) * 100, 2)) + "% \n\r")
-        f.write("CPU count: " + str(psutil.cpu_count()) + "\n\r")
-        f.write("CPU used: " + str(psutil.cpu_percent(4)) + "\n\r")
-
 
         root_variable_labels = sorted(dataframe[root_variable].unique())
         A2 = len(root_variable_labels)
@@ -129,26 +116,14 @@ class FreqVsFreqBiasDetector(BiasDetector):
         distance, stds = self.compute_distance_between_frequencies(freqs)
         #return (distance, distance<=computed_threshold, computed_threshold, stds)
 
-        threshold = False
-
         try:
-            threshold = distance <= computed_threshold
+            df_vs_thr = distance <= computed_threshold
         except:
-            threshold = False
-
-        end_dateTime = datetime.now()
-        total_memory, used_memory, free_memory = map(
-            int, os.popen('free -t -m').readlines()[-1].split()[1:])
-        f.write("END " + end_dateTime.strftime("%Y-%m-%d %H:%M:%S") + "\n\r")
-        diff = (start_dateTime - end_dateTime).total_seconds() / 60
-        f.write("TIME EXECUTION minutes: " + str(diff) + "\n\r")
-        f.write("RAM memory used: " + str(round((used_memory / total_memory) * 100, 2)) + "% \n\r")
-        f.write("CPU used: " + str(psutil.cpu_percent(4)) + "\n\r")
-        f.close()
+            df_vs_thr = False
 
         return {
             "distance": distance,
-            "threshold": threshold,
+            "df_vs_thr": df_vs_thr,
             "computed_threshold": computed_threshold,
             "standard_deviation": stds
         }
@@ -188,16 +163,6 @@ class FreqVsFreqBiasDetector(BiasDetector):
         # this is computed once and passed each time for each group
         # in order to avoid disappearing labels due to small groups
         # with only one observed category.
-        total_memory, used_memory, free_memory = map(
-            int, os.popen('free -t -m').readlines()[-1].split()[1:])
-        f = open("../logs/compare_root_variable_conditioned_groups.log", "a")
-        start_dateTime = datetime.now()
-        f.write("START " + start_dateTime.strftime("%Y-%m-%d %H:%M:%S") + "\n\r")
-        f.write("RAM total: " + str(total_memory) + "% \n\r")
-        f.write("RAM memory used: " + str(round((used_memory / total_memory) * 100, 2)) + "% \n\r")
-        f.write("CPU count: " + str(psutil.cpu_count()) + "\n\r")
-        f.write("CPU used: " + str(psutil.cpu_percent(4)) + "\n\r")
-
         root_variable_labels = sorted(dataframe[root_variable].unique())
 
         if self.target_variable_type == 'class':
@@ -217,14 +182,8 @@ class FreqVsFreqBiasDetector(BiasDetector):
         for conditioning_variables_subset in conditioning_variables_subsets[1:]:
 
             combinations = cartesian([dataframe[v].unique() for v in conditioning_variables_subset])
-            j = 0
-            for comb in combinations:
-                total_memory, used_memory, free_memory = map(
-                    int, os.popen('free -t -m').readlines()[-1].split()[1:])
-                f.write("Comb " + str(j) + "RAM memory used: " + str(round((used_memory / total_memory) * 100, 2)) + "% \n\r")
-                f.write("CPU used: " + str(psutil.cpu_percent(4)) + "\n\r")
-                j = j + 1
 
+            for comb in combinations:
                 condition = " & ".join(
                     [f'{conditioning_variables_subset[i[0]]}=={i[1]}' for i in enumerate(comb)]
                 )
@@ -263,14 +222,7 @@ class FreqVsFreqBiasDetector(BiasDetector):
         }
 
         results = {}
-        g = 0
         for group, obs_and_dist in distances.items():
-            total_memory, used_memory, free_memory = map(
-                int, os.popen('free -t -m').readlines()[-1].split()[1:])
-            f.write("Group " + str(g) + "RAM memory used: " + str(round((used_memory / total_memory) * 100, 2)) + "% \n\r")
-            f.write("CPU used: " + str(psutil.cpu_percent(4)) + "\n\r")
-            g = g + 1
-
             # Too small groups
             if obs_and_dist[0] < min_obs_per_group:
                 result = (obs_and_dist[0], None, 'Not enough observations')
@@ -288,15 +240,5 @@ class FreqVsFreqBiasDetector(BiasDetector):
                     obs_and_dist[1][1]  #standard deviation
                 )
             results[group] = result
-
-        end_dateTime = datetime.now()
-        total_memory, used_memory, free_memory = map(
-            int, os.popen('free -t -m').readlines()[-1].split()[1:])
-        f.write("END " + end_dateTime.strftime("%Y-%m-%d %H:%M:%S") + "\n\r")
-        diff = (start_dateTime - end_dateTime).total_seconds() / 60
-        f.write("TIME EXECUTION minutes: " + str(diff) + "\n\r")
-        f.write("RAM memory used: " + str(round((used_memory / total_memory) * 100, 2)) + "% \n\r")
-        f.write("CPU used: " + str(psutil.cpu_percent(4)) + "\n\r")
-        f.close()
 
         return results

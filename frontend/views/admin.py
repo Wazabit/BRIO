@@ -27,6 +27,7 @@ def admin_home():
         btn_login = True
 
         clients = user.get_my_clients(app.db)
+        # flash(clients, 'success')
 
         return render_template('admin/admin_home.html',
                                    session=session.get("user"),

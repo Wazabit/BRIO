@@ -13,7 +13,8 @@ class Project:
     analysis: [str]
     created_at: datetime
 
-    def __init__(self, name: str, owner_id: str, client_id: str, analysis: str = ''):
+    def __init__(self, name: str, owner_id: str, client_id: str, analysis: str = '', created_at: datetime = datetime.now(),
+                 uuid: str = str(uuid.uuid4().hex[:16].lower())):
         self.name = name
         self.owner_id = owner_id
         self.client_id = client_id
@@ -21,8 +22,8 @@ class Project:
             self.analysis = analysis
         else:
             self.analysis = analysis.split(',') if analysis != '' else []
-        self.created_at = datetime.now()
-        self.uuid = str(uuid.uuid4().hex[:16].lower())
+        self.created_at = created_at
+        self.uuid = uuid
 
     @staticmethod
     def register_update(project, db):
@@ -37,3 +38,7 @@ class Project:
             default=lambda o: o.__dict__,
             sort_keys=True,
             indent=4)
+
+    def add_analysis(self, analysis_id, db):
+        self.analysis.append(analysis_id)
+        db.update_one("projects", {"uuid": self.uuid}, self)

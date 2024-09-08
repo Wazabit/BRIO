@@ -65,7 +65,7 @@ def home_bias():
         global success_status
         global animation_status
         global dict_vars
-
+        clients = user.get_my_clients(app.db)
         if request.method == 'GET' and request.args.get('reset'):
             used_df = ""
             success_status = "text-warning"
@@ -87,7 +87,7 @@ def home_bias():
                         app.config['UPLOAD_FOLDER'], dict_vars['dataset']))
                     used_df = dict_vars['dataset']
                     success_status = "text-success"
-                    current_file = File(dict_vars['dataset'], user.sub, FileType.DATASET, FileStatus.IN_USE, app.config['UPLOAD_FOLDER'])
+                    current_file = File(dict_vars['dataset'], user.sub, FileType.DATASET, FileStatus.IN_USE, app.config['UPLOAD_FOLDER'], request.form['client_id'], request.form['project_id'])
                     current_file.dbInsert(current_file, app.db)
                     flash('Dataframe successfully uploaded!', 'success')
                 else:
@@ -146,7 +146,8 @@ def home_bias():
         return render_template('home.html',
                                session=session.get("user"),
                                btn_login=btn_login,
-                               user=user.toJSON(),
+                               user=user,
+                               clients=clients,
                                role=user.role,
                                pretty=json.dumps(session.get("user"), indent=4),
                                df_used=filename,

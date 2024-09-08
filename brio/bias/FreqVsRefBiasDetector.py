@@ -6,10 +6,6 @@ from scipy.stats import entropy
 from scipy.special import rel_entr
 import numpy as np
 
-from datetime import datetime
-import os
-import psutil
-
 
 #todo if kl <0 make it None and add a message analogous to 'not enough observations', es 'too many empty bins'
 class FreqVsRefBiasDetector(BiasDetector):
@@ -136,17 +132,6 @@ class FreqVsRefBiasDetector(BiasDetector):
                     )
             where n is the number of classes of root_variable
         '''
-        usage = {}
-        total_memory, used_memory, free_memory = map(
-            int, os.popen('free -t -m').readlines()[-1].split()[1:])
-
-        usage['start'] = {}
-        start_dateTime = datetime.now()
-        usage['start']['dateTime'] = start_dateTime.strftime("%Y-%m-%d %H:%M:%S")
-        usage['start']['total_memory'] = str(total_memory)
-        usage['start']['used_memory'] = str(round((used_memory / total_memory) * 100, 2))
-        usage['start']['total_cpu'] = str(psutil.cpu_count())
-        usage['start']['cpu_percent'] = str(psutil.cpu_percent(4))
 
         root_variable_labels = sorted(dataframe[root_variable].unique())
         A2 = len(root_variable_labels)
@@ -182,22 +167,10 @@ class FreqVsRefBiasDetector(BiasDetector):
         except:
             df_vs_thr.append(False)
 
-        usage['end'] = {}
-        end_dateTime = datetime.now()
-        usage['end']['dateTime'] = end_dateTime.strftime("%Y-%m-%d %H:%M:%S")
-        total_memory, used_memory, free_memory = map(
-            int, os.popen('free -t -m').readlines()[-1].split()[1:])
-        usage['end']['total_memory'] = str(total_memory)
-        usage['end']['used_memory'] = str(round((used_memory / total_memory) * 100, 2))
-        usage['end']['total_cpu'] = str(psutil.cpu_count())
-        usage['end']['cpu_percent'] = str(psutil.cpu_percent(4))
-        usage['timing'] = str((end_dateTime - start_dateTime).total_seconds() / 60)
-
         return {
             'distance': distance,
             'df_vs_thr': df_vs_thr,
-            'computed_threshold': computed_threshold,
-            'usage': usage
+            'computed_threshold': computed_threshold
         }
 
     def compare_root_variable_conditioned_groups(self,
@@ -244,18 +217,6 @@ class FreqVsRefBiasDetector(BiasDetector):
         # this is computed once and passed each time for each group
         # in order to avoid disappearing labels due to small groups
         # with only one observed category.
-
-        usage = {}
-        total_memory, used_memory, free_memory = map(
-            int, os.popen('free -t -m').readlines()[-1].split()[1:])
-
-        usage['start'] = {}
-        start_dateTime = datetime.now()
-        usage['start']['dateTime'] = start_dateTime.strftime("%Y-%m-%d %H:%M:%S")
-        usage['start']['total_memory'] = str(total_memory)
-        usage['start']['used_memory'] = str(round((used_memory / total_memory) * 100, 2))
-        usage['start']['cpu_percent'] = str(psutil.cpu_percent(4))
-
         root_variable_labels = sorted(dataframe[root_variable].unique())
 
         if self.target_variable_type == 'class':
@@ -323,7 +284,6 @@ class FreqVsRefBiasDetector(BiasDetector):
         }
 
         results = {}
-
         for group, obs_and_dist in distances.items():
             # Too small groups
             if obs_and_dist[0] < min_obs_per_group:
@@ -342,17 +302,5 @@ class FreqVsRefBiasDetector(BiasDetector):
                 )
 
             results[group] = result
-
-        usage['end'] = {}
-        end_dateTime = datetime.now()
-        usage['end']['dateTime'] = end_dateTime.strftime("%Y-%m-%d %H:%M:%S")
-        total_memory, used_memory, free_memory = map(
-            int, os.popen('free -t -m').readlines()[-1].split()[1:])
-        usage['end']['total_memory'] = str(total_memory)
-        usage['end']['used_memory'] = str(round((used_memory / total_memory) * 100, 2))
-        usage['end']['cpu_percent'] = str(psutil.cpu_percent(4))
-        usage['timing'] = str((end_dateTime - start_dateTime).total_seconds() / 60)
-
-        results['usage'] = usage
 
         return results

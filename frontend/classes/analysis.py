@@ -7,6 +7,8 @@ from datetime import datetime
 import numpy as np
 
 from frontend.classes.analysisType import AnalysisType
+from frontend.classes.file import File
+from frontend.classes.project import Project
 
 
 def get_md5(file_md5_hash: str, owner_id: str, analysis_type: str, list_var: str, selected_params: dict) -> str:
@@ -31,7 +33,6 @@ class Analysis:
     conditioned: str
     hazard: str
     created_at: datetime
-    usage: {}
 
     def __init__(self, md5_hash: str, owner_id: str, analysis_type: AnalysisType, list_var: array,
                  selected_params: dict):
@@ -43,7 +44,6 @@ class Analysis:
         self.unconditioned = ''
         self.conditioned = ''
         self.hazard = ''
-        self.usage = {}
         self.created_at = datetime.now()
         self.md5_hash = get_md5(self.file_md5_hash, self.owner_id, self.analysis_type, self.list_var,
                                 self.selected_params)
@@ -53,18 +53,20 @@ class Analysis:
         db.insert("analysis", analysis)
 
     @staticmethod
-    def analysisUpdate(md5_hash, results1, results2, results3, usage, db):
+    def analysisUpdate(md5_hash, results1, results2, results3, db):
         data = {
             'unconditioned': json.dumps(results1, cls=CustomJSONizer),
             'conditioned': json.dumps(results2, cls=CustomJSONizer),
             'hazard': json.dumps(results3, cls=CustomJSONizer),
-            'usage': {
-                'unconditioned': usage['unconditioned'],
-                'conditioned': usage['conditioned'],
-                'hazard': usage['hazard']
-            }
         }
         db.update_one("analysis", {"md5_hash": md5_hash}, data)
+
+        analysis = db.find("analysis", {"md5_hash": md5_hash})[0]
+        project_id = File.get_project_id_by_file_md5_hash(analysis['file_md5_hash'], db)
+        result = db.find("projects", {"uuid": project_id})[0]
+        project = Project(result["name"], result["owner_id"], result["client_id"], result["analysis"],
+                          result["created_at"], result["uuid"])
+        project.add_analysis(md5_hash, db)
 
     @staticmethod
     def getAnalysis(sub, db):
@@ -105,3 +107,4 @@ class Analysis:
             self,
             default=lambda o: o.__dict__,
             sort_keys=True)
+
