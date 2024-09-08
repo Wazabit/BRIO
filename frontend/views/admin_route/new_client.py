@@ -10,9 +10,6 @@ from brio.utils.funcs import upload_folder, allowed_file_logo, get_file_extensio
 from frontend.classes.client import Client
 
 from frontend.classes.database import Database
-from frontend.classes.file import File
-from frontend.classes.fileStatus import FileStatus
-from frontend.classes.fileType import FileType
 from frontend.classes.user import User
 
 bp = Blueprint('new_client', __name__, template_folder="../../templates/admin", url_prefix="/admin/new_client")

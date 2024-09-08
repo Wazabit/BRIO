@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'admin/base.html' %}
 
 
 {% block head %}
@@ -6,61 +6,6 @@
 
 {% block title %}
 MIRAI Toolbox - Create New Project
-{% endblock %}
-
-
-{% block header %}
-<nav class="navbar navbar-dark navbar-expand-lg navbar-mirai shadow fixed-top">
-  <div class="container-fluid">
-    <a class="navbar-brand brand-mirai" href="/">
-      <img class="logo" src="{{ url_for('static', filename='img/logo.svg') }}">
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item pe-2">
-          <a class="nav-link " aria-current="page" href="/">HOME</a>
-        </li>
-        <li class="nav-item pe-2 dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="brioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            BRIO
-          </a>
-          <ul class="dropdown-menu dropdown-menu-dark shadow" aria-labelledby="brioDropdown">
-            <li><a class="dropdown-item" href="/bias">BIAS</a></li>
-            <li><a class="dropdown-item" href="/risk">RISK</a></li>
-            <li><a class="dropdown-item" href="/opacity">OPACITY</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="https://github.com/DLBD-Department/BRIO_x_Alkemy" target="_blank">BRIOxALKEMY</a></li>
-            <li><a class="dropdown-item" href="https://sites.unimi.it/brio/" target="_blank">BRIO Project</a></li>
-          </ul>
-        </li>
-        <li class="nav-item pe-2 dropdown">
-          <a class="nav-link dropdown-toggle active" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            ADMIN
-          </a>
-          <ul class="dropdown-menu dropdown-menu-dark shadow" aria-labelledby="adminDropdown">
-            <li><a class="dropdown-item" href="/admin">DASHBOARD</a></li>
-            <li><a class="dropdown-item" href="/bias">CLIENTS</a></li>
-            <li><a class="dropdown-item" href="/risk">PROJECTS</a></li>
-            <li><a class="dropdown-item" href="/opacity">ANALYSIS</a></li>
-          </ul>
-        </li>
-        <li class="nav-item pe-2">
-          {% if btn_login == True %}
-              <a class="nav-link" href="{{ url_for('logout') }}">LOGOUT</a>
-          {% else %}
-              <a class="nav-link" href="{{ url_for('login') }}">LOGIN</a>
-          {% endif %}
-        </li>
-      </ul>
-    </div>
-  </div>
-  <div class="corner d-none d-lg-block">
-    <img src="{{ url_for('static', filename='img/corner.svg') }}">
-  </div>
-</nav>
 {% endblock %}
 
 {% block content %}
@@ -92,37 +37,34 @@ MIRAI Toolbox - Create New Project
                   <div class="col mb-3">
                     <label class="align-self-center" for="client">Client:</label>
                     <select class="selectpicker w-100" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="client" id="client" required>
-                      <option value="dev">dev@MIRAI</option>
-                      <option value="CRIF">CRIF</option>
-                      <option value="Immanence">Immanence</option>
-                      <option value="Alkemy">Alkemy</option>
-                      <option value="P4I">P4I</option>
-                      <option value="Bacon Ipsum">Bacon Ipsum</option>
+                      {% for client in clients %}
+                            <option value="{{ client['uuid'] }}">{{ client['name'] }}</option>
+                      {% endfor %}
                     </select>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col mb-3">
-                    <label class="align-self-center" for="analysis">Analysis:</label>
-                    <select class="selectpicker w-100" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="analysis" id="analysis" multiple required>
-                      <option value="research">Risk for Gender</option>
-                      <option value="admin">Risk for Age</option>
-                      <option value="dev">Risk for Profession</option>
-                      <option value="dp">Risk for Zip Code</option>
-                      <option value="gp">Bias Gender FreqVsFreq</option>
-                      <option value="gp">Bias Age FreqVsFreq</option>
-                      <option value="gp">Bias Gender FreqVsRef</option>
-                      <option value="gp">Bias Age FreqVsRef</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="col mb-3">
-                    <label class="align-self-center" for="selected_analysis">Selected Analysis:</label>
-                    <textarea class="form-control w-100" rows="6" name="selected_analysis" id="selected_analysis" placeholder="Nothing Selected" readonly></textarea>
-                  </div>
-                </div>
+{#                <div class="row">#}
+{#                  <div class="col mb-3">#}
+{#                    <label class="align-self-center" for="analysis">Analysis:</label>#}
+{#                    <select class="selectpicker w-100" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="analysis" id="analysis" multiple required>#}
+{#                      <option value="research">Risk for Gender</option>#}
+{#                      <option value="admin">Risk for Age</option>#}
+{#                      <option value="dev">Risk for Profession</option>#}
+{#                      <option value="dp">Risk for Zip Code</option>#}
+{#                      <option value="gp">Bias Gender FreqVsFreq</option>#}
+{#                      <option value="gp">Bias Age FreqVsFreq</option>#}
+{#                      <option value="gp">Bias Gender FreqVsRef</option>#}
+{#                      <option value="gp">Bias Age FreqVsRef</option>#}
+{#                    </select>#}
+{#                  </div>#}
+{#                </div>#}
+{##}
+{#                <div class="row">#}
+{#                  <div class="col mb-3">#}
+{#                    <label class="align-self-center" for="selected_analysis">Selected Analysis:</label>#}
+{#                    <textarea class="form-control w-100" rows="6" name="selected_analysis" id="selected_analysis" placeholder="Nothing Selected" readonly></textarea>#}
+{#                  </div>#}
+{#                </div>#}
               </div>
               <div class="card-footer">
                 <div class="row">

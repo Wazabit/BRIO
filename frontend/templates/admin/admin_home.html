@@ -134,7 +134,7 @@ MIRAI Toolbox - Admin Home
                             <a href="/admin/client" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">All Clients</a>
                           </div>
                           <div class="col-6">
-                            <a href="/admin/new_client" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">New Client</a>
+                            <a href="{{ url_for('new_client.new_client') }}" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">New Client</a>
                           </div>
                         </div>
                       </div>
@@ -168,286 +168,25 @@ MIRAI Toolbox - Admin Home
                           </div>
                         </div>
                         <div id="projects" style="overflow-y: scroll;">
-                          <div class="row text-white">
-                            <div class="col-4">
-                              <p class="m-0 text-truncate">CRIF Risk Report #1</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">CRIF</p>
-                            </div>
-                            <div class="col-2">
-                              <p class="m-0 text-truncate">8</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
-                            </div>
-                          </div>
-                          <div class="row text-white">
-                            <div class="col-4">
-                              <p class="m-0 text-truncate">Immanence Risk Report #1</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Immanence</p>
-                            </div>
-                            <div class="col-2">
-                              <p class="m-0 text-truncate">4</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Mon 22 Jul 2024</p>
-                            </div>
-                          </div>
-                          <div class="row text-white">
-                            <div class="col-4">
-                              <p class="m-0 text-truncate">Alkemy Risk Report #1</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Alkemy</p>
-                            </div>
-                            <div class="col-2">
-                              <p class="m-0 text-truncate">18</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
-                            </div>
-                          </div>
-                          <div class="row text-white">
-                            <div class="col-4">
-                              <p class="m-0 text-truncate">P4I Risk Report #1</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">P4I</p>
-                            </div>
-                            <div class="col-2">
-                              <p class="m-0 text-truncate">8</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
-                            </div>
-                          </div>
-                          <div class="row text-white">
-                            <div class="col-4">
-                              <p class="m-0 text-truncate">Bacon Ipsum Risk Report #1</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Bacon Ipsum</p>
-                            </div>
-                            <div class="col-2">
-                              <p class="m-0 text-truncate">80</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
-                            </div>
-                          </div>
-                          <div class="row text-white">
-                            <div class="col-4">
-                              <p class="m-0 text-truncate">CRIF Risk Report #1</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">CRIF</p>
-                            </div>
-                            <div class="col-2">
-                              <p class="m-0 text-truncate">8</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
-                            </div>
-                          </div>
-                          <div class="row text-white">
-                            <div class="col-4">
-                              <p class="m-0 text-truncate">Immanence Risk Report #1</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Immanence</p>
-                            </div>
-                            <div class="col-2">
-                              <p class="m-0 text-truncate">4</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Mon 22 Jul 2024</p>
-                            </div>
-                          </div>
-                          <div class="row text-white">
-                            <div class="col-4">
-                              <p class="m-0 text-truncate">Alkemy Risk Report #1</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Alkemy</p>
-                            </div>
-                            <div class="col-2">
-                              <p class="m-0 text-truncate">18</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
-                            </div>
-                          </div>
-                          <div class="row text-white">
-                            <div class="col-4">
-                              <p class="m-0 text-truncate">P4I Risk Report #1</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">P4I</p>
-                            </div>
-                            <div class="col-2">
-                              <p class="m-0 text-truncate">8</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
-                            </div>
-                          </div>
-                          <div class="row text-white">
-                            <div class="col-4">
-                              <p class="m-0 text-truncate">Bacon Ipsum Risk Report #1</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Bacon Ipsum</p>
-                            </div>
-                            <div class="col-2">
-                              <p class="m-0 text-truncate">80</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
-                            </div>
-                          </div>
-                          <div class="row text-white">
-                            <div class="col-4">
-                              <p class="m-0 text-truncate">CRIF Risk Report #1</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">CRIF</p>
-                            </div>
-                            <div class="col-2">
-                              <p class="m-0 text-truncate">8</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
-                            </div>
-                          </div>
-                          <div class="row text-white">
-                            <div class="col-4">
-                              <p class="m-0 text-truncate">Immanence Risk Report #1</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Immanence</p>
-                            </div>
-                            <div class="col-2">
-                              <p class="m-0 text-truncate">4</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Mon 22 Jul 2024</p>
-                            </div>
-                          </div>
-                          <div class="row text-white">
-                            <div class="col-4">
-                              <p class="m-0 text-truncate">Alkemy Risk Report #1</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Alkemy</p>
-                            </div>
-                            <div class="col-2">
-                              <p class="m-0 text-truncate">18</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
-                            </div>
-                          </div>
-                          <div class="row text-white">
-                            <div class="col-4">
-                              <p class="m-0 text-truncate">P4I Risk Report #1</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">P4I</p>
-                            </div>
-                            <div class="col-2">
-                              <p class="m-0 text-truncate">8</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
-                            </div>
-                          </div>
-                          <div class="row text-white">
-                            <div class="col-4">
-                              <p class="m-0 text-truncate">Bacon Ipsum Risk Report #1</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Bacon Ipsum</p>
-                            </div>
-                            <div class="col-2">
-                              <p class="m-0 text-truncate">80</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
-                            </div>
-                          </div>
-                          <div class="row text-white">
-                            <div class="col-4">
-                              <p class="m-0 text-truncate">CRIF Risk Report #1</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">CRIF</p>
-                            </div>
-                            <div class="col-2">
-                              <p class="m-0 text-truncate">8</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
-                            </div>
-                          </div>
-                          <div class="row text-white">
-                            <div class="col-4">
-                              <p class="m-0 text-truncate">Immanence Risk Report #1</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Immanence</p>
-                            </div>
-                            <div class="col-2">
-                              <p class="m-0 text-truncate">4</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Mon 22 Jul 2024</p>
-                            </div>
-                          </div>
-                          <div class="row text-white">
-                            <div class="col-4">
-                              <p class="m-0 text-truncate">Alkemy Risk Report #1</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Alkemy</p>
-                            </div>
-                            <div class="col-2">
-                              <p class="m-0 text-truncate">18</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
-                            </div>
-                          </div>
-                          <div class="row text-white">
-                            <div class="col-4">
-                              <p class="m-0 text-truncate">P4I Risk Report #1</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">P4I</p>
-                            </div>
-                            <div class="col-2">
-                              <p class="m-0 text-truncate">8</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
-                            </div>
-                          </div>
-                          <div class="row text-white">
-                            <div class="col-4">
-                              <p class="m-0 text-truncate">Bacon Ipsum Risk Report #1</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Bacon Ipsum</p>
-                            </div>
-                            <div class="col-2">
-                              <p class="m-0 text-truncate">80</p>
-                            </div>
-                            <div class="col-3">
-                              <p class="m-0 text-truncate">Sun 21 Jul 2024</p>
-                            </div>
-                          </div>
+                            {% for client in clients %}
+                                {% for project_id in client['projects'] %}
+                                    <div class="row text-white">
+                                        <div class="col-4">
+                                          <p class="m-0 text-truncate">{{ client['projects'][project_id]['name'] }}</p>
+                                        </div>
+                                        <div class="col-3">
+                                          <p class="m-0 text-truncate">{{ client['name'] }}</p>
+                                        </div>
+                                        <div class="col-2">
+                                          <p class="m-0 text-truncate">{{ client['projects'][project_id]['tot_analysis'] }}</p>
+                                        </div>
+                                        <div class="col-3">
+                                          <p class="m-0 text-truncate">{{ client['projects'][project_id]['created_at'] }}</p>
+                                        </div>
+                                      </div>
+                                {% endfor %}
+                            {% endfor %}
+
                         </div>
                       </div>
                       <div class="card-footer">
@@ -456,7 +195,7 @@ MIRAI Toolbox - Admin Home
                             <a href="#" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">All Projects</a>
                           </div>
                           <div class="col-6">
-                            <a href="#" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">New Projects</a>
+                            <a href="{{ url_for('new_project.new_project') }}" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100" role="button">New Projects</a>
                           </div>
                         </div>
                       </div>

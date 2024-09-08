@@ -39,10 +39,11 @@ class User:
     def register_update(user, db):
         if len(db.find("users", {"sub": user.sub})) == 0:
             db.insert("users", user)
-            client = Client('Personal Client', user.name, user.email, '', user.sub, [], [])
+            client = Client('Personal Client for ' + user.name, user.name, user.email, '', user.sub, user.sub, '', [])
             client.register_update(client, db)
             project = Project("Personal Project", user.sub, client.uuid)
             project.register_update(project, db)
+            client.add_project(project.uuid, db)
         else:
             db.update_one("users", {"sub": user.sub}, user)
 
@@ -71,8 +72,17 @@ class User:
 
         response = db.aggregate("clients", pipeline)
         for results in response:
-            if 'projects' in results:
-                results['tot_projects'] = len(results['projects'])
+            results['tot_projects'] = len(results['projects'])
+            projects = results['projects']
+            results['projects'] = dict()
+
+            for project in projects:
+                project_data = db.find("projects", {"uuid": project})[0]
+                if project_data is not None:
+                    project_data['tot_analysis'] = len(project_data['analysis'])
+                    project_data['created_at'] = project_data['created_at'].strftime("%a %d %b %Y")
+                    results['projects'][project] = project_data
+
             clients.append(results)
 
         return clients
