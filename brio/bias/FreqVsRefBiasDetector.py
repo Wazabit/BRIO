@@ -389,7 +389,6 @@ class FreqVsRefBiasDetector(BiasDetector):
                         break
 
                 if not find:
-                    print("CONDITION: ", y, condition)
                     dataframe_subset = dataframe.query(condition)
                     num_of_obs = dataframe_subset.shape[0]
                     y += 1

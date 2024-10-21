@@ -6,16 +6,11 @@ function handle_disab_frompred() {
     var dd_root = document.getElementById("bs-select-2");
     var lis_root = dd_root.firstElementChild.getElementsByTagName('li');
     for (var j = 0; j < lis_root.length; j++) {
-	if (lis_root[j].firstElementChild.lastElementChild.innerText == selected_option.value) {
+        lis_root[j].removeAttribute("style");
+        lis_root[j].classList.remove("disabled");
+	    if (lis_root[j].firstElementChild.lastElementChild.innerText === selected_option.value) {
             lis_root[j].className = "disabled";
             $('li.disabled').hide();
-        }
-        else {
-            if (lis_root[j].classList.contains("disabled")) {
-                $('li.disabled').removeAttr("style");
-                $('li.disabled').show();
-                lis_root[j].classList.remove("disabled");
-            }
         }
     }
 
@@ -23,42 +18,95 @@ function handle_disab_frompred() {
     var dd_cond = document.getElementById("bs-select-3");
     var lis_cond = dd_cond.firstElementChild.getElementsByTagName('li');
     for (var j = 0; j < lis_cond.length; j++) {
-	if (lis_cond[j].firstElementChild.lastElementChild.innerText == selected_option.value) {
+        lis_cond[j].removeAttribute("style");
+        lis_cond[j].classList.remove("disabled");
+	    if (lis_cond[j].firstElementChild.lastElementChild.innerText === selected_option.value) {
             lis_cond[j].className = "disabled";
             $('li.disabled').hide();
-        }
-        else {
-            if (lis_cond[j].classList.contains("disabled")) {
-                $('li.disabled').removeAttr("style");
-                $('li.disabled').show();
-                lis_cond[j].classList.remove("disabled");
-            }
         }
     }
 }
 
 function handle_disab_fromroot() {
     $('#cond_var').selectpicker('toggle');
-    var disab = document.getElementById("root_var");
-    var selected_option = disab.options[disab.selectedIndex];
-    var dd = document.getElementById("bs-select-3");
-    var lis = dd.firstElementChild.getElementsByTagName('li');
-    for (var j = 0; j < lis.length; j++) {
-	if (lis[j].firstElementChild.lastElementChild.innerText == selected_option.value) {
+    const disab_pred = document.getElementById("predictions");
+    const selected_option_pred = disab_pred.options[disab_pred.selectedIndex];
+
+    const disab = document.getElementById("root_var");
+    const selected_option = disab.options[disab.selectedIndex];
+
+    let dd = document.getElementById("bs-select-3");
+    let lis = dd.firstElementChild.getElementsByTagName('li');
+    for (let j = 0; j < lis.length; j++) {
+        lis[j].removeAttribute("style");
+        lis[j].classList.remove("disabled");
+	    if (lis[j].firstElementChild.lastElementChild.innerText === selected_option.value ||
+            (selected_option_pred !== undefined && lis[j].firstElementChild.lastElementChild.innerText === selected_option_pred.value)) {
             lis[j].className = "disabled";
             $('li.disabled').hide();
         }
-        else if (lis[j].classList.contains("disabled")) {
-            $('li.disabled').show();
-            lis[j].classList.remove("disabled");
+    }
+
+    const disab_cond = document.getElementById("cond_var").nextElementSibling;
+    const selected_option_cond = disab_cond.title.split(",");
+    dd = document.getElementById("bs-select-1");
+    lis = dd.firstElementChild.getElementsByTagName('li');
+    for (j = 0; j < lis.length; j++) {
+        lis[j].removeAttribute("style");
+        lis[j].classList.remove("disabled");
+        for (let i = 0; i < selected_option_cond.length; i++) {
+            if (lis[j].firstElementChild.lastElementChild.innerText === selected_option_cond[i].trim() ||
+                lis[j].firstElementChild.lastElementChild.innerText === selected_option.value) {
+                lis[j].className = "disabled";
+                $('li.disabled').hide();
+            }
         }
     }
+
 }
 
 function handle_select() {
     var select = document.getElementById("cond_var").nextElementSibling;
     var textarea = document.getElementById("mytext");
     textarea.value = select.title;
+
+    var selected_options = select.title.split(",")
+
+    var disab_pred = document.getElementById("predictions");
+    var selected_option_pred = disab_pred.options[disab_pred.selectedIndex];
+
+    var disab_root = document.getElementById("root_var");
+    var selected_option_root = disab_root.options[disab_root.selectedIndex];
+
+    //remove the selected option from the root_var select
+    var dd_root = document.getElementById("bs-select-2");
+    var lis_root = dd_root.firstElementChild.getElementsByTagName('li');
+    for (var j = 0; j < lis_root.length; j++) {
+        lis_root[j].removeAttribute("style");
+        lis_root[j].classList.remove("disabled");
+        for (var i = 0; i < selected_options.length; i++) {
+            if (lis_root[j].firstElementChild.lastElementChild.innerText === selected_options[i].trim() ||
+                lis_root[j].firstElementChild.lastElementChild.innerText === selected_option_pred.value) {
+                lis_root[j].className = "disabled";
+                $('li.disabled').hide();
+            }
+        }
+    }
+
+    //remove the selected option from the predictions select
+    var dd_pred = document.getElementById("bs-select-1");
+    var lis_pred = dd_pred.firstElementChild.getElementsByTagName('li');
+    for (var j = 0; j < lis_pred.length; j++) {
+        lis_pred[j].removeAttribute("style");
+        lis_pred[j].classList.remove("disabled");
+        for (var i = 0; i < selected_options.length; i++) {
+            if (lis_pred[j].firstElementChild.lastElementChild.innerText === selected_options[i].trim() ||
+                lis_pred[j].firstElementChild.lastElementChild.innerText === selected_option_root.value) {
+                lis_pred[j].className = "disabled";
+                $('li.disabled').hide();
+            }
+        }
+    }
 }
 
 function sel_all() {

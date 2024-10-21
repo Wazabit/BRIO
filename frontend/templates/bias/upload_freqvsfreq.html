@@ -156,7 +156,7 @@
                            <label class="align-self-center" for="predictions">Predictions:</label>
                        </div>
                        <div class="col-6 d-flex">
-                           <select class="selectpicker w-100" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="predictions" id="predictions">
+                           <select class="selectpicker w-100" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="predictions" id="predictions" title="Nothing Selected">
                                {% for item in var_list -%}
                                    <option value="{{item}}">{{ item }}</option>
                                {%- endfor %}
@@ -168,7 +168,7 @@
                             <label class="align-self-center" for="root_var">Root Variable:</label>
                         </div>
                         <div class="col-6 d-flex">
-                            <select class="selectpicker w-100" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="root_var" id="root_var">
+                            <select class="selectpicker w-100" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="root_var" id="root_var" title="Nothing Selected">
                                 {% for item in var_list -%}
                                     <option value="{{item}}">{{ item }}</option>
                                 {%- endfor %}
@@ -180,7 +180,7 @@
                             <label class="align-self-center" for="cond_var">Conditioning variables:</label>
                         </div>
                         <div class="col-6 d-flex">
-                            <select class="selectpicker w-100" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="cond_var" id="cond_var" multiple data-actions-box="true">
+                            <select class="selectpicker w-100" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="cond_var" id="cond_var" title="Nothing Selected" multiple data-actions-box="true">
                                 {% for item in var_list -%}
                                     <option value="{{item}}" >{{ item }}</option>
                                 {%- endfor %}
