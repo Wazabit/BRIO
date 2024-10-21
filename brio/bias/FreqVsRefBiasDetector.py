@@ -173,6 +173,140 @@ class FreqVsRefBiasDetector(BiasDetector):
             'computed_threshold': computed_threshold
         }
 
+    # def old_compare_root_variable_conditioned_groups(self,
+    #                                                  dataframe,
+    #                                                  target_variable,
+    #                                                  root_variable,
+    #                                                  conditioning_variables,
+    #                                                  reference_distribution,
+    #                                                  min_obs_per_group=30,
+    #                                                  threshold=None,
+    #                                                  n_bins=10):
+    #     '''
+    #     This function computes the distances between a set of n reference distributions, and the
+    #     distributions of each n class of root_variable w.r.t. target_variable, for each
+    #     subgroup given by the conditioning variables groups.
+    #
+    #     Args:
+    #         dataframe: Pandas DataFrame with features and
+    #             predicted labels
+    #         target_variable: variable with the predicted labels
+    #         root_variable: variable used to split the data in n groups. For each group, the target distribution is computed
+    #         conditioning_variables: list of strings names of the variables that we use
+    #             to create groups within the population.
+    #             Starting from the first variable, a tree of conditions is created;
+    #             for each of the resulting group, we check if the n reference distributions are significantly
+    #             different from the n predicted (observed) distributions (n is the number of root_variable classes).
+    #         threshold: value from 0 to 1 used to check the computed distance with. If None, the tool will compute a parametric threshold.
+    #         min_obs_per_group: the minimum number of observations needed for the distance computation
+    #         reference_distribution: numpy array of probabilities w.r.t. target_variable (e.g. predictions) for the
+    #             n groups given by root_variable.
+    #         n_bins: number of bins used to split the predicted probability (only applies when self.target_variable_type='probability')
+    #
+    #     Returns:
+    #         A dictionary {group_condition: (
+    #                                         numb_obs_of_group,
+    #                                         [distance_a, distance_b, ..., distance_n],
+    #                                         [distance_a>=computed_threshold, distance_b>=computed_threshold, ..., distance_n>=computed_threshold]
+    #                                         computed_threshold
+    #                                         )
+    #                         },
+    #         where distance_a, distance_b, ..., distance_n  are the distances computed for the two categories of root_variable.
+    #     '''
+    #
+    #     # this is computed once and passed each time for each group
+    #     # in order to avoid disappearing labels due to small groups
+    #     # with only one observed category.
+    #     root_variable_labels = sorted(dataframe[root_variable].unique())
+    #
+    #     if self.target_variable_type == 'class':
+    #         target_variable_labels = sorted(dataframe[target_variable].unique())
+    #     elif self.target_variable_type == 'probability':
+    #         target_variable_labels = None
+    #     else:
+    #         raise Exception("target_variable_type can only be 'class' or 'probability'")
+    #
+    #     # Second parameter for threshold calculator
+    #     A2 = len(root_variable_labels)
+    #
+    #     conditioned_frequencies = {}
+    #
+    #     conditioning_variables_subsets = list(self.powerset(conditioning_variables))
+    #
+    #     # All the possible subsets of conditioning variables are inspected. The first one
+    #     # is excluded being the empty set.
+    #     y = 0
+    #     for conditioning_variables_subset in conditioning_variables_subsets[1:]:
+    #
+    #         combinations = cartesian([dataframe[v].unique() for v in conditioning_variables_subset])
+    #         for comb in combinations:
+    #             condition = " & ".join(
+    #                 [f'{conditioning_variables_subset[i[0]]}=={i[1]}' for i in enumerate(comb)]
+    #             )
+    #
+    #             dataframe_subset = dataframe.query(condition)
+    #             num_of_obs = dataframe_subset.shape[0]
+    #             y += 1
+    #             print("CONDITION: ", y, condition, num_of_obs)
+    #             if self.target_variable_type == 'class':
+    #                 freqs, abs_freqs = self.get_frequencies_list(
+    #                     dataframe_subset,
+    #                     target_variable,
+    #                     target_variable_labels,
+    #                     root_variable,
+    #                     root_variable_labels)
+    #                 conditioned_frequencies[condition] = (
+    #                     num_of_obs,
+    #                     freqs,
+    #                     [sum(x) for x in abs_freqs]
+    #                 )
+    #             elif self.target_variable_type == 'probability':
+    #                 freqs, abs_freqs = self.get_frequencies_list_from_probs(
+    #                     dataframe_subset,
+    #                     target_variable,
+    #                     root_variable,
+    #                     root_variable_labels,
+    #                     n_bins)
+    #                 conditioned_frequencies[condition] = (
+    #                     num_of_obs,
+    #                     freqs,
+    #                     [sum(x) for x in abs_freqs]
+    #                 )
+    #
+    #     # print(conditioned_frequencies)
+    #     distances = {
+    #         group: (
+    #             (
+    #                 obs_and_freqs[0],
+    #                 self.compute_distance_from_reference(observed_distribution=obs_and_freqs[1],
+    #                                                      reference_distribution=reference_distribution,
+    #                                                      n_obs=obs_and_freqs[2])
+    #             )
+    #         ) for group, obs_and_freqs in conditioned_frequencies.items()
+    #     }
+    #
+    #     results = {}
+    #     for group, obs_and_dist in distances.items():
+    #         # Too small groups
+    #         if obs_and_dist[0] < min_obs_per_group:
+    #             result = (obs_and_dist[0], [None for d in obs_and_dist[1]], 'Not enough observations')
+    #         else:
+    #             result = (
+    #                 obs_and_dist[0],  #obs
+    #                 obs_and_dist[1],  #distance
+    #                 [d <= threshold_calculator(
+    #                     A1=self.A1,
+    #                     A2=A2,
+    #                     A3=obs_and_dist[0],
+    #                     default_threshold=threshold
+    #                 ) if d is not None else 'Distance not defined' for d in obs_and_dist[1]],
+    #                 threshold_calculator(A1=self.A1, A2=A2, A3=obs_and_dist[0], default_threshold=threshold)
+    #             )
+    #
+    #         results[group] = result
+    #
+    #     return results
+
     def compare_root_variable_conditioned_groups(self,
                                                  dataframe,
                                                  target_variable,
@@ -183,35 +317,35 @@ class FreqVsRefBiasDetector(BiasDetector):
                                                  threshold=None,
                                                  n_bins=10):
         '''
-        This function computes the distances between a set of n reference distributions, and the 
-        distributions of each n class of root_variable w.r.t. target_variable, for each 
-        subgroup given by the conditioning variables groups. 
+        This function computes the distances between a set of n reference distributions, and the
+        distributions of each n class of root_variable w.r.t. target_variable, for each
+        subgroup given by the conditioning variables groups.
 
         Args:
-            dataframe: Pandas DataFrame with features and 
+            dataframe: Pandas DataFrame with features and
                 predicted labels
             target_variable: variable with the predicted labels
             root_variable: variable used to split the data in n groups. For each group, the target distribution is computed
-            conditioning_variables: list of strings names of the variables that we use 
-                to create groups within the population. 
+            conditioning_variables: list of strings names of the variables that we use
+                to create groups within the population.
                 Starting from the first variable, a tree of conditions is created;
-                for each of the resulting group, we check if the n reference distributions are significantly 
+                for each of the resulting group, we check if the n reference distributions are significantly
                 different from the n predicted (observed) distributions (n is the number of root_variable classes).
             threshold: value from 0 to 1 used to check the computed distance with. If None, the tool will compute a parametric threshold.
             min_obs_per_group: the minimum number of observations needed for the distance computation
-            reference_distribution: numpy array of probabilities w.r.t. target_variable (e.g. predictions) for the 
+            reference_distribution: numpy array of probabilities w.r.t. target_variable (e.g. predictions) for the
                 n groups given by root_variable.
             n_bins: number of bins used to split the predicted probability (only applies when self.target_variable_type='probability')
 
         Returns:
             A dictionary {group_condition: (
-                                            numb_obs_of_group, 
-                                            [distance_a, distance_b, ..., distance_n], 
+                                            numb_obs_of_group,
+                                            [distance_a, distance_b, ..., distance_n],
                                             [distance_a>=computed_threshold, distance_b>=computed_threshold, ..., distance_n>=computed_threshold]
                                             computed_threshold
                                             )
                             },
-            where distance_a, distance_b, ..., distance_n  are the distances computed for the two categories of root_variable. 
+            where distance_a, distance_b, ..., distance_n  are the distances computed for the two categories of root_variable.
         '''
 
         # this is computed once and passed each time for each group
@@ -234,7 +368,9 @@ class FreqVsRefBiasDetector(BiasDetector):
         conditioning_variables_subsets = list(self.powerset(conditioning_variables))
 
         # All the possible subsets of conditioning variables are inspected. The first one
-        # is excluded being the empty set. 
+        # is excluded being the empty set.
+        zero_frequency_conditions = []
+        y = 0
         for conditioning_variables_subset in conditioning_variables_subsets[1:]:
 
             combinations = cartesian([dataframe[v].unique() for v in conditioning_variables_subset])
@@ -243,35 +379,49 @@ class FreqVsRefBiasDetector(BiasDetector):
                 condition = " & ".join(
                     [f'{conditioning_variables_subset[i[0]]}=={i[1]}' for i in enumerate(comb)]
                 )
+                find = False
+                copy_zero_frequency_conditions = zero_frequency_conditions.copy()
+                for zero_frequency_condition in copy_zero_frequency_conditions:
+                    if zero_frequency_condition in condition:
+                        zero_frequency_conditions.append(condition)
+                        find = True
+                        conditioned_frequencies[condition] = conditioned_frequencies[zero_frequency_condition]
+                        break
 
-                dataframe_subset = dataframe.query(condition)
-                num_of_obs = dataframe_subset.shape[0]
+                if not find:
+                    print("CONDITION: ", y, condition)
+                    dataframe_subset = dataframe.query(condition)
+                    num_of_obs = dataframe_subset.shape[0]
+                    y += 1
+                    # print("CONDITION: ", y, condition, num_of_obs)
+                    if num_of_obs <= min_obs_per_group:
+                        zero_frequency_conditions.append(condition)
 
-                if self.target_variable_type == 'class':
-                    freqs, abs_freqs = self.get_frequencies_list(
-                        dataframe_subset,
-                        target_variable,
-                        target_variable_labels,
-                        root_variable,
-                        root_variable_labels)
-                    conditioned_frequencies[condition] = (
-                        num_of_obs,
-                        freqs,
-                        [sum(x) for x in abs_freqs]
-                    )
-                elif self.target_variable_type == 'probability':
-                    freqs, abs_freqs = self.get_frequencies_list_from_probs(
-                        dataframe_subset,
-                        target_variable,
-                        root_variable,
-                        root_variable_labels,
-                        n_bins)
-                    conditioned_frequencies[condition] = (
-                        num_of_obs,
-                        freqs,
-                        [sum(x) for x in abs_freqs]
-                    )
-
+                    if self.target_variable_type == 'class':
+                        freqs, abs_freqs = self.get_frequencies_list(
+                            dataframe_subset,
+                            target_variable,
+                            target_variable_labels,
+                            root_variable,
+                            root_variable_labels)
+                        conditioned_frequencies[condition] = (
+                            num_of_obs,
+                            freqs,
+                            [sum(x) for x in abs_freqs]
+                        )
+                    elif self.target_variable_type == 'probability':
+                        freqs, abs_freqs = self.get_frequencies_list_from_probs(
+                            dataframe_subset,
+                            target_variable,
+                            root_variable,
+                            root_variable_labels,
+                            n_bins)
+                        conditioned_frequencies[condition] = (
+                            num_of_obs,
+                            freqs,
+                            [sum(x) for x in abs_freqs]
+                        )
+        # print(conditioned_frequencies)
         distances = {
             group: (
                 (

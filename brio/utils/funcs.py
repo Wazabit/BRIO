@@ -9,13 +9,16 @@ def allowed_file(filename: str) -> str:
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
 def allowed_file_logo(filename: str) -> str:
     ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
 def get_file_extension(filename: str) -> str:
     return filename.rsplit('.', 1)[1].lower()
+
 
 def handle_multiupload(req: request, label: str, path: str) -> None:
     files_list = req.files.getlist(label)
@@ -39,6 +42,11 @@ def handle_ref_distributions(rootvar: str, targetvar: str, df: pd.DataFrame, dic
         final_list.append(np.array(intermediate_list))
         intermediate_list = []
     return final_list
+
+
+def normalize_column_names(df: pd.DataFrame) -> pd.DataFrame:
+    df.columns = df.columns.str.lower().str.replace('-', '_')
+    return df
 
 
 def order_violations(viol: dict) -> dict:

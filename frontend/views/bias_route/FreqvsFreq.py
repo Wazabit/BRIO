@@ -13,7 +13,7 @@ from flask import (Blueprint, Flask, flash, jsonify,
 
 from brio.bias.FreqVsFreqBiasDetector import FreqVsFreqBiasDetector
 from brio.bias.BiasDetector import BiasDetector
-from brio.utils.funcs import order_violations, upload_folder
+from brio.utils.funcs import order_violations, upload_folder, normalize_column_names
 
 from brio.risk.HazardFromBiasDetectionCalculator import HazardFromBiasDetectionCalculator
 from frontend.classes.analysis import Analysis
@@ -84,7 +84,7 @@ def freqvsfreq():
                 df_pickle = open(latest_file, "rb")
                 dict_vars['df'] = pickle.load(df_pickle)
             case 'csv':
-                dict_vars['df'] = pd.read_csv(latest_file)
+                dict_vars['df'] = normalize_column_names(pd.read_csv(latest_file))
 
         list_var = dict_vars['df'].columns
         if request.method == 'POST':
@@ -203,8 +203,6 @@ def results_fvf():
         dict_vars['cond_vars'],
         weight_logic="group"
     )
-
-    results3 = results3['hazards']
 
     Analysis.analysisUpdate(dict_vars['analysis'], results1, results2, results3, app.db)
 

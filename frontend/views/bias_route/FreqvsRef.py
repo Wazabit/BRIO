@@ -11,7 +11,7 @@ from flask import (Blueprint, Flask, flash, jsonify,
 from brio.bias.FreqVsRefBiasDetector import FreqVsRefBiasDetector
 from brio.bias.BiasDetector import BiasDetector
 from brio.utils.funcs import (handle_ref_distributions, order_violations,
-                              write_reference_distributions_html, upload_folder)
+                              write_reference_distributions_html, upload_folder, normalize_column_names)
 
 from brio.risk.HazardFromBiasDetectionCalculator import HazardFromBiasDetectionCalculator
 from frontend.classes.analysis import Analysis
@@ -84,7 +84,8 @@ def freqvsref():
                 df_pickle = open(latest_file, "rb")
                 dict_vars['df'] = pickle.load(df_pickle)
             case 'csv':
-                dict_vars['df'] = pd.read_csv(latest_file)
+                dict_vars['df'] = normalize_column_names(pd.read_csv(latest_file))
+
         list_var = dict_vars['df'].columns
         if request.method == 'POST':
             if list(request.form.keys()):
@@ -223,8 +224,6 @@ def results_fvr():
         weight_logic="group"
     )
 
-    results3 = results3['hazards']
-
     Analysis.analysisUpdate(dict_vars['analysis'], results1, results2, results3, app.db)
 
     individual_risk = results3.pop(0) / results3.pop(len(results3) - 1)
@@ -232,7 +231,7 @@ def results_fvr():
     conditioned_results_with_hazard = {}
 
     for k, v in results2.items():
-        if v[1][0] is not None:
+        if len(results3) > 0 and v[1][0] is not None:
             v_list = list(v)
             line_risk = results3.pop(0)
             v_list.insert(1, line_risk)
