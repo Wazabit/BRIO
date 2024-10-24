@@ -56,6 +56,10 @@ app.db = Database()
 def home():
     if session.get("user") is None:
         btn_login = False
+        return render_template(
+            "homepage.html",
+            btn_login=btn_login
+        )
     else:
         data = session.get("user")
         user = User(data.get("userinfo"))
