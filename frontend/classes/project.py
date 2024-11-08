@@ -3,6 +3,7 @@ import uuid
 from dataclasses import dataclass
 from datetime import datetime
 
+
 @dataclass
 class Project:
     id: str
@@ -13,8 +14,9 @@ class Project:
     analysis: [str]
     created_at: datetime
 
-    def __init__(self, name: str, owner_id: str, client_id: str, analysis: str = '', created_at: datetime = datetime.now(),
-                 uuid: str = str(uuid.uuid4().hex[:16].lower())):
+    def __init__(self, name: str, owner_id: str, client_id: str, analysis: str = '',
+                 created_at: datetime = datetime.now(),
+                 project_id: str = ''):
         self.name = name
         self.owner_id = owner_id
         self.client_id = client_id
@@ -23,7 +25,10 @@ class Project:
         else:
             self.analysis = analysis.split(',') if analysis != '' else []
         self.created_at = created_at
-        self.uuid = uuid
+        if project_id == '':
+            self.uuid = uuid.uuid4().hex[:16].lower()
+        else:
+            self.uuid = project_id
 
     @staticmethod
     def register_update(project, db):

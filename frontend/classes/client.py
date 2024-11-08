@@ -20,7 +20,8 @@ class Client:
 
     def __init__(self, name: str, contact: str, email: str, logo: str, owner_id: str, admins: str, editors: str,
                  projects: [str], created_at: datetime = datetime.now(),
-                 uuid: str = str(uuid.uuid4().hex[:16].lower())):
+                 client_id: str = ''):
+
         self.name = name
         self.contact = contact
         self.email = email
@@ -29,14 +30,17 @@ class Client:
         if type(admins) == list:
             self.admins = admins
         else:
-            self.admins = admins.split(',') if admins != '' else []
+            self.admins = admins.split(',') if admins != '' else [owner_id]
         if type(editors) == list:
             self.editors = editors
         else:
             self.editors = editors.split(',') if editors != '' else []
         self.projects = projects
         self.created_at = created_at
-        self.uuid = uuid
+        if client_id == '':
+            self.uuid = uuid.uuid4().hex[:16].lower()
+        else:
+            self.uuid = client_id
 
     @staticmethod
     def register_update(client, db):

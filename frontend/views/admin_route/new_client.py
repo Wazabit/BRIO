@@ -34,9 +34,9 @@ def new_client():
         app.config['UPLOAD_FOLDER'] = upload_folder(UPLOAD_FOLDER, 'client_logos')
         btn_login = True
 
+    admins = user.get_users_by_role(app.db, "Admin")
+    editors = user.get_users_by_role(app.db, "Editor")
     if request.method == 'GET':
-        admins = user.get_users_by_role(app.db, "Admin")
-        editors = user.get_users_by_role(app.db, "Editor")
         return render_template('new_client.html',
                                session=session.get("user"),
                                btn_login=btn_login,
@@ -82,6 +82,8 @@ def new_client():
                                session=session.get("user"),
                                btn_login=btn_login,
                                user=user.toJSON(),
+                               admins=admins,
+                               editors=editors,
                                role=user.role,
                                pretty=json.dumps(session.get("user"), indent=4)
                                )
