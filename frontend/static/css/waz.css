@@ -275,7 +275,7 @@ hr{
   border-left-color: rgba(0, 0, 0, .85);
 }
 
-input[type="file"], input[type="text"]{
+input[type="file"], input[type="text"], input[type="email"]{
   background-color: transparent;
   border: 1px solid #13DCF2;
   color: #13DCF2;

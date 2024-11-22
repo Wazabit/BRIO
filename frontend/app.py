@@ -9,7 +9,7 @@ from flask import Flask, render_template, redirect, session, url_for
 from flask_cors import CORS
 
 from frontend.views import bias, opacity, risk, admin
-from frontend.views.admin_route import client, new_client, project, new_project
+from frontend.views.admin_route import client, new_client, project, new_project, charts_admin_home
 
 from frontend.classes.user import User
 from frontend.classes.database import Database
@@ -30,6 +30,7 @@ app.register_blueprint(client.bp)
 app.register_blueprint(new_client.bp)
 app.register_blueprint(project.bp)
 app.register_blueprint(new_project.bp)
+app.register_blueprint(charts_admin_home.bp)
 
 app.secret_key = env.get("APP_SECRET_KEY")
 
