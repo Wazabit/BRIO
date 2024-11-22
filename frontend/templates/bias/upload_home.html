@@ -21,7 +21,16 @@
                 <select class="selectpicker w-100 px-0 mb-2" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="project_id" id="project_id" required>
 
                 </select>
-                <label for="dataset" class="col-form-label col-form-label-sm rajdhani-bold ps-0 text-miraiblu">Dataframe:</label>
+
+                <label for="dataset_id" class="col-form-label col-form-label-sm rajdhani-bold ps-0 text-miraiblu">Select a Dataframe:</label>
+                <select class="selectpicker w-100 px-0 mb-2" data-style="btn-outline-primary btn-mirai rajdhani-bold" name="project_id" id="dataset_id">
+                  <option>file1</option>
+                  <option>file2</option>
+                  <option>file3</option>
+
+                </select>
+
+                <label for="dataset" class="col-form-label col-form-label-sm rajdhani-bold ps-0 text-miraiblu">Or upload a new Dataframe:</label>
                 <input type="file" class="form-control form-control-sm mb-3 rajdhani-bold" name="dataset" id="dataset">
               </div>
               <button id="file_upload" type="submit" class="btn btn-outline-primary btn-mirai rajdhani-bold w-100  btn-disabled">Upload</button>
@@ -39,7 +48,7 @@
 
     <div class="card card-mirai {{ animated }} mt-4">
       <div class="card-header text-uppercase">
-        Currently uploaded dataframe
+        Currently selected dataframe
       </div>
       <div class="card-body d-flex flex-column justify-content-between {{ status }}">
         <div>

@@ -16,7 +16,7 @@ BRIO - Bias Assessment - FreqvsRef
       </div> 
       <div class="row">
         <div class="col">
-          <div class="card card-mirai {{ animated }}">
+          <div class="card card-mirai {{ animated }} mb-3">
             <div class="card-body">
               <p>Check how much the predictions for the target variable differ with respect to a reference distribution provided as input, overall and conditioning to the categories of other selected predictors.</p>
               <ul class="mb-0">
@@ -31,6 +31,25 @@ BRIO - Bias Assessment - FreqvsRef
               <div class="card-arrow-bottom-right"></div>
             </div>
           </div>
+
+          <div class="card card-mirai {{ animated }}">
+            <div class="card-header text-uppercase">
+              Insert Analysis Title:
+            </div>
+            <div class="card-body">
+              <div class="col mb-3">
+                <label for="name">Enter a descriptive name for your analysis</label>
+                <input type="text" id="name" name="name" class="w-100 p-1 px-2" style="color-scheme: dark;" required minlength="2"/>
+              </div>
+            </div>
+            <div class="card-arrow">
+              <div class="card-arrow-top-left"></div>
+              <div class="card-arrow-top-right"></div>
+              <div class="card-arrow-bottom-left"></div>
+              <div class="card-arrow-bottom-right"></div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
