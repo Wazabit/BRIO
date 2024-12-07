@@ -54,17 +54,19 @@ class HazardFromBiasDetectionCalculator:
                 1  #for the overall test, only 1 feature used, the root variable
             ))
 
-            for group_name, group in conditioned_results.items():
-                if self.as_list(group[1])[k] is not None:
-                    test_results.append(
-                        (
-                            self.as_list(group[1])[k],  #test result
-                            group[3],  #threshold
-                            group[0],  #num_samples
-                            self.as_list(group[2])[k],  #boolean
-                            len(group_name.split("&")) + 1  #num_used_features, cond.+root
+            # Using conditioned results only if available
+            if conditioned_results is not None:
+                for group_name, group in conditioned_results.items():
+                    if self.as_list(group[1])[k] is not None:
+                        test_results.append(
+                            (
+                                self.as_list(group[1])[k],  #test result
+                                group[3],  #threshold
+                                group[0],  #num_samples
+                                self.as_list(group[2])[k],  #boolean
+                                len(group_name.split("&")) + 1  #num_used_features, cond.+root
+                            )
                         )
-                    )
 
             if weight_logic == "group":
                 #T_i in Risk Function document
