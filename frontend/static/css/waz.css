@@ -222,7 +222,7 @@ hr{
   background-color: transparent;
 }
 .btn-outline-primary.btn-mirai:hover {
-  color: #0B3B59;
+  color: #0B3B59!important;
   background-color: #13DCF2;
   border-color: #13DCF2;
 }
@@ -288,7 +288,7 @@ input[type="file"]::file-selector-button {
   padding: .2em .4em;
 }
 
-input[type="file"]:focus, input[type="file"]:hover::file-selector-button, input[type="file"]:hover::file-selector-button {
+input[type="file"]:focus, input[type="file"]:hover::file-selector-button, input[type="file"]:hover::file-selector-button, input[type="file"]:focus::file-selector-button {
   background-color: #13DCF2!important;
   border: 1px solid #13DCF2;
   color: #0B3B59;
