@@ -99,8 +99,15 @@ class HazardFromBiasDetectionCalculator:
 
                 q = line[2] / tot_observations
                 e = line[0] - line[1]
+
                 # calcolo in deployment
-                hazard_cumulative = weight * q * abs(e) ** (1. / 3.) * line[1] ** (1. / 3.)
+                #hazard_cumulative = weight * q * abs(e) ** (1. / 3.) * line[1] ** (1. / 3.)
+
+                # working Greta 1: logarithmic
+                #hazard_cumulative = weight * q * np.exp(0.5 * (np.log(abs(e)) + np.log (line[1])))
+
+                # working Greta 2: smooth scaling - best so far
+                hazard_cumulative = weight * q * abs(e)/(abs(e) + 10**(-3)) * line[1]/(line[1] + 10**(-3))
 
                 # prova 1 NO
                 #x = (line[1] + weight) * (q + abs(e))
