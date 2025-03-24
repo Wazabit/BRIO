@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 import logging
 
@@ -41,6 +43,7 @@ class HazardFromBiasDetectionCalculator:
         # Iterating over each reference distribution, if available (FreqVsRef)
         # In case of FreqVsFreq, there will be a single iteration
         num_iterations = len(self.as_list(overall_result['distance']))
+        counter = 0
         for k in np.arange(0, num_iterations):
 
             # test result, threshold, num_samples, boolean, num_used_features
@@ -81,7 +84,11 @@ class HazardFromBiasDetectionCalculator:
 
             hazards = []
             hazard = 0
+
             for line in test_results:
+
+                counter = counter + 1
+
                 if weight_logic == "group":
                     c_info = n_features_total - line[4] + 1
                     weight = c_info / weight_denominator
@@ -92,7 +99,43 @@ class HazardFromBiasDetectionCalculator:
 
                 q = line[2] / tot_observations
                 e = line[0] - line[1]
+                # calcolo in deployment
                 hazard_cumulative = weight * q * abs(e) ** (1. / 3.) * line[1] ** (1. / 3.)
+
+                # prova 1 NO
+                #x = (line[1] + weight) * (q + abs(e))
+                #hazard_cumulative = 2/( 1 + math.exp(-x))-1
+
+                # prova 2 NO
+                #x = line[1] * weight * abs(e)
+                #hazard_cumulative = q * (2/(1 + math.exp(-x))-1)
+
+                # prova 3 NO
+                #x = (line[1] + weight) * abs(e)
+                #hazard_cumulative = q * (2/(1 + math.exp(-x))-1)
+
+                # prova 4 NO
+                #x = (line[1] + weight) * (q + abs(e))
+                #hazard_cumulative = 2/( 1 + math.exp(-x))-1
+
+                # prova 5 (con counter)
+                # line[1]: threshold
+                # weight: coefficiente group/ind fairness
+                # abs(e): distanza da threshold
+                # q: esposure
+                # line[1] + weight -> danno
+                # q + abs(e) -> esposizione
+                #x = (line[1] + weight) * (q + abs(e))
+                #hazard_cumulative = 2/(1 + math.exp(-x))-1
+
+                #prova 6 NO
+                #x = line[1] * q * abs(e)
+                #hazard_cumulative = weight*(2/(1 + math.exp(-x))-1)
+
+                #prova 7 NO
+                #x = line[1] * (q + weight) * abs(e)
+                #hazard_cumulative = 2 / (1 + math.exp(-x)) - 1
+
                 delta = 0  #when line[3] == True or 'Not enough observations'
                 if line[3] == False:
                     delta = 1
@@ -102,6 +145,9 @@ class HazardFromBiasDetectionCalculator:
                 hazard_overall += hazard
                 hazard_overall_max += hazard_cumulative
         #append hazard_overall to hazards array
+        if counter>0:
+          hazard_overall = hazard_overall#/counter
+          hazard_overall_max = hazard_overall_max#/counter
         hazards.insert(0, hazard_overall)
         hazards.insert(len(hazards) + 1, hazard_overall_max)
 
